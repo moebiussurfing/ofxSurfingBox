@@ -1,37 +1,29 @@
-# ofxAddon
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Stage: beta](https://img.shields.io/badge/-alpha-red)
+# ofxSurfingBox
 
 ## Overview
-ofxFboMixerBlend is an addon template for openFrameworks to make other addons.
+Draggable Box with text info.
 
 ## Screenshot
 ![Alt text](docs/screenshot1.JPG?raw=true "MoebiusSurfing")
 
 ## Features
-- can have some app modes  (2 by default). So it can have multiple behaviour modes. (Edit/Use).
+- This class draws a draggable text box with a background.
+- Auto stores and recall the box position between sessions.
+- DoubleClick the box to allow move the position.
+- Useful to help info boxes in your apps.
 
 ## Usage
-- copy the folder '/ofxFboMixerBlend'.
-- rename the folder to the name of your addon
+- See the examples.
 
 ## Dependencies
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
-* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
 
-The above add-ons already packed somewhere into **OF_ADDON/libs**.  
-No need to add them manually with the **OF Project Generator**:  
-* [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
-
-## Tested systems
-* **Windows 10** / **VS 2017** / **OF ~0.11**
-* **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
+## Tested System
+* **Windows 10** / **VS 2022** / **oF ~0.12**
 
 ## Author
-An addon by **@moebiusSurfing**  
-*( ManuMolina ) 2019-2021*  
-
-<br/>
+An add-on by **@moebiusSurfing**  
+*( ManuMolina ) 2019-2022*  
 
 ## License
 [**MIT License**](https://github.com/LICENSE)
