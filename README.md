@@ -21,7 +21,7 @@ This add-on has two classes:
 - Auto stores and recall the settings between sessions.
 
 ### ofxSurfingBoxHelpText.h
-- This class draws the same, a draggable box with a filled background with text.
+- This class draws the same, a draggable box with a filled background but with text.
 - Useful to display **Help Info** boxes in your apps.
 
 ## Usage
