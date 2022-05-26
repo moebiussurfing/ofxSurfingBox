@@ -43,4 +43,4 @@ An add-on by **@moebiusSurfing**
 *( ManuMolina ) 2019-2022*  
 
 ## License
-[**MIT License**](https://github.com/LICENSE)
+[**MIT License**]
