@@ -216,11 +216,21 @@ public:
 	}
 
 	//--------------------------------------------------------------
+	void reset() {
+
+		int sz = 200;
+		rect_HelpTextBox.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
+		rect_HelpTextBox.setWidth(sz);
+		rect_HelpTextBox.setHeight(sz);
+	}
+
+	//--------------------------------------------------------------
 	void setup() {
 
 		path_TTF = "assets/fonts/" + name_TTF;
 		bool bLoaded = myFont.load(path_TTF, size_TTF, true, true);
-		if (!bLoaded) bLoaded = myFont.load(OF_TTF_SANS, size_TTF, true, true);
+		//if (!bLoaded) bLoaded = myFont.load(OF_TTF_SANS, size_TTF, true, true);
+		if (!bLoaded) bLoaded = myFont.load(OF_TTF_MONO, size_TTF, true, true);
 
 		_bUseShadow = true;
 
@@ -230,7 +240,7 @@ public:
 		doubleClicker.setDebug(false);
 
 		// Default position
-		rect_HelpTextBox.setPosition(ofGetWidth() / 2, ofGetHeight() / 2);
+		reset();
 
 		//----
 
