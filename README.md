@@ -4,7 +4,7 @@
 Draggable Box with text info.
 
 ## Screenshot
-![Alt text](docs/screenshot1.JPG?raw=true "MoebiusSurfing")
+![](/readme_images/Capture.PNG)
 
 ## Features
 - This class draws a draggable text box with a background.
@@ -18,7 +18,7 @@ Draggable Box with text info.
 ## Dependencies
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 
-## Third Party add-ons bundled into **OF_ADDON/libs/**
+## Third Party add-ons bundled into **ofxSurfingHelpers**
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect) [_FORK_ from [roymacdonald](https://github.com/roymacdonald/ofxScaleDragRect)]  
 * [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) [_FORK_ from [memo](https://github.com/memo/ofxMSAInteractiveObject)]  
 
