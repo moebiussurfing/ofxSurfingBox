@@ -2,7 +2,7 @@
 
 ## Overview
 This add-on has two classes: 
-1. A draggable rectangle: **ofxSurfingBoxHelpText** 
+1. A draggable rectangle: **ofxSurfingBoxInteractive** 
 2. A draggable rectangle with text info: **ofxSurfingBoxHelpText**
 
 ## Screenshot
@@ -10,7 +10,7 @@ This add-on has two classes:
 
 ## Features
 
-### ofxSurfingBoxHelpText.h
+### ofxSurfingBoxInteractive.h
 - This class is like a draggable ofRectangle.
 - It can be used as a viewport for a camera, a videoplayer, or like any ofRectangle.
 - Can be placed into top, bottom, center, left... positions.
