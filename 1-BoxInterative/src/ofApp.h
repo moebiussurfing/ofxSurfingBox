@@ -12,13 +12,19 @@ public:
 	void setup();
 	void draw();
 	void keyPressed(int key);
+	
+	//--
 
+	// Box
 	ofxSurfingBoxInteractive boxWidget;
+
+	// Scene
 	ofRectangle r;
 	vector<ofColor> colors;
 
 	//--
 
+	// Just to show the help info
 	ofxSurfingBoxHelpText textBoxWidget;
 	void buildHelpInfo();
 };

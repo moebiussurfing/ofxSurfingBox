@@ -17,7 +17,6 @@ void ofApp::setup() {
 	//--
 
 	// Help Info
-	textBoxWidget.setPath("myCustomBoxPath/");
 	textBoxWidget.setup();
 	buildHelpInfo();
 }
@@ -26,7 +25,10 @@ void ofApp::setup() {
 void ofApp::draw()
 {
 	// Help Info 
-	if (textBoxWidget.isChanged()) buildHelpInfo();
+
+	// We can update text when something on the class object changes...
+	//if (textBoxWidget.isChanged()) buildHelpInfo();
+
 	textBoxWidget.draw();
 
 	//--
@@ -36,14 +38,17 @@ void ofApp::draw()
 	boxWidget.draw();
 
 	//--
-	// 
+	 
 	// Scene
-	// To use the Box object
-	// We will draw a bigger rounded rectangle
+	// To use the Box object.
+	// We will draw a smaller/bigger rounded rectangle.
 	// animated and with changing color.
 	{
+		// Here we get the ofRectangle from the Box object!
 		r = boxWidget.getRectangle();
 
+		//-
+		
 		ofPushStyle();
 		ofNoFill();
 		ofSetLineWidth(4);
@@ -54,7 +59,7 @@ void ofApp::draw()
 		
 		bool b;
 		static ofColor c;
-		if (b = ofGetFrameNum() % 10 == 0) 
+		if (b = ofGetFrameNum() % 10 == 0) // change the color after 10 frames. 
 		{
 			static int k = 0;
 			k = ++k % colors.size();
@@ -91,13 +96,15 @@ void ofApp::buildHelpInfo()
 	helpInfo += "SPACE          EDIT \n";
 	helpInfo += "A              TOGGLE LOCK ASPECT RATIO  \n";
 	helpInfo += "TAB            MODE LAYOUT  \n";
-	helpInfo += "DEBUG \n";
-	helpInfo += boxWidget.getMode();
-	helpInfo += "\n";
-	helpInfo += boxWidget.getEditing();
-	helpInfo += "\n";
-	helpInfo += "LOCKED ASPECT RATIO " + (string)(boxWidget.isLockedAspectRatio() ? "TRUE" : "FALSE");
-	helpInfo += "\n";
+
+	// We can update text when something on the class object changes...
+	// helpInfo += "DEBUG \n";
+	// helpInfo += boxWidget.getMode();
+	// helpInfo += "\n";
+	// helpInfo += boxWidget.getEditing();
+	// helpInfo += "\n";
+	// helpInfo += "LOCKED ASPECT RATIO " + (string)(boxWidget.isLockedAspectRatio() ? "TRUE" : "FALSE");
+	// helpInfo += "\n";
 
 	textBoxWidget.setText(helpInfo);
 }
