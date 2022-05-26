@@ -18,6 +18,10 @@ Draggable Box with text info.
 ## Dependencies
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 
+## Third Party add-ons bundled into **OF_ADDON/libs/**
+* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect) [_FORK_ from [roymacdonald](https://github.com/roymacdonald/ofxScaleDragRect)]  
+* [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) [_FORK_ from [memo](https://github.com/memo/ofxMSAInteractiveObject)]  
+
 ## Tested System
 * **Windows 10** / **VS 2022** / **oF ~0.12**
 
