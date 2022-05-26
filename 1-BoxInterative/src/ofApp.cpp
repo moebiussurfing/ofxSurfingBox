@@ -26,7 +26,8 @@ void ofApp::draw()
 {
 	// Help Info 
 
-	// We can update text when something on the class object changes...
+	// We could update the text when something on the class object changes...
+	// Also for debug purposes.
 	//if (textBoxWidget.isChanged()) buildHelpInfo();
 
 	textBoxWidget.draw();
@@ -42,10 +43,11 @@ void ofApp::draw()
 	// Scene
 	// To use the Box object.
 	// We will draw a smaller/bigger rounded rectangle.
-	// animated and with changing color.
+	// Animated and with changing color.
 	{
 		// Here we get the ofRectangle from the Box object!
-		r = boxWidget.getRectangle();
+		
+		ofRectangle r = boxWidget.getRectangle();
 
 		//-
 		
@@ -57,9 +59,9 @@ void ofApp::draw()
 		r.scaleFromCenter(ofxSurfingHelpers::getFadeBlink(0.5f, 0.7f, 0.12f));//inner
 		//r.scaleFromCenter(ofxSurfingHelpers::getFadeBlink(1.1f, 1.2f, 0.12f));//outer
 		
-		bool b;
+		bool b = (ofGetFrameNum() % 10 == 0);
 		static ofColor c;
-		if (b = ofGetFrameNum() % 10 == 0) // change the color after 10 frames. 
+		if (b) // changes the color after 10 frames. 
 		{
 			static int k = 0;
 			k = ++k % colors.size();
@@ -97,7 +99,7 @@ void ofApp::buildHelpInfo()
 	helpInfo += "A              TOGGLE LOCK ASPECT RATIO  \n";
 	helpInfo += "TAB            MODE LAYOUT  \n";
 
-	// We can update text when something on the class object changes...
+	// We could update the text when something on the class object changes...
 	// helpInfo += "DEBUG \n";
 	// helpInfo += boxWidget.getMode();
 	// helpInfo += "\n";
