@@ -2,8 +2,8 @@
 
 ## Overview
 This add-on has two classes: 
-1. A draggable rectangle with text info.
-2. A draggable rectangle. 
+1. A draggable rectangle. 
+2. A draggable rectangle with text info.
 
 ## Screenshot
 ![](/readme_images/Capture.PNG)
@@ -11,16 +11,16 @@ This add-on has two classes:
 ## Features
 
 ### ofxSurfingBoxHelpText.h
-- This class draws a draggable text box with a background.
+- This class draws a draggable text box with a filled background.
 - Auto stores and recall the box position between sessions.
 - DoubleClick the box to allow move the position.
-- Useful to help info boxes in your apps.
+- Useful to Help Info boxes in your apps.
 
 ### ofxSurfingBoxHelpText.h
 - This class is a draggable ofRectangle.
-- It can be used as a viewport or like any rectangle on many scenarios.
+- It can be used as a viewport for a camera or a videoplayer, or like any ofRectangle on many scenarios.
 - Can be placed into top, bottom, left... positions.
-- Also can be positioned and scaled manually.
+- Also can be positioned freely and scaled manually.
 - Mouse wheel modifies the scale.
 - Aspect ratio can be locked.
 - Double click activates editing or locked mode.
