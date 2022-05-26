@@ -19,7 +19,6 @@ public:
 	ofxSurfingBoxInteractive boxWidget;
 
 	// Scene
-	ofRectangle r;
 	vector<ofColor> colors;
 
 	//--
