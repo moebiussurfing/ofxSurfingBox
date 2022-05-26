@@ -17,12 +17,12 @@ This add-on has two classes:
 - Also can be positioned freely and scaled manually.
 - Mouse wheel modifies the scale.
 - Aspect ratio can be locked.
-- Double click activates Editing or Locked modes.
-- Auto stores and recall the box position between sessions: to allow move the position.
+- Double click activates Editing or Locked modes: to allow move the position and resize using the mouse.
+- Auto stores and recall the settings between sessions.
 
 ### ofxSurfingBoxHelpText.h
 - This class draws the same, a draggable box with a filled background with text.
-- Useful to Help Info boxes in your apps.
+- Useful to display **Help Info** boxes in your apps.
 
 ## Usage
 - See the examples.
