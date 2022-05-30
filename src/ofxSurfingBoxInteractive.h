@@ -185,6 +185,12 @@ public:
 
 public:
 
+	// legacy
+	//--------------------------------------------------------------
+	void setPath(string path) {//call before setup. Will set path to save settings into.
+		path_Global = path;
+	}
+
 	//--------------------------------------------------------------
 	void setPathGlobal(string path) {//call before setup. Will set path to save settings into.
 		path_Global = path;
