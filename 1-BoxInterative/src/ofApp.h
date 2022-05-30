@@ -1,8 +1,10 @@
 #pragma once
 #include "ofMain.h"
 
+//-> We are testing this one here:
 #include "ofxSurfingBoxInteractive.h"
 
+// Only for help info. Not the purpose of this example.
 #include "ofxSurfingBoxHelpText.h"
 
 class ofApp : public ofBaseApp {

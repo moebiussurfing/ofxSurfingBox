@@ -125,6 +125,10 @@ public:
 	ofRectangle getRectangle() {
 		return rect_Box;
 	}
+	float getX() { return rect_Box.x; }
+	float getY() { return rect_Box.y; }
+	float getWidth() { return rect_Box.getWidth(); }
+	float getHeight() { return rect_Box.getHeight(); }
 
 private:
 
@@ -146,29 +150,53 @@ private:
 	float round = 5;
 	int marginBorders = 50;
 
-public:
+	//--
 
-	////ofParameter<glm::vec2> shape{ "Shape", glm::vec2(1920 / 2, 1080 / 2), glm::vec2(0,0), glm::vec2(19200,1080) };
+public:
 	
+	//--------------------------------------------------------------
+	void setName(string name) {
+		path_RectHelpBox = name;
+	}
+
+	//--------------------------------------------------------------
+	void setRectangle(ofRectangle shape) {
+		this->setShape(shape);
+	}
 	//--------------------------------------------------------------
 	void setShape(ofRectangle shape) {
 		rect_Box.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
 	}
+	//--------------------------------------------------------------
+	void setPosition(float x, float y) {
+		rect_Box.setX(x);
+		rect_Box.setY(y);
+	}
+	//--------------------------------------------------------------
+	void setWidth(float w) {
+		rect_Box.setWidth(w);
+	}
+	//--------------------------------------------------------------
+	void setHeight(float h) {
+		rect_Box.setHeight(h);
+	}
+
+	//--
 
 public:
 
 	//--------------------------------------------------------------
-	void setPath(string path) {//call before setup. Will set path to save settings into.
+	void setPathGlobal(string path) {//call before setup. Will set path to save settings into.
 		path_Global = path;
 	}
 
 	//--------------------------------------------------------------
-	void reset() {
+	void reset(bool bOnlySize = true) {
 
 		int sz = 200;
-		rect_Box.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
 		rect_Box.setWidth(sz);
 		rect_Box.setHeight(sz);
+		if(!bOnlySize) rect_Box.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
 	}
 
 	//--------------------------------------------------------------
@@ -182,7 +210,7 @@ public:
 		doubleClicker.setDebug(false);
 
 		// Default position
-		reset();
+		reset(false);
 
 		//----
 
@@ -221,6 +249,7 @@ public:
 
 		// Changed Mode
 
+		// memorize free layout mode to not be overwritten by other predefined (top,left..) layout positions.
 		if (modeLayout != modeLayout_PRE)
 		{
 			if (modeLayout_PRE == FREE_LAYOUT)
