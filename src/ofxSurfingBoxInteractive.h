@@ -339,17 +339,16 @@ public:
 
 		//--
 
-		float _w = ofGetWidth();
-		float _h = ofGetHeight();
+		int _w = ofGetWidth();
+		int _h = ofGetHeight();
 
 		int _padx = 10;
 		int _pady = 10;
 
 		int _xx;
 		int _yy;
-
-		float _ww;
-		float _hh;
+		int _ww;
+		int _hh;
 
 		_ww = rect_Box.getWidth();
 		_hh = rect_Box.getHeight();
@@ -402,6 +401,8 @@ public:
 
 			//--
 
+			// Set
+
 			rect_Box.setX(_xx);
 			rect_Box.setY(_yy);
 		}
@@ -419,10 +420,12 @@ public:
 		//-
 
 		// Force fit box inside the window
+		bool bContraints = true;
+		if(bContraints)
 		{
 			float _xmax = _w - _ww - _padx;
 			float _ymax = _h - _hh - _pady;
-			float _ymin = 3 * _pady;
+			float _ymin = 2 * _pady;
 
 			if (rect_Box.getY() > _ymax)//bottom
 			{
@@ -444,6 +447,7 @@ public:
 
 		//--
 
+		// Move clicker linked to the box
 		doubleClicker.set(_xx, _yy, _ww, _hh);
 	}
 
