@@ -16,14 +16,18 @@
 	Mouse wheel changes scale.
 	Aspect ratio can be locked.
 	Double click activates editing or locked modes.
+	Can be also handled with double, triple mouse clicks.
 
 */
 
 
 /*
 
-	TODO: 
-	
+
+	TODO:
+
+	BUG: double clicked do not enables edit mode??
+
 	+ save mode picked too
 	+ fit screen or mini/ big modes to use on a video player.
 
@@ -35,6 +39,13 @@
 
 class ofxSurfingBoxInteractive /* : public ofBaseApp*/
 {
+private:
+
+	bool bEnableMouseWheel = true;
+
+public:
+
+	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
 
 public:
 
@@ -73,6 +84,10 @@ public:
 		NUM_LAYOUTS
 	};
 
+	//--
+
+	// DoubleClick engine
+
 private:
 
 	DoubleClicker doubleClicker;
@@ -84,7 +99,26 @@ private:
 	bool bLockedAspectRatio = false;
 	bool bIsChanged = false;
 
+	bool bDebugDoubleClick = false;
+
 public:
+
+
+	// Debug DoubleClick
+	//--------------------------------------------------------------
+	void setDebugDoubleClick(bool b) {
+		bDebugDoubleClick = b;
+		doubleClicker.setDebug(bDebugDoubleClick);
+	}
+	//--------------------------------------------------------------
+	void setToggleDebugDoubleClick() {
+		bDebugDoubleClick = !bDebugDoubleClick;
+		doubleClicker.setDebug(bDebugDoubleClick);
+	}
+	//--------------------------------------------------------------
+	bool isDebugDoubleClick() {
+		return bDebugDoubleClick;
+	}
 
 	// a simple callback to trig when theme or layout changed
 	//--------------------------------------------------------------
@@ -97,12 +131,27 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	string getEditing() {
-		if (rect_Box.isEditing()) return "EDITING"; else return "NOT EDITING";
+	bool isEditing() {
+		
+		//bool b = rect_Box.isEditing();
+		//bool b = bIsEditing || rect_Box.isEditing();
+		bool b = bIsEditing;
+		
+		return b;
+	}
+
+	////--------------------------------------------------------------
+	//string getEditingString() {
+	//	if (rect_Box.isEditing()) return "EDITING"; else return "NOT EDITING";
+	//}
+
+	//--------------------------------------------------------------
+	BOX_LAYOUT getModeLayout() {
+		return modeLayout;
 	}
 
 	//--------------------------------------------------------------
-	string getMode() {
+	string getModeLayoutString() {
 		str_modeLayout = "UNKNOWN";
 		switch (modeLayout)
 		{
@@ -122,6 +171,7 @@ public:
 
 	ofxInteractiveRect rect_Box = { "_" };
 
+	//--------------------------------------------------------------
 	ofRectangle getRectangle() {
 		return rect_Box;
 	}
@@ -150,14 +200,18 @@ private:
 	float round = 5;
 	int marginBorders = 50;
 
+	bool bIsEditing = false;
+
 	//--
 
 public:
-	
+
 	//--------------------------------------------------------------
 	void setName(string name) {
 		path_RectHelpBox = name;
 	}
+
+	//--
 
 	//--------------------------------------------------------------
 	void setRectangle(ofRectangle shape) {
@@ -197,23 +251,20 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void reset(bool bOnlySize = true) {
+	void reset(bool bOnlySize = true, int width = 320) {
 
-		int sz = 200;
+		int sz = width;
 		rect_Box.setWidth(sz);
 		rect_Box.setHeight(sz);
-		if(!bOnlySize) rect_Box.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
+		if (!bOnlySize) rect_Box.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
 	}
 
 	//--------------------------------------------------------------
 	void setup() {
 
-		//_bUseShadow = true;
-
-		//setTheme(bThemeDarkOrLight);
-
 		doubleClicker.set(0, 0, ofGetWidth(), ofGetHeight()); // default full screen
-		doubleClicker.setDebug(false);
+
+		doubleClicker.setDebug(bDebugDoubleClick);
 
 		// Default position
 		reset(false);
@@ -221,14 +272,14 @@ public:
 		//----
 
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
-		//ofxSurfingHelpers::CheckFolder(path_Global + "/" + path_Name + "/");
 
 		// Load settings
 		rect_Box.loadSettings(path_RectHelpBox, path_Global + "/", false);
-		//rect_Box.loadSettings(path_RectHelpBox, path_Global + "/" + path_Name + "/", false);
 
-		////--
-		//// 
+		rect_Box.setEnableMouseWheel(true);
+
+		//--
+
 		//// We dont need draggable borders and decoration.
 		//rect_Box.setLockResize(true);
 		////rect_Box.setLockResize(!bNoText);
@@ -246,7 +297,8 @@ public:
 		static BOX_LAYOUT modeLayout_PRE = NUM_LAYOUTS;
 		static bool bLockedAspectRatio_PRE = false;
 
-		if (bLockedAspectRatio != bLockedAspectRatio_PRE) {
+		if (bLockedAspectRatio != bLockedAspectRatio_PRE)
+		{
 			bLockedAspectRatio_PRE = bLockedAspectRatio;
 			bIsChanged = true;
 		}
@@ -260,12 +312,12 @@ public:
 		{
 			if (modeLayout_PRE == FREE_LAYOUT)
 			{
-				//store
+				// store
 				rect_Box_PRE = rect_Box;
 			}
 			else
 			{
-				//restore
+				// restore
 				rect_Box.set(rect_Box_PRE);
 			}
 
@@ -275,21 +327,17 @@ public:
 			bIsChanged = true;
 
 			// workflow
-			if (modeLayout != FREE_LAYOUT) {
+			if (modeLayout != FREE_LAYOUT)
+			{
 				setEdit(false);
 			}
 		}
 
 		//--
 
-		//if (!bGui) return;
+		drawDebugDoubleClick();
 
-		ofPushStyle();
-
-		//TODO: not drawing..
-		drawDoubleClickDebug();
-
-		//-
+		//--
 
 		float _w = ofGetWidth();
 		float _h = ofGetHeight();
@@ -315,10 +363,31 @@ public:
 		}
 		else
 		{
-			if (modeLayout == BOTTOM_CENTER) {
+			if (modeLayout == CENTER) {
+
+				_xx = _w / 2 - _ww / 2 - _padx;
+				_yy = _h / 2 - _hh / 2 - _pady;
+			}
+			else if (modeLayout == TOP_CENTER) {
+
+				_xx = _w / 2 - _ww / 2 - _padx;
+				_yy = 1 * _pady;
+			}
+			else if (modeLayout == BOTTOM_CENTER) {
 
 				_xx = _w / 2 - _ww / 2 - _padx;
 				_yy = _h - _hh - _pady;
+			}
+
+			else if (modeLayout == TOP_LEFT) {
+
+				_xx = _padx;
+				_yy = _pady;
+			}
+			else if (modeLayout == TOP_RIGHT) {
+
+				_xx = _w - _ww - _padx;
+				_yy = _pady;
 			}
 			else if (modeLayout == BOTTOM_LEFT) {
 
@@ -331,27 +400,7 @@ public:
 				_yy = _h - _hh - _pady;
 			}
 
-			else if (modeLayout == TOP_CENTER) {
-
-				_xx = _w / 2 - _ww / 2 - _padx;
-				_yy = 2 * _pady;
-			}
-			else if (modeLayout == TOP_LEFT) {
-
-				_xx = _padx;
-				_yy = 2 * _pady;
-			}
-			else if (modeLayout == TOP_RIGHT) {
-
-				_xx = _w - _ww - _padx;
-				_yy = 2 * _pady;
-			}
-
-			else if (modeLayout == CENTER) {
-
-				_xx = _w / 2 - _ww / 2 - _padx;
-				_yy = _h / 2 - _hh / 2 - _pady;
-			}
+			//--
 
 			rect_Box.setX(_xx);
 			rect_Box.setY(_yy);
@@ -359,32 +408,13 @@ public:
 
 		//-
 
-		ofColor colorBg;
-
 		if (modeLayout == FREE_LAYOUT)
 		{
 			if (rect_Box.isEditing())
 			{
-				float a = ofxSurfingHelpers::getFadeBlink(0.6f, 1.f);
-
-				ofColor c = ofColor(_colorBg, _colorBg.a * a);
 				rect_Box.draw();
-
-				colorBg = c;
-			}
-			else
-			{
-				colorBg = _colorBg;
 			}
 		}
-		else
-		{
-			colorBg = _colorBg;
-		}
-
-		//-
-
-		ofPopStyle();
 
 		//-
 
@@ -412,6 +442,8 @@ public:
 			}
 		}
 
+		//--
+
 		doubleClicker.set(_xx, _yy, _ww, _hh);
 	}
 
@@ -420,8 +452,11 @@ public:
 private:
 
 	//--------------------------------------------------------------
-	void drawDoubleClickDebug()
+	void drawDebugDoubleClick()
 	{
+		//TODO: too tricky maybe. can be simplified.
+		// some drawing are not requiring when not debugging!
+
 		//--
 
 		// 1. Double click swap edit mode
@@ -429,24 +464,24 @@ private:
 		//-
 
 		// Allow edit only on free layout mode:
+
 #ifdef LOCK_EDIT_ON_NON_FREE_LAYOUT_MODE
 		if (modeLayout == FREE_LAYOUT)
 #endif
-			//-
-
 		{
 			if (doubleClicker.isMouseDoubleClick())
-				//if (doubleClicker.isMouseTripleClick()) 
 			{
 				bState1 = !bState1;
 
 				setEdit(bState1);
 
 				// workflow
+
 				if (bState1)
 				{
 					if (modeLayout != FREE_LAYOUT) modeLayout = FREE_LAYOUT;
 				}
+
 				//modeLayout = FREE_LAYOUT;
 			}
 		}
@@ -455,7 +490,6 @@ private:
 
 		// 2. Triple clicks swap modeLayout mode
 
-		//if (doubleClicker.isMouseDoubleClick())
 		if (doubleClicker.isMouseTripleClick())
 		{
 			bState2 = !bState2;
@@ -466,6 +500,7 @@ private:
 			else { modeLayout = BOX_LAYOUT(i); }
 		}
 
+		//--
 
 		doubleClicker.draw();
 	}
@@ -476,12 +511,13 @@ public:
 	void setToggleEdit()
 	{
 		setEdit(!rect_Box.isEditing());
-		//rect_Box.toggleEdit();
 	}
 
 	//--------------------------------------------------------------
 	void setEdit(bool bEdit)
 	{
+		bIsEditing = bEdit;
+
 		if (bEdit)
 		{
 			rect_Box.enableEdit();
@@ -553,11 +589,15 @@ public:
 		bLocked = !bLocked;
 		setLocked(bLocked);
 	}
-	private:
+
+private:
+
 	bool isLocked() { return bLocked; }
 
 	//--
-	public:
+
+public:
+
 	//--------------------------------------------------------------
 	void setVisible(bool b) {
 		bGui = b;

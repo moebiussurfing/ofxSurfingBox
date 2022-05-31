@@ -40,7 +40,13 @@
 class ofxSurfingBoxHelpText /* : public ofBaseApp*/
 {
 
+private: 
+	
+	bool bEnableMouseWheel = false;
+
 public:
+
+	void setEnableMouseWheel(bool b){ bEnableMouseWheel = b; }
 
 	ofParameter<bool> bGui { "Help", true };//exposed toggle to be used or linked in other parent scope guis!
 
@@ -57,6 +63,7 @@ public:
 
 		//size_TTF = 10;
 		//name_TTF = "overpass-mono-bold.otf";
+
 	}
 
 	//--------------------------------------------------------------
@@ -66,6 +73,8 @@ public:
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 		rect_HelpTextBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
 		//rect_HelpTextBox.saveSettings(path_RectHelpBox, path_Global + "/" + path_Name + "/", false);
+
+
 	}
 
 	//-
@@ -99,7 +108,7 @@ private:
 
 public:
 
-	// a simple callback to trig when theme or layout changed
+	// A simple callback to trig when theme or layout changed
 	//--------------------------------------------------------------
 	bool isChanged() {
 		if (!bIsChanged) return false;
@@ -110,7 +119,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	string getEditing() {
+	string getEditingString() {
 		if (rect_HelpTextBox.isEditing()) return "Editing"; else return "Not Editing";
 	}
 
@@ -255,7 +264,10 @@ public:
 		rect_HelpTextBox.setLockResize(true);
 		//rect_HelpTextBox.setLockResize(!bNoText);
 		rect_HelpTextBox.setTransparent();
+
+		rect_HelpTextBox.setEnableMouseWheel(false);
 	}
+
 	//--------------------------------------------------------------
 	void draw(string text) {
 		setText(text);
@@ -292,7 +304,7 @@ public:
 
 		ofPushStyle();
 
-		drawDoubleClickDebug();
+		drawDebugDoubleClick();
 
 		//-
 
@@ -450,7 +462,7 @@ public:
 private:
 
 	//--------------------------------------------------------------
-	void drawDoubleClickDebug()
+	void drawDebugDoubleClick()
 	{
 		//--
 
@@ -466,7 +478,6 @@ private:
 
 		{
 			if (doubleClicker.isMouseDoubleClick())
-				//if (doubleClicker.isMouseTripleClick()) 
 			{
 				bState1 = !bState1;
 
@@ -486,7 +497,6 @@ private:
 		// 2. Triple clicks swap modeLayout mode
 
 		if (doubleClicker.isMouseTripleClick())
-			//if (doubleClicker.isMouseDoubleClick())
 		{
 			bState2 = !bState2;
 
@@ -590,7 +600,7 @@ public:
 	}
 
 	//--
-	// 
+	 
 	//--------------------------------------------------------------
 	void setVisible(bool b) {
 		bGui = b;
