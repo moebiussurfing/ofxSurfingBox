@@ -47,6 +47,7 @@ void ofApp::buildHelpInfo()
 	helpInfo += "\n";
 
 	helpInfo += "Double click mouse to edit \n";
+	helpInfo += "Left click + Right click mouse to close \n";
 	helpInfo += "Drag the Box to desired place! \n";
 	helpInfo += "Layout will be auto saved. \n";
 	helpInfo += "\n";

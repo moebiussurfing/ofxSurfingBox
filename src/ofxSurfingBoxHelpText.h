@@ -16,7 +16,7 @@
 
 	+ use ctrl modifier bc three clicks interferes with double..
 	+ add store layout settings
-	+ move layout to drag rect class. 
+	+ move layout to drag rect class.
 		add mores params like theme to saving settings!
 	+ sum padding from 0, not expanded from center..
 
@@ -33,22 +33,51 @@
 
 
 //-
- 
- 
+
+
 //#define LOCK_EDIT_ON_NON_FREE_LAYOUT_MODE
 
 class ofxSurfingBoxHelpText /* : public ofBaseApp*/
 {
 
-private: 
-	
+private:
+
 	bool bEnableMouseWheel = false;
+	//bool bMouseLeftPressed = false;
+	//bool bMouseRightPressed = false;
+
+	////--------------------------------------------------------------
+	//void mousePressed(ofMouseEventArgs& mouse)
+	//{
+	//	//// this function could be moved to DoubleClick class
+	//	//bool bIsOver = doubleClicker.inside(mouse.x, mouse.y);
+	//	//if (!bIsOver)return;
+
+	//	//ofLogNotice(__FUNCTION__) << mouse;
+	//	//if (mouse.button == 0) bMouseLeftPressed = true;
+	//	//if (mouse.button == 2) {
+	//	//	bMouseRightPressed = true;
+
+	//	//	if (bMouseLeftPressed) bGui = false;
+	//	//}
+	//}
+
+	////--------------------------------------------------------------
+	//void mouseReleased(ofMouseEventArgs& mouse)
+	//{
+	//	bool bIsOver = doubleClicker.inside(mouse.x, mouse.y);
+	//	if (!bIsOver)return;
+
+	//	//ofLogNotice(__FUNCTION__) << mouse;
+	//	//if (mouse.button == 0) bMouseLeftPressed = false;
+	//	//if (mouse.button == 2) bMouseRightPressed = false;
+	//}
 
 public:
 
-	void setEnableMouseWheel(bool b){ bEnableMouseWheel = b; }
+	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
 
-	ofParameter<bool> bGui { "Help", true };//exposed toggle to be used or linked in other parent scope guis!
+	ofParameter<bool> bGui{ "Help", true };//exposed toggle to be used or linked in other parent scope guis!
 
 	//--------------------------------------------------------------
 	ofxSurfingBoxHelpText()
@@ -64,6 +93,8 @@ public:
 		//size_TTF = 10;
 		//name_TTF = "overpass-mono-bold.otf";
 
+		//ofAddListener(ofEvents().mousePressed, this, &ofxSurfingBoxHelpText::mousePressed);
+		//ofAddListener(ofEvents().mouseReleased, this, &ofxSurfingBoxHelpText::mouseReleased);
 	}
 
 	//--------------------------------------------------------------
@@ -74,7 +105,8 @@ public:
 		rect_HelpTextBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
 		//rect_HelpTextBox.saveSettings(path_RectHelpBox, path_Global + "/" + path_Name + "/", false);
 
-
+		//ofRemoveListener(ofEvents().mousePressed, this, &ofxSurfingBoxHelpText::mousePressed);
+		//ofRemoveListener(ofEvents().mouseReleased, this, &ofxSurfingBoxHelpText::mouseReleased);
 	}
 
 	//-
@@ -248,6 +280,8 @@ public:
 		doubleClicker.set(0, 0, ofGetWidth(), ofGetHeight());// default full screen
 		doubleClicker.setDebug(false);
 
+		doubleClicker.bGui.makeReferenceTo(bGui);
+
 		// Default position
 		reset();
 
@@ -276,7 +310,7 @@ public:
 
 	//--------------------------------------------------------------
 	void draw() {
-		
+
 		// Simple callbacks
 		static bool bGui_PRE = false;
 		static bool bThemeDarkOrLight_PRE = false;
@@ -287,13 +321,13 @@ public:
 			setLocked(!bGui);//TODO:disable callbacks..
 			bIsChanged = true;
 		}
-		
+
 		if (bThemeDarkOrLight != bThemeDarkOrLight_PRE) {
 			bThemeDarkOrLight_PRE = bThemeDarkOrLight;
 			bIsChanged = true;
 		}
-		
-		if (modeLayout!= modeLayout_PRE) {
+
+		if (modeLayout != modeLayout_PRE) {
 			modeLayout_PRE = modeLayout;
 			bIsChanged = true;
 		}
@@ -600,7 +634,7 @@ public:
 	}
 
 	//--
-	 
+
 	//--------------------------------------------------------------
 	void setVisible(bool b) {
 		bGui = b;

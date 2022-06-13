@@ -63,6 +63,8 @@ public:
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 		rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
 		//rect_Box.saveSettings(path_RectHelpBox, path_Global + "/" + path_Name + "/", false);
+		
+		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 	}
 
 	//-
@@ -180,7 +182,9 @@ public:
 	float getWidth() { return rect_Box.getWidth(); }
 	float getHeight() { return rect_Box.getHeight(); }
 
+	void setUseBorder(bool b) { bUseBorder = b; }
 private:
+	bool bUseBorder = false;
 
 	std::string path_RectHelpBox = "_myBox";
 	std::string path_Global = "ofxSurfingBoxInteractive/";// can be setted before setup
@@ -205,6 +209,8 @@ private:
 	//--
 
 public:
+
+	ofParameter<bool> bEdit;
 
 	//--------------------------------------------------------------
 	void setName(string name) {
@@ -260,7 +266,10 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void setup() {
+	void setup() 
+	{
+		bEdit.set("EDIT BOX", false);
+		bEdit.addListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 
 		doubleClicker.set(0, 0, ofGetWidth(), ofGetHeight()); // default full screen
 
@@ -285,18 +294,42 @@ public:
 		////rect_Box.setLockResize(!bNoText);
 		//rect_Box.setTransparent();
 	}
+	//--------------------------------------------------------------
+	void ofxSurfingBoxInteractive::Changed_Edit(bool & edit) {
+		ofLogNotice(__FUNCTION__) << "Edit : " << edit;
+		setEdit(edit);
+	}
+
+	//--------------------------------------------------------------
+	void drawBorder(ofColor color = ofColor(0, 255))
+	{
+		// Border
+		ofPushStyle();
+		ofNoFill();
+		ofSetColor(color);
+		ofSetLineWidth(2.0);
+		ofDrawRectangle(getRectangle());
+		ofPopStyle();
+	}
 
 	//--------------------------------------------------------------
 	void draw()
 	{
-		static ofRectangle rect_Box_PRE = rect_Box;
-
 		//--
 
 		// Simple callbacks
+		
+		static ofRectangle rect_Box_PRE = rect_Box.getRect();
 		static BOX_LAYOUT modeLayout_PRE = NUM_LAYOUTS;
 		static bool bLockedAspectRatio_PRE = false;
 
+		// size changed
+		if (rect_Box.getRect() != rect_Box_PRE) {
+			rect_Box_PRE = rect_Box.getRect();
+			bIsChanged = true;
+		}
+
+		// aspect changed
 		if (bLockedAspectRatio != bLockedAspectRatio_PRE)
 		{
 			bLockedAspectRatio_PRE = bLockedAspectRatio;
@@ -449,6 +482,10 @@ public:
 
 		// Move clicker linked to the box
 		doubleClicker.set(_xx, _yy, _ww, _hh);
+
+		//--
+
+		if(bUseBorder) drawBorder();
 	}
 
 	//-
@@ -518,15 +555,17 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void setEdit(bool bEdit)
+	void setEdit(bool edit)
 	{
-		bIsEditing = bEdit;
+		bIsEditing = edit;
+
+		if (bEdit != bIsEditing) bEdit = bIsEditing;
 
 		if (bEdit)
 		{
 			rect_Box.enableEdit();
 
-			//workflow
+			// workflow
 			if (modeLayout != FREE_LAYOUT)
 			{
 				modeLayout = FREE_LAYOUT;
