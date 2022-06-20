@@ -18,7 +18,8 @@ This add-on has two classes:
 - Also can be positioned freely and scaled manually.
 - Mouse wheel modifies the scale.
 - Aspect ratio can be locked.
-- Double click activates Editing or Locked modes: to allow move the position and resize using the mouse.
+- Double click activates Editing or Locked modes: 
+    to allow move the position and resize using the mouse.
 - Auto stores and recall the settings between sessions.
 
 ### ofxSurfingBoxHelpText.h
@@ -33,8 +34,8 @@ This add-on has two classes:
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 
 ## Third Party add-ons bundled into **ofxSurfingHelpers**
-* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect) [_FORK_ from [roymacdonald](https://github.com/roymacdonald/ofxScaleDragRect)]  
-* [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) [_FORK_ from [memo](https://github.com/memo/ofxMSAInteractiveObject)]  
+* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect) / _Fork from [roymacdonald](https://github.com/roymacdonald/ofxScaleDragRect)]_  
+* [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) / _Fork from [memo](https://github.com/memo/ofxMSAInteractiveObject)]_  
 
 ## Tested System
 * **Windows 10** / **VS 2022** / **oF ~0.12**
