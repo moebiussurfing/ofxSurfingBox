@@ -5,8 +5,9 @@ This add-on has two classes:
 1. A draggable rectangle: **ofxSurfingBoxInteractive** 
 2. A draggable rectangle with text info: **ofxSurfingBoxHelpText**
 
-## Screenshot
-![](/readme_images/Capture.PNG)
+## Screenshots
+![](/examples/2-BoxHelpText-Simple/Capture.PNG)
+![](/examples/3-BoxHelpText-Debug/Capture.PNG)
 
 ## Features
 
@@ -23,6 +24,7 @@ This add-on has two classes:
 ### ofxSurfingBoxHelpText.h
 - This class draws the same, a draggable box with a filled background but with text.
 - Useful to display **Help Info** boxes in your apps.
+- Tittle font for the first text lines.
 
 ## Usage
 - See the examples.

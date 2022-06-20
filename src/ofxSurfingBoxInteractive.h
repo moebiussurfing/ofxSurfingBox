@@ -39,17 +39,8 @@
 
 class ofxSurfingBoxInteractive /* : public ofBaseApp*/
 {
-private:
-
-	bool bEnableMouseWheel = true;
 
 public:
-
-	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
-
-public:
-
-	ofParameter<bool> bGui{ "Box Rectangle", true };//exposed toggle to be used or linked in other parent scope guis!
 
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive()
@@ -62,10 +53,11 @@ public:
 		// All app settings
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 		rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
-		//rect_Box.saveSettings(path_RectHelpBox, path_Global + "/" + path_Name + "/", false);
 		
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 	}
+
+	ofParameter<bool> bGui{ "Box Rectangle", true };//exposed toggle to be used or linked in other parent scope guis!
 
 	//-
 
@@ -81,7 +73,6 @@ public:
 		TOP_LEFT,
 		TOP_RIGHT,
 		CENTER,
-		//LOCKED,
 
 		NUM_LAYOUTS
 	};
@@ -103,8 +94,17 @@ private:
 
 	bool bDebugDoubleClick = false;
 
+	ofParameterGroup params_AppSession{ "AppSession" };
+
+private:
+
+	bool bEnableMouseWheel = true;
+
 public:
 
+	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
+
+public:
 
 	// Debug DoubleClick
 	//--------------------------------------------------------------
@@ -122,7 +122,7 @@ public:
 		return bDebugDoubleClick;
 	}
 
-	// a simple callback to trig when theme or layout changed
+	// A simple callback to trig when theme or layout changed
 	//--------------------------------------------------------------
 	bool isChanged() {
 		if (!bIsChanged) return false;
@@ -135,17 +135,10 @@ public:
 	//--------------------------------------------------------------
 	bool isEditing() {
 		
-		//bool b = rect_Box.isEditing();
-		//bool b = bIsEditing || rect_Box.isEditing();
 		bool b = bIsEditing;
 		
 		return b;
 	}
-
-	////--------------------------------------------------------------
-	//string getEditingString() {
-	//	if (rect_Box.isEditing()) return "EDITING"; else return "NOT EDITING";
-	//}
 
 	//--------------------------------------------------------------
 	BOX_LAYOUT getModeLayout() {
@@ -165,7 +158,6 @@ public:
 		case 5: str_modeLayout = "TOP_LEFT"; break;
 		case 6: str_modeLayout = "TOP_RIGHT"; break;
 		case 7: str_modeLayout = "CENTER"; break;
-			//case 8: str_modeLayout = "LOCKED"; break;
 		default: str_modeLayout = "UNKNOWN LAYOUT"; break;
 		}
 		return str_modeLayout;
@@ -186,9 +178,9 @@ public:
 private:
 	bool bUseBorder = false;
 
-	std::string path_RectHelpBox = "_myBox";
-	std::string path_Global = "ofxSurfingBoxInteractive/";// can be setted before setup
-	//std::string path_Name = "appSettings";// subfolder for app session settings
+	std::string path_RectHelpBox = "myBox";
+	std::string path_Global = "ofxSurfingBoxInteractive/"; // can be setted before setup
+	//std::string path_Name = "appSettings"; // subfolder for app session settings
 
 	ofColor _colorButton;// bg selected button
 	ofColor _colorBg;// background color
@@ -245,7 +237,7 @@ public:
 
 public:
 
-	// legacy
+	// Legacy
 	//--------------------------------------------------------------
 	void setPath(string path) {//call before setup. Will set path to save settings into.
 		path_Global = path;
@@ -577,7 +569,6 @@ public:
 
 			// Save
 			rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
-			//rect_Box.saveSettings(path_RectHelpBox, path_Global + "/" + path_Name + "/", false);
 		}
 
 		bIsChanged = true;
@@ -596,14 +587,14 @@ public:
 	//	if (!bThemeDarkOrLight)
 	//	{
 	//		//_colorText = ofColor(0, 255);
-	//		_colorButton = ofColor(255, 64);
+	//		_colorShadow = ofColor(255, 64);
 	//		_colorBg = ofColor(225, 64);
 	//	}
 	//	// Dark theme (white lines & black bg) (true = dark)
 	//	else
 	//	{
 	//		//_colorText = ofColor(255, 150);
-	//		_colorButton = ofColor(16, 225);
+	//		_colorShadow = ofColor(16, 225);
 	//		_colorBg = ofColor(0, 200);
 	//	}
 	//}
