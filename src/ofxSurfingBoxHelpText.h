@@ -36,7 +36,7 @@
 /*
 
 //TODO:
-//textBoxWidget.setFixedHeight(1); 
+//textBoxWidget.setFixedHeight(1);
 
  Call before call setup!
 textBoxWidget.setPath(path_GLOBAL + "HelpBox/");
@@ -149,6 +149,8 @@ public:
 			ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
 			titleHeight = _r.getHeight() + 5;
 		}
+		
+		//--
 
 		//TODO: auto set padding...
 		//round = 5;
@@ -162,11 +164,10 @@ public:
 
 		doubleClicker.set(0, 0, ofGetWidth(), ofGetHeight()); // default full screen
 		doubleClicker.setDebug(false);
-
 		doubleClicker.bGui.makeReferenceTo(bGui);
 
-		// Default position
-		reset();
+		//// Default position
+		//reset();
 
 		//----
 
@@ -176,11 +177,10 @@ public:
 		rect_HelpTextBox.loadSettings(nameBoxFile, path_Global + "/", false);
 
 		// We don't need to resize, draggable borders and decoration.
-		rect_HelpTextBox.setLockResize(true);
 		//rect_HelpTextBox.setLockResize(!bNoText);
-
-		rect_HelpTextBox.setTransparent();
-		rect_HelpTextBox.setEnableMouseWheel(false);
+		rect_HelpTextBox.setLockResize(true);
+		rect_HelpTextBox.setTransparent();//no hide drawing
+		rect_HelpTextBox.setEnableMouseWheel(false);//bc it's auto resized by amount of added text size!
 
 		//--
 
@@ -195,11 +195,6 @@ public:
 		ofAddListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 
 		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".json");
-
-		if (index_ModeLayout.get() == FREE_LAYOUT)
-		{
-			rect_HelpTextBox.loadSettings(nameBoxFile, path_Global + "/", false);
-		}
 	}
 
 	//--------------------------------------------------------------
@@ -213,9 +208,6 @@ public:
 	void draw()
 	{
 		if (!bGui) return;
-
-		// Force fit box inside the window
-		doForceFitOnWindow();
 
 		ofPushStyle();
 
@@ -264,6 +256,9 @@ public:
 		xright = _w - _ww - padBorders / 2;
 		ytop = _pady + _pady;
 		ybottom = _h - _hh - _pady - _pady - padBorders / 2;
+
+		// Force fit box inside the window
+		doForceFitOnWindow();
 
 		//--
 
@@ -664,14 +659,14 @@ public:
 		name_TTF2 = name;
 	}
 
-	//--------------------------------------------------------------
-	void reset() {
+	////--------------------------------------------------------------
+	//void reset() {
 
-		int sz = 200;
-		rect_HelpTextBox.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
-		rect_HelpTextBox.setWidth(sz);
-		rect_HelpTextBox.setHeight(sz);
-	}
+	//	int sz = 200;
+	//	rect_HelpTextBox.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
+	//	rect_HelpTextBox.setWidth(sz);
+	//	rect_HelpTextBox.setHeight(sz);
+	//}
 
 	//--------------------------------------------------------------
 	int getTitleHeightLines() {
@@ -779,7 +774,8 @@ public:
 		// Dark theme (white lines & black bg) (true = dark)
 		else
 		{
-			_colorText = ofColor(255, 150);
+			_colorText = ofColor(255, 200);
+			//_colorText = ofColor(255, 150);
 			_colorShadow = ofColor(16, 225);
 			_colorBg = ofColor(0, 200);
 		}
