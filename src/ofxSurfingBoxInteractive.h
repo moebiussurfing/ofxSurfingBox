@@ -26,9 +26,9 @@
 
 	TODO:
 
-	BUG: double clicked do not enables edit mode??
-
-	+ save mode picked too
+	+ add click + space to easy edit/lock
+	+ add all settings -> get from text box
+	+ save mode too -> on text box is implemented!
 	+ fit screen or mini/ big modes to use on a video player.
 
 */
@@ -53,7 +53,7 @@ public:
 		// All app settings
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 		rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
-		
+
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 	}
 
@@ -76,6 +76,16 @@ public:
 
 		NUM_LAYOUTS
 	};
+
+private:
+
+	// Fit Marks
+	int xcenter;
+	int ycenter;
+	int xleft;
+	int xright;
+	int ytop;
+	int ybottom;
 
 	//--
 
@@ -134,9 +144,9 @@ public:
 
 	//--------------------------------------------------------------
 	bool isEditing() {
-		
+
 		bool b = bIsEditing;
-		
+
 		return b;
 	}
 
@@ -194,7 +204,10 @@ private:
 	bool bState2 = false;
 
 	float round = 5;
-	int marginBorders = 50;
+	//int marginBorders = 50;
+
+	int _padx;
+	int _pady;
 
 	bool bIsEditing = false;
 
@@ -258,7 +271,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void setup() 
+	void setup()
 	{
 		bEdit.set("EDIT BOX", false);
 		bEdit.addListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
@@ -269,6 +282,11 @@ public:
 
 		// Default position
 		reset(false);
+
+		// Fit Marks
+		// padding to borders
+		_padx = 0;
+		_pady = _padx;
 
 		//----
 
@@ -287,7 +305,7 @@ public:
 		//rect_Box.setTransparent();
 	}
 	//--------------------------------------------------------------
-	void ofxSurfingBoxInteractive::Changed_Edit(bool & edit) {
+	void ofxSurfingBoxInteractive::Changed_Edit(bool& edit) {
 		ofLogNotice(__FUNCTION__) << "Edit : " << edit;
 		setEdit(edit);
 	}
@@ -310,7 +328,7 @@ public:
 		//--
 
 		// Simple callbacks
-		
+
 		static ofRectangle rect_Box_PRE = rect_Box.getRect();
 		static BOX_LAYOUT modeLayout_PRE = NUM_LAYOUTS;
 		static bool bLockedAspectRatio_PRE = false;
@@ -367,16 +385,11 @@ public:
 		int _w = ofGetWidth();
 		int _h = ofGetHeight();
 
-		int _padx = 10;
-		int _pady = 10;
+		int _ww = rect_Box.getWidth();
+		int _hh = rect_Box.getHeight();
 
 		int _xx;
 		int _yy;
-		int _ww;
-		int _hh;
-
-		_ww = rect_Box.getWidth();
-		_hh = rect_Box.getHeight();
 
 		//-
 
@@ -387,41 +400,48 @@ public:
 		}
 		else
 		{
-			if (modeLayout == CENTER) {
+			//-
 
-				_xx = _w / 2 - _ww / 2 - _padx;
-				_yy = _h / 2 - _hh / 2 - _pady;
+			// Top 
+
+			if (modeLayout == TOP_LEFT) {
+				_xx = xleft;
+				_yy = ytop;
 			}
 			else if (modeLayout == TOP_CENTER) {
-
-				_xx = _w / 2 - _ww / 2 - _padx;
-				_yy = 1 * _pady;
-			}
-			else if (modeLayout == BOTTOM_CENTER) {
-
-				_xx = _w / 2 - _ww / 2 - _padx;
-				_yy = _h - _hh - _pady;
-			}
-
-			else if (modeLayout == TOP_LEFT) {
-
-				_xx = _padx;
-				_yy = _pady;
+				_xx = xcenter;
+				_yy = ytop;
 			}
 			else if (modeLayout == TOP_RIGHT) {
-
-				_xx = _w - _ww - _padx;
-				_yy = _pady;
+				_xx = xright;
+				_yy = ytop;
 			}
-			else if (modeLayout == BOTTOM_LEFT) {
 
-				_xx = _padx;
-				_yy = _h - _hh - _pady;
+			//-
+
+			// Center 
+
+			else if (modeLayout == CENTER) {
+
+				_xx = xcenter;
+				_yy = ycenter;
+			}
+
+			//-
+
+			// Bottom
+
+			else if (modeLayout == BOTTOM_LEFT) {
+				_xx = xleft;
+				_yy = ybottom;
+			}
+			else if (modeLayout == BOTTOM_CENTER) {
+				_xx = xcenter;
+				_yy = ybottom;
 			}
 			else if (modeLayout == BOTTOM_RIGHT) {
-
-				_xx = _w - _ww - _padx;
-				_yy = _h - _hh - _pady;
+				_xx = xright;
+				_yy = ybottom;
 			}
 
 			//--
@@ -442,33 +462,15 @@ public:
 			}
 		}
 
-		//-
+		//--
 
-		// Force fit box inside the window
-		bool bContraints = true;
-		if(bContraints)
-		{
-			float _xmax = _w - _ww - _padx;
-			float _ymax = _h - _hh - _pady;
-			float _ymin = 2 * _pady;
-
-			if (rect_Box.getY() > _ymax)//bottom
-			{
-				rect_Box.setY(_ymax);
-			}
-			else if (rect_Box.getX() < _padx)//left
-			{
-				rect_Box.setX(_padx);
-			}
-			else if (rect_Box.getX() > _xmax)//right
-			{
-				rect_Box.setX(_xmax);
-			}
-			else if (rect_Box.getY() < _ymin)//top
-			{
-				rect_Box.setY(_ymin);
-			}
-		}
+		// Fit Marks
+		xcenter = _w / 2 - _ww / 2 + _padx / 2;
+		ycenter = _h / 2 - _hh / 2;
+		xleft = _padx;
+		xright = _w - _ww - _padx;
+		ytop = _pady;
+		ybottom = _h - _hh - _pady;
 
 		//--
 
@@ -477,8 +479,36 @@ public:
 
 		//--
 
-		if(bUseBorder) drawBorder();
+		if (bUseBorder) drawBorder();
+
+		//--
+
+		// Force fit box inside the window
+		//bool bContraints = true;
+		//if (bContraints) doForceFitOnWindow();
+		doForceFitOnWindow();
 	}
+
+	//--------------------------------------------------------------
+	void doForceFitOnWindow()
+	{
+		if (rect_Box.getY() > ybottom) // bottom
+		{
+			rect_Box.setY(ybottom);
+		}
+		else if (rect_Box.getX() < xleft) // left
+		{
+			rect_Box.setX(xleft);
+		}
+		else if (rect_Box.getX() > xright) // right
+		{
+			rect_Box.setX(xright);
+		}
+		else if (rect_Box.getY() < ytop) // top
+		{
+			rect_Box.setY(ytop);
+		}
+	};
 
 	//-
 
@@ -517,7 +547,7 @@ private:
 
 				//modeLayout = FREE_LAYOUT;
 			}
-		}
+	}
 
 		//--
 
@@ -536,7 +566,7 @@ private:
 		//--
 
 		doubleClicker.draw();
-	}
+}
 
 public:
 

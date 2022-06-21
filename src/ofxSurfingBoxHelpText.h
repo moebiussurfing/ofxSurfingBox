@@ -12,8 +12,19 @@
 
 /*
 
-	TODO:
+Default fonts to be placed into dat/assets/fonts
 
+JetBrainsMonoNL-ExtraBold.ttf
+JetBrainsMono-ExtraBold.ttf
+
+*/
+
+/*
+
+	TODO:
+	
+	+ fix broken layout when using a title with one line only!
+		Now we must use two lines.
 	+ use ctrl modifier bc three clicks interferes with double..
 
 */
@@ -661,7 +672,6 @@ public:
 
 	////--------------------------------------------------------------
 	//void reset() {
-
 	//	int sz = 200;
 	//	rect_HelpTextBox.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
 	//	rect_HelpTextBox.setWidth(sz);
@@ -816,6 +826,7 @@ public:
 public:
 
 	//--------------------------------------------------------------
+	// Must be called after	calling setup if using tittle!
 	void setText(string text) {
 		textInfo = text;
 
@@ -830,6 +841,7 @@ public:
 		else _ss = ss;
 	}
 
+	// Must be called before calling setup!
 	//--------------------------------------------------------------
 	void setTitle(string text) {
 		bTitleSetted = true;
@@ -840,6 +852,7 @@ public:
 		ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
 		titleHeight = _r.getHeight() + 5;
 
+		// Only required to update title on the fly!
 		std::string ss = textInfo;
 		_ss = "\n";
 		if (bTitleSetted)
