@@ -444,7 +444,10 @@ public:
 	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
 
 	ofParameter<bool> bGui{ "Help", true }; //exposed toggle to be used or linked in other parent scope guis!
-
+	// Example: 
+	// Can be linked before calling setup()
+	//textBoxWidget.bGui.makeReferenceTo(guiManager.bHelp);
+	
 	//-
 
 public:
