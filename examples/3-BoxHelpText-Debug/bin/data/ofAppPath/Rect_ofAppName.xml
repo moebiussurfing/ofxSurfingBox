@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofAppPath/</path>
-	<x>538</x>
-	<y>81</y>
-	<width>249</width>
-	<height>532.667</height>
+	<x>203</x>
+	<y>45</y>
+	<width>367</width>
+	<height>629.52</height>
 	<name>_ofAppName</name>
-	<isEditing>0</isEditing>
+	<isEditing>1</isEditing>
 </interactiveRect>

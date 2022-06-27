@@ -22,7 +22,7 @@ JetBrainsMono-ExtraBold.ttf
 /*
 
 	TODO:
-	
+
 	+ fix broken layout when using a title with one line only!
 		Now we must use two lines.
 	+ use ctrl modifier bc three clicks interferes with double..
@@ -75,6 +75,11 @@ public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxHelpText()
 	{
+		//TODO:
+		//doubleClicker.enableAllEvents();
+
+		//--
+
 		// Default Fonts
 
 		//--
@@ -160,12 +165,12 @@ public:
 			ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
 			titleHeight = _r.getHeight() + 5;
 		}
-		
+
 		//--
 
 		//TODO: auto set padding...
 		//round = 5;
-		//padBorders = size_TTF * 20;
+		//padding = size_TTF * 20;
 
 		//--
 
@@ -212,6 +217,7 @@ public:
 	void draw(string text)
 	{
 		setText(text);
+
 		draw();
 	}
 
@@ -227,10 +233,6 @@ public:
 		float _w = ofGetWidth();
 		float _h = ofGetHeight();
 
-		// hardcoded pad to screen borders
-		_padx = 10;
-		_pady = 10;
-
 		int _xx = 0;
 		int _yy = 0;
 
@@ -239,7 +241,7 @@ public:
 
 		//--
 
-		drawDebugDoubleClick();
+		updateDoubleClicker();
 
 		//--
 
@@ -261,12 +263,20 @@ public:
 
 		// Fit Marks
 
+		//TODO:L must be fixed on ofxSurfingHelpers::drawTextBoxed
+		//...manual correction could break layout... 
+		// also when not using tittle breaks layout too...
+		float offset = 0;
+		//float offset = size_TTF + 0;
+
+		ytop = padding / 2 - _pady - offset;
+		ybottom = _h - _hh - _pady - _pady - padding / 2;
+
 		xcenter = _w / 2 - _ww / 2 + _padx / 2;
 		ycenter = _h / 2 - _hh / 2;
-		xleft = _padx + padBorders / 2;
-		xright = _w - _ww - padBorders / 2;
-		ytop = _pady + _pady;
-		ybottom = _h - _hh - _pady - _pady - padBorders / 2;
+
+		xleft = _padx + padding / 2;
+		xright = _w - _ww - padding / 2;
 
 		// Force fit box inside the window
 		doForceFitOnWindow();
@@ -283,6 +293,16 @@ public:
 
 		//-
 
+		// Center 
+
+		else if (index_ModeLayout.get() == CENTER) {
+
+			_xx = xcenter;
+			_yy = ycenter;
+		}
+
+		//--
+
 		// Top 
 
 		else if (index_ModeLayout.get() == TOP_LEFT) {
@@ -298,17 +318,7 @@ public:
 			_yy = ytop;
 		}
 
-		//-
-
-		// Center 
-
-		else if (index_ModeLayout.get() == CENTER) {
-
-			_xx = xcenter;
-			_yy = ycenter;
-		}
-
-		//-
+		//--
 
 		// Bottom
 
@@ -335,6 +345,7 @@ public:
 			{
 				float a = ofxSurfingHelpers::getFadeBlink(0.6f, 1.f);
 				ofColor c = ofColor(_colorBg, _colorBg.a * a);
+
 				rect_HelpTextBox.draw();
 
 				colorBg = c;
@@ -365,7 +376,7 @@ public:
 			ofxSurfingHelpers::drawTextBoxed(myFont, _ss,
 				_xx, _yy,
 				_colorText, colorBg, _bUseShadow, _colorShadow,
-				padBorders, round, h, true);
+				padding, round, h, true);
 
 			//--
 
@@ -381,6 +392,7 @@ public:
 				//--
 
 				// Text shadow
+
 				if (_bUseShadow)
 				{
 					ofSetColor(_colorShadow);
@@ -388,6 +400,7 @@ public:
 				}
 
 				// Text
+
 				ofSetColor(_colorText);
 				myFont2.drawString(textTitle, _xx2, _yy2);
 			}
@@ -403,6 +416,10 @@ public:
 
 		// Force fit box inside the window
 		doForceFitOnWindow();
+
+		//--
+
+		doubleClicker.draw();
 	}
 
 	//--
@@ -447,7 +464,7 @@ public:
 	// Example: 
 	// Can be linked before calling setup()
 	//textBoxWidget.bGui.makeReferenceTo(guiManager.bHelp);
-	
+
 	//-
 
 public:
@@ -468,7 +485,7 @@ public:
 
 private:
 
-	DoubleClicker doubleClicker;
+	DoubleClicker doubleClicker;//handles multiple mouse clicks and combinations
 
 	ofParameter<int> index_ModeLayout{ "Layout Mode", 0, 0, NUM_LAYOUTS - 1 };
 	string name_ModeLayout = "";
@@ -543,16 +560,25 @@ public:
 	string getModeName() {
 		name_ModeLayout = "UNKNOWN";
 
+		//FREE_LAYOUT = 0,
+		//CENTER,
+		//TOP_LEFT,
+		//TOP_CENTER,
+		//TOP_RIGHT,
+		//BOTTOM_LEFT,
+		//BOTTOM_CENTER,
+		//BOTTOM_RIGHT,
+
 		switch (index_ModeLayout)
 		{
 		case 0: name_ModeLayout = "FREE_LAYOUT"; break;
-		case 1: name_ModeLayout = "BOTTOM_CENTER"; break;
-		case 2: name_ModeLayout = "BOTTOM_LEFT"; break;
-		case 3: name_ModeLayout = "BOTTOM_RIGHT"; break;
-		case 4: name_ModeLayout = "TOP_CENTER"; break;
-		case 5: name_ModeLayout = "TOP_LEFT"; break;
-		case 6: name_ModeLayout = "TOP_RIGHT"; break;
-		case 7: name_ModeLayout = "CENTER"; break;
+		case 1: name_ModeLayout = "CENTER"; break;
+		case 2: name_ModeLayout = "TOP_LEFT"; break;
+		case 3: name_ModeLayout = "TOP_CENTER"; break;
+		case 4: name_ModeLayout = "TOP_RIGHT"; break;
+		case 5: name_ModeLayout = "BOTTOM_LEFT"; break;
+		case 6: name_ModeLayout = "BOTTOM_CENTER"; break;
+		case 7: name_ModeLayout = "BOTTOM_RIGHT"; break;
 		default: name_ModeLayout = "UNKNOWN LAYOUT"; break;
 		}
 		return name_ModeLayout;
@@ -602,11 +628,10 @@ private:
 	bool bCenter = true;
 	bool bLeftPosition = false;
 
-	bool bState1 = false;
-	bool bState2 = false;
+	bool bStateEdit = false;
 
 	float round = 5;
-	int padBorders = 50;
+	int padding = 50;
 
 	bool bNoText = false;
 
@@ -652,7 +677,11 @@ public:
 	}
 	//--------------------------------------------------------------
 	void setPadding(int pad = 50) {
-		padBorders = pad;
+		padding = pad;
+	}
+	//--------------------------------------------------------------
+	void setPaddingBorders(int pad = 10) {
+		_padx = _pady = pad;
 	}
 
 	//--------------------------------------------------------------
@@ -695,7 +724,7 @@ public:
 private:
 
 	//--------------------------------------------------------------
-	void drawDebugDoubleClick()
+	void updateDoubleClicker()
 	{
 		//--
 
@@ -712,12 +741,12 @@ private:
 		{
 			if (doubleClicker.isMouseDoubleClick())
 			{
-				bState1 = !bState1;
+				bStateEdit = !bStateEdit;
 
-				setEdit(bState1);
+				setEdit(bStateEdit);
 
 				// workflow
-				if (bState1)
+				if (bStateEdit)
 				{
 					if (index_ModeLayout.get() != FREE_LAYOUT) index_ModeLayout = FREE_LAYOUT;
 				}
@@ -727,20 +756,45 @@ private:
 
 		//--
 
+		/*
 		// 2. Triple clicks swap modeLayout mode
 
 		if (doubleClicker.isMouseTripleClick())
 		{
-			bState2 = !bState2;
-
 			int i = index_ModeLayout.get();
 			i++;
 			if (i >= NUM_LAYOUTS) { index_ModeLayout = FREE_LAYOUT; }//0
 			else { index_ModeLayout = BOX_LAYOUT(i); }
 		}
+		*/
+
+		//--
+
+		// 3. Right click swap modeLayout mode
+
+		if (doubleClicker.isMouseRightClick())
+		{
+			if (getIsEditing())
+			{
+				ofLogNotice(__FUNCTION__) << "isMouseRightClick";
+
+				int i = index_ModeLayout.get();
+				i++;
+				if (i >= NUM_LAYOUTS) { index_ModeLayout = FREE_LAYOUT; }//cycle to 0
+				else { index_ModeLayout = BOX_LAYOUT(i); }
+			}
+		}
+
+		//--
 	}
 
 public:
+
+	//--------------------------------------------------------------
+	void setDebug(bool b)//must call after setup!
+	{
+		doubleClicker.setDebug(b);
+	}
 
 	//--------------------------------------------------------------
 	void setEdit(bool bEdit)
@@ -811,8 +865,9 @@ public:
 	//--------------------------------------------------------------
 	void setLocked(bool b) {
 		bLocked = b;
-		if (b) doubleClicker.disableAllEvents();
-		else doubleClicker.enableAllEvents();
+
+		//if (b) doubleClicker.disableAllEvents();
+		//else doubleClicker.enableAllEvents();
 	}
 
 	//--
@@ -846,7 +901,7 @@ public:
 
 	// Must be called before calling setup!
 	//--------------------------------------------------------------
-	void setTitle(string text) {
+	void setTitle(string text) {//must call before setup to correct layout!
 		bTitleSetted = true;
 
 		textTitle = text;

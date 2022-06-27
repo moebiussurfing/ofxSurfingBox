@@ -200,7 +200,7 @@ private:
 	bool bCenter = true;
 	bool bLeftPosition = false;
 
-	bool bState1 = false;
+	bool bStateEdit = false;
 	bool bState2 = false;
 
 	float round = 5;
@@ -378,7 +378,7 @@ public:
 
 		//--
 
-		drawDebugDoubleClick();
+		updateDoubleClicker();
 
 		//--
 
@@ -515,7 +515,7 @@ public:
 private:
 
 	//--------------------------------------------------------------
-	void drawDebugDoubleClick()
+	void updateDoubleClicker()
 	{
 		//TODO: too tricky maybe. can be simplified.
 		// some drawing are not requiring when not debugging!
@@ -534,13 +534,13 @@ private:
 		{
 			if (doubleClicker.isMouseDoubleClick())
 			{
-				bState1 = !bState1;
+				bStateEdit = !bStateEdit;
 
-				setEdit(bState1);
+				setEdit(bStateEdit);
 
 				// workflow
 
-				if (bState1)
+				if (bStateEdit)
 				{
 					if (modeLayout != FREE_LAYOUT) modeLayout = FREE_LAYOUT;
 				}

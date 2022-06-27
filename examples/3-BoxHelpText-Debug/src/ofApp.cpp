@@ -11,9 +11,6 @@ void ofApp::setup() {
 	textBoxWidget.setName("_ofAppName");
 	textBoxWidget.setPath("ofAppPath");
 
-	//// Set Light Theme. Is not stored on settings.
-	//textBoxWidget.setTheme(false); // light
-
 	//--
 
 	//TODO: 
@@ -21,7 +18,7 @@ void ofApp::setup() {
 	// now could break the layout...
 
 	// Customize Fonts
-	//if(0)
+	if(0) // uncomment to use the default fonts.
 	{
 		// Body Font 
 		textBoxWidget.setFontName("AnonymousPro-Bold.ttf");
@@ -32,22 +29,22 @@ void ofApp::setup() {
 		textBoxWidget.setFontTitleSize(60);
 	}
 
-	// Customize Padding
-	if (0)
+	// Customize Style
+	if (0) // uncomment to use the default styles.
 	{
-		textBoxWidget.setPadding(120);
-		//textBoxWidget.setPadding(70);
-		//textBoxWidget.setPadding(0);
+		textBoxWidget.setPaddingBorders(0);
+		textBoxWidget.setPadding(0);
+		textBoxWidget.setRounded(0);
 
-		textBoxWidget.setRounded(50);
-		//textBoxWidget.setRounded(0);
+		//textBoxWidget.setPadding(120);
+		//textBoxWidget.setRounded(50);
 	}
 
 	//--
 
 	// Set a custom tittle
 	// before calling setup()
-	//if (0)
+	//if (0) // uncomment to disable title.
 	{
 		std::string helpTitle = "";
 		helpTitle += "HELP \n";
@@ -58,6 +55,15 @@ void ofApp::setup() {
 	//--
 
 	textBoxWidget.setup();
+
+	//--
+
+	// Enable Debug to double clicks and other stuff
+	//textBoxWidget.setDebug(true);
+
+	//// A. We set the help info on once, on setup,
+	//// because we don't want to be changed during runtime.
+	//buildHelpInfo();
 }
 
 //--------------------------------------------------------------
@@ -65,20 +71,26 @@ void ofApp::draw()
 {
 	ofSetWindowTitle(textBoxWidget.getModeName());
 
-	// Optional:
+	// B. We build the help info on every frame:
 	// Maybe, with a callback, we could build the info only when we want to be updated.
 	// Here is updated on every frame.
 	buildHelpInfo();
 
-	//// Optional:
 	//// We could update our info depending of our app Mode during runtime.
-	//// rebuild text info if required. 
-	//// Or maybe when changed internally the theme or layout ...
+	//// C. Rebuild text info if required. 
+	//if (bSomethingChanged()) buildHelpInfo();
+	//// D. Or maybe when changed internally the theme or layout ...
 	//if (textBoxWidget.isChanged()) buildHelpInfo();
 
 	//--
 
 	textBoxWidget.draw();
+
+	//--
+	 
+	//// D Can be directly draw without requiring to set to the object like when
+	////textBoxWidget.setText(helpInfo);
+	//draw(helpInfo)
 }
 
 //--------------------------------------------------------------
@@ -86,7 +98,7 @@ void ofApp::keyPressed(int key) {
 
 	if (key == OF_KEY_TAB) textBoxWidget.setToggleLayoutMode();
 	if (key == ' ') textBoxWidget.setToogleEdit();
-	if (key == 'h') textBoxWidget.setToggleVisible();
+	if (key == 'h' || key == 'H') textBoxWidget.setToggleVisible();
 	if (key == 't') textBoxWidget.setToggleTheme();
 	if (key == 'm') bMinimized = !bMinimized;
 }
@@ -114,16 +126,21 @@ void ofApp::buildHelpInfo()
 
 
 		bool b = textBoxWidget.getIsEditing();
+
+		helpInfo += "POSITION \n" + textBoxWidget.getModeName() + "\n\n";
+
+		helpInfo += ofToString(b ? "EDITING" : "LOCKED") + "\n";
 		helpInfo += "DoubleClick to " + ofToString(b ? "LOCK" : "EDIT") + ". \n\n";
 		if (b) {
-			helpInfo += "LeftClick + RightClick to close.\n";
 			helpInfo += "Drag the Box around the window!\n";
-			helpInfo += "Layout will be auto saved.\n";
+			helpInfo += "RightClick to browse predefined Layouts.\n";
+			helpInfo += "LeftClick + RightClick to close box.\n";
+			helpInfo += "All will be auto saved.\n";
 		}
 		helpInfo += "\n\n";
 		helpInfo += "KEY COMMANDS \n";
 		helpInfo += "\n";
-		helpInfo += "h      HELP \n";
+		helpInfo += "h/H    HELP \n";
 		helpInfo += "\n";
 		helpInfo += "t      TOGGLE THEME \n";
 		helpInfo += "       " + textBoxWidget.getThemeName() + "\n";
@@ -133,7 +150,7 @@ void ofApp::buildHelpInfo()
 	helpInfo += "TAB    TOGGLE POSITION \n";
 	helpInfo += "       " + textBoxWidget.getModeName() + "\n";
 	helpInfo += "\n";
-	helpInfo += "SPACE  TOGGLE EDIT " + ofToString(textBoxWidget.getIsEditing() ? "TRUE" : "FALSE") + "\n";
+	helpInfo += "SPACE  EDIT/LOCK \n";
 	helpInfo += "\n";
 	helpInfo += "m      MINIMIZE \n";
 	helpInfo += "\n";
