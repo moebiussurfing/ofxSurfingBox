@@ -305,7 +305,7 @@ public:
 		//rect_Box.setTransparent();
 	}
 	//--------------------------------------------------------------
-	void ofxSurfingBoxInteractive::Changed_Edit(bool& edit) {
+	void Changed_Edit(bool& edit) {
 		ofLogNotice(__FUNCTION__) << "Edit : " << edit;
 		setEdit(edit);
 	}
