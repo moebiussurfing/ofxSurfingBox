@@ -914,7 +914,8 @@ public:
 	void setTitle(string text) {//must call before setup to correct layout!
 		bTitleSetted = true;
 
-		textTitle = text;
+		textTitle = "\n";
+		textTitle += text;
 
 		titleNumLines = getTitleHeightLines() + 1;
 		ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
