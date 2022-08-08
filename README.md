@@ -34,6 +34,7 @@ This add-on has two classes:
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 
 ## Third Party add-ons bundled into **ofxSurfingHelpers**
+Already added to `OFX_ADDON/libs/`. No need to add into **PROJECT GENERATOR**.  
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect) / _Fork from [roymacdonald](https://github.com/roymacdonald/ofxScaleDragRect)_  
 * [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) / _Fork from [memo](https://github.com/memo/ofxMSAInteractiveObject)_  
 
