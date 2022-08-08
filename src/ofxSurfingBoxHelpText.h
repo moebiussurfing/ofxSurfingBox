@@ -88,6 +88,7 @@ public:
 
 		size_TTF = 11;
 		name_TTF = "JetBrainsMonoNL-ExtraBold.ttf";
+		//name_TTF = "JetBrainsMono-Bold.ttf";
 
 		//--
 
@@ -146,6 +147,8 @@ public:
 	//--------------------------------------------------------------
 	void setup()
 	{
+		ofLogNotice(__FUNCTION__); 
+
 		string pathRoot = "assets/fonts/";
 		// this is hardcoded. 
 		// Put your font files there!
@@ -159,6 +162,7 @@ public:
 		{
 			path_TTF2 = pathRoot + name_TTF2;
 			bool bLoaded2 = myFont2.load(path_TTF2, size_TTF2, true, true);
+			if (!bLoaded2) bLoaded2 = myFont2.load(path_TTF, size_TTF2, true, true);
 			if (!bLoaded2) bLoaded2 = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
 
 			titleNumLines = getTitleHeightLines() + 1;
@@ -461,7 +465,8 @@ public:
 	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
 
 	ofParameter<bool> bGui{ "Help", true }; //exposed toggle to be used or linked in other parent scope guis!
-	// Example: 
+	
+											// Example: 
 	// Can be linked before calling setup()
 	//textBoxWidget.bGui.makeReferenceTo(guiManager.bHelp);
 
@@ -885,7 +890,7 @@ public:
 
 	//--------------------------------------------------------------
 	// Must be called after	calling setup if using tittle!
-	void setText(string text) {
+	void setText(string text) {//erase text and create new text
 		textInfo = text;
 
 		std::string ss = textInfo;
@@ -897,6 +902,11 @@ public:
 			_ss = _ss + ss;
 		}
 		else _ss = ss;
+	}
+
+	//--------------------------------------------------------------
+	void addText(string text) {//queue text at end
+		textInfo += text;
 	}
 
 	// Must be called before calling setup!
