@@ -910,6 +910,7 @@ public:
 	}
 
 	// Must be called before calling setup!
+	// //TODO: BUG: sometimes happens some memory leaking?
 	//--------------------------------------------------------------
 	void setTitle(string text) {//must call before setup to correct layout!
 		bTitleSetted = true;
