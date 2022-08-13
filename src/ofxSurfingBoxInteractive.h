@@ -323,8 +323,18 @@ public:
 	}
 
 	//--------------------------------------------------------------
+	void drawBorderBlinking(ofColor color = ofColor(255))
+	{
+		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
+		ofColor c = ofColor(color, a);
+		drawBorder(c);
+	}
+
+	//--------------------------------------------------------------
 	void draw()
 	{
+		ofPushStyle();
+
 		//--
 
 		// Simple callbacks
@@ -487,6 +497,8 @@ public:
 		//bool bContraints = true;
 		//if (bContraints) doForceFitOnWindow();
 		doForceFitOnWindow();
+
+		ofPopStyle();
 	}
 
 	//--------------------------------------------------------------
