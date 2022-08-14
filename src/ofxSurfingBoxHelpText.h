@@ -670,6 +670,11 @@ public:
 	void setPath(string path) { // Call before setup. Will set path to save settings into.
 		path_Global = path;
 	}
+	//legacy
+	//--------------------------------------------------------------
+	void setPathGlobal(string path) { // Call before setup. Will set path to save settings into.
+		path_Global = path;
+	}
 
 	//--------------------------------------------------------------
 	void setName(string _name) { // Call before setup. Will custo name.

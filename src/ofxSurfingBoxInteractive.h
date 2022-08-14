@@ -45,6 +45,7 @@ public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive()
 	{
+		
 	}
 
 	//--------------------------------------------------------------
@@ -55,6 +56,9 @@ public:
 		rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
 
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
+		bUseBorder.removeListener(this, &ofxSurfingBoxInteractive::Changed_Border);
+
+		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
 	}
 
 	ofParameter<bool> bGui{ "Box Rectangle", true };//exposed toggle to be used or linked in other parent scope guis!
@@ -142,6 +146,25 @@ public:
 		}
 	}
 
+	// callback to re fresh fbo's
+	//--------------------------------------------------------------
+	bool isChangedShape() {
+		static float w;
+		static float h;
+
+		bool changed = false;
+
+		if (w != this->getWidth() || h != this->getHeight())
+		{
+			changed = true;
+
+			w = this->getWidth();
+			h = this->getHeight();
+		}
+
+		return changed;
+	}
+
 	//--------------------------------------------------------------
 	bool isEditing() {
 
@@ -185,16 +208,22 @@ public:
 	float getHeight() { return rect_Box.getHeight(); }
 
 	void setUseBorder(bool b) { bUseBorder = b; }
+	void setBorderColor(ofColor c) { _colorBorder = c; }
+
 private:
-	bool bUseBorder = false;
+
+	//bool bUseBorder = false;
+	//bool bUseBorder = true;
 
 	std::string path_RectHelpBox = "myBox";
 	std::string path_Global = "ofxSurfingBoxInteractive/"; // can be setted before setup
 	//std::string path_Name = "appSettings"; // subfolder for app session settings
+	std::string path_AppSession = "AppSession.xml";
 
 	ofColor _colorButton;// bg selected button
 	ofColor _colorBg;// background color
 	ofColor _colorShadow;
+	ofColor _colorBorder;
 	bool _bUseShadow;
 
 	bool bCenter = true;
@@ -216,6 +245,8 @@ private:
 public:
 
 	ofParameter<bool> bEdit;
+	ofParameter<bool> bTransparent;
+	ofParameter<bool> bUseBorder;
 
 	//--------------------------------------------------------------
 	void setName(string name) {
@@ -273,8 +304,12 @@ public:
 	//--------------------------------------------------------------
 	void setup()
 	{
-		bEdit.set("EDIT BOX", false);
+		bEdit.set("Edit Box", false);
+		bUseBorder.set("Border", false);
+		bTransparent.set("Transparent", false);
+
 		bEdit.addListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
+		bUseBorder.addListener(this, &ofxSurfingBoxInteractive::Changed_Border);
 
 		doubleClicker.set(0, 0, ofGetWidth(), ofGetHeight()); // default full screen
 
@@ -297,6 +332,12 @@ public:
 
 		rect_Box.setEnableMouseWheel(true);
 
+		// extra settings
+		params_AppSession.add(bEdit);
+		params_AppSession.add(bUseBorder);
+		params_AppSession.add(bTransparent);
+		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/" + path_AppSession);
+
 		//--
 
 		//// We dont need draggable borders and decoration.
@@ -306,28 +347,43 @@ public:
 	}
 	//--------------------------------------------------------------
 	void Changed_Edit(bool& edit) {
-		ofLogNotice(__FUNCTION__) << "Edit : " << edit;
+		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "Edit : " << edit;
 		setEdit(edit);
+	}
+	//--------------------------------------------------------------
+	void Changed_Border(bool& b) {
+		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "Border: " << b;
+		setUseBorder(b);
 	}
 
 	//--------------------------------------------------------------
-	void drawBorder(ofColor color = ofColor(0, 255))
+	//void drawBorder(ofColor color = ofColor(0, 255))
+	void drawBorder()
 	{
 		// Border
 		ofPushStyle();
 		ofNoFill();
-		ofSetColor(color);
+		ofSetColor(_colorBorder);
 		ofSetLineWidth(2.0);
 		ofDrawRectangle(getRectangle());
 		ofPopStyle();
 	}
 
 	//--------------------------------------------------------------
-	void drawBorderBlinking(ofColor color = ofColor(255))
+	//void drawBorderBlinking(ofColor color = ofColor(255, 200))
+	void drawBorderBlinking()
 	{
 		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
-		ofColor c = ofColor(color, a);
-		drawBorder(c);
+		ofColor c = ofColor(_colorBorder, a);
+
+		//drawBorder(c);
+		// Border
+		ofPushStyle();
+		ofNoFill();
+		ofSetColor(c);
+		ofSetLineWidth(2.0);
+		ofDrawRectangle(getRectangle());
+		ofPopStyle();
 	}
 
 	//--------------------------------------------------------------
@@ -489,7 +545,12 @@ public:
 
 		//--
 
+		if (!bTransparent)
+		{
 		if (bUseBorder) drawBorder();
+		}
+
+		if (this->isEditing()) drawBorderBlinking();
 
 		//--
 
@@ -559,7 +620,7 @@ private:
 
 				//modeLayout = FREE_LAYOUT;
 			}
-	}
+		}
 
 		//--
 
@@ -578,7 +639,7 @@ private:
 		//--
 
 		doubleClicker.draw();
-}
+	}
 
 public:
 
