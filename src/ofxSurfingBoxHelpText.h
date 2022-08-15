@@ -47,18 +47,18 @@ JetBrainsMono-ExtraBold.ttf
 /*
 
 //TODO:
-//textBoxWidget.setFixedHeight(1);
+//boxHelpInfo.setFixedHeight(1);
 
  Call before call setup!
-textBoxWidget.setPath(path_GLOBAL + "HelpBox/");
+boxHelpInfo.setPath(path_GLOBAL + "HelpBox/");
 
  Customize Mode
-//textBoxWidget.setMode(ofxSurfingBoxHelpText::FREE_LAYOUT);
-textBoxWidget.setMode(ofxSurfingBoxHelpText::BOTTOM_CENTER);
+//boxHelpInfo.setMode(ofxSurfingBoxHelpText::FREE_LAYOUT);
+boxHelpInfo.setMode(ofxSurfingBoxHelpText::BOTTOM_CENTER);
 
 // Custom Theme
-textBoxWidget.setTheme(true); // dark
-//textBoxWidget.setTheme(false); // light
+boxHelpInfo.setTheme(true); // dark
+//boxHelpInfo.setTheme(false); // light
 
 */
 
@@ -140,7 +140,7 @@ public:
 
 		rect_HelpTextBox.saveSettings(nameBoxFile, path_Global + "/", false);
 
-		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".json");
+		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
 		ofRemoveListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 	}
 
@@ -214,7 +214,7 @@ public:
 
 		ofAddListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 
-		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".json");
+		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
 	}
 
 	//--------------------------------------------------------------
@@ -468,7 +468,7 @@ public:
 	
 											// Example: 
 	// Can be linked before calling setup()
-	//textBoxWidget.bGui.makeReferenceTo(guiManager.bHelp);
+	//boxHelpInfo.bGui.makeReferenceTo(guiManager.bHelp);
 
 	//-
 

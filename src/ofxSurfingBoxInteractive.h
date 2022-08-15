@@ -336,6 +336,7 @@ public:
 		params_AppSession.add(bEdit);
 		params_AppSession.add(bUseBorder);
 		params_AppSession.add(bTransparent);
+
 		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/" + path_AppSession);
 
 		//--
