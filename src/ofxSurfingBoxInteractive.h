@@ -198,6 +198,8 @@ public:
 
 	ofxInteractiveRect rect_Box = { "_" };
 
+	bool isVisible() { return bGui.get(); }
+
 	//--------------------------------------------------------------
 	ofRectangle getRectangle() {
 		return rect_Box;
@@ -374,6 +376,8 @@ public:
 	//void drawBorderBlinking(ofColor color = ofColor(255, 200))
 	void drawBorderBlinking()
 	{
+		if (!bGui) return;//TODO:
+		
 		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
 		ofColor c = ofColor(_colorBorder, a);
 
@@ -390,6 +394,8 @@ public:
 	//--------------------------------------------------------------
 	void draw()
 	{
+		if (!bGui) return;//TODO:
+
 		ofPushStyle();
 
 		//--
@@ -625,9 +631,20 @@ private:
 
 		//--
 
-		// 2. Triple clicks swap modeLayout mode
+		// 2. Left pressed + right click : close box!
 
-		if (doubleClicker.isMouseTripleClick())
+		if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick()) {
+			//if (doubleClicker.isMouseRightPressedThenPressedLeft()) {
+			ofLogWarning("TextBoxWidget") << (__FUNCTION__);
+			bGui = false;
+		}
+
+		//--
+
+		// 3. Right click swap modeLayout mode
+		if (doubleClicker.isMouseRightClick())
+		// 3. Triple clicks swap modeLayout mode
+		//if (doubleClicker.isMouseTripleClick())
 		{
 			bState2 = !bState2;
 

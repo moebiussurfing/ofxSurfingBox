@@ -468,7 +468,7 @@ public:
 	
 											// Example: 
 	// Can be linked before calling setup()
-	//boxHelpInfo.bGui.makeReferenceTo(guiManager.bHelp);
+	//boxHelpInfo.bGui.makeReferenceTo(ui.bHelp);
 
 	//-
 
@@ -780,9 +780,19 @@ private:
 
 		//--
 
+		// 4. Left pressed + right click : close box!
+
+		if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick()) {
+			//if (doubleClicker.isMouseRightPressedThenPressedLeft()) {
+			ofLogWarning("TextBoxWidget") << (__FUNCTION__);
+			bGui = false;
+		}
+
+		//--
+
 		// 3. Right click swap modeLayout mode
 
-		if (doubleClicker.isMouseRightClick())
+		else if (doubleClicker.isMouseRightClick())
 		{
 			if (getIsEditing())
 			{
@@ -794,6 +804,8 @@ private:
 				else { index_ModeLayout = BOX_LAYOUT(i); }
 			}
 		}
+
+		//--
 
 		//--
 	}
