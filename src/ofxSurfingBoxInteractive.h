@@ -26,9 +26,9 @@
 
 	TODO:
 
+	+ add contraints, min rect size.
 	+ add click + space to easy edit/lock
 	+ add all settings -> get from text box
-	+ save mode too -> on text box is implemented!
 	+ fit screen or mini/ big modes to use on a video player.
 
 */
@@ -45,7 +45,7 @@ public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive()
 	{
-		
+
 	}
 
 	//--------------------------------------------------------------
@@ -61,7 +61,8 @@ public:
 		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
 	}
 
-	ofParameter<bool> bGui{ "Box Rectangle", true };//exposed toggle to be used or linked in other parent scope guis!
+	ofParameter<bool> bGui{ "Box Rectangle", true };
+	//exposed toggle to be used or linked in other parent scope guis!
 
 	//-
 
@@ -244,6 +245,7 @@ private:
 
 	//--
 
+
 public:
 
 	ofParameter<bool> bEdit;
@@ -253,6 +255,24 @@ public:
 	//--------------------------------------------------------------
 	void setName(string name) {
 		path_RectHelpBox = name;
+	}
+
+	//--
+
+private:
+
+	//ofRectangle shapeConstraintMin;//min shape
+	//ofRectangle shapeConstraintMax;//max shape
+
+public:
+
+	//--------------------------------------------------------------
+	void setRectConstraintMin(glm::vec2 shape) {
+		rect_Box.setRectConstraintMin(shape);
+	}
+	//--------------------------------------------------------------
+	void setRectConstraintMax(glm::vec2 shape) {
+		rect_Box.setRectConstraintMax(shape);
 	}
 
 	//--
@@ -377,7 +397,7 @@ public:
 	void drawBorderBlinking()
 	{
 		if (!bGui) return;//TODO:
-		
+
 		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
 		ofColor c = ofColor(_colorBorder, a);
 
@@ -554,7 +574,7 @@ public:
 
 		if (!bTransparent)
 		{
-		if (bUseBorder) drawBorder();
+			if (bUseBorder) drawBorder();
 		}
 
 		if (this->isEditing()) drawBorderBlinking();
@@ -632,19 +652,19 @@ private:
 		//--
 
 		// 2. Left pressed + right click : close box!
-
-		if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick()) {
-			//if (doubleClicker.isMouseRightPressedThenPressedLeft()) {
-			ofLogWarning("TextBoxWidget") << (__FUNCTION__);
-			bGui = false;
-		}
+		if (this->isEditing())
+			if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick()) {
+				//if (doubleClicker.isMouseRightPressedThenPressedLeft()) {
+				ofLogWarning("TextBoxWidget") << (__FUNCTION__);
+				bGui = false;
+			}
 
 		//--
 
 		// 3. Right click swap modeLayout mode
 		if (doubleClicker.isMouseRightClick())
-		// 3. Triple clicks swap modeLayout mode
-		//if (doubleClicker.isMouseTripleClick())
+			// 3. Triple clicks swap modeLayout mode
+			//if (doubleClicker.isMouseTripleClick())
 		{
 			bState2 = !bState2;
 
