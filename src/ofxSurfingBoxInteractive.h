@@ -26,15 +26,24 @@
 
 	TODO:
 
-	+ add contraints, min rect size.
+	+ add disable save settings
+		organize path better
 	+ add click + space to easy edit/lock
 	+ add all settings -> get from text box
 	+ fit screen or mini/ big modes to use on a video player.
 
 */
 
+/*
+		// constraint sizes
+		glm::vec2 shapeMin(200, 400);
+		boxWidgets.setRectConstraintMin(shapeMin);
+		glm::vec2 shapeMax(ofGetWidth(), ofGetHeight());
+		boxWidgets.setRectConstraintMax(shapeMax);
+*/
 
-//-
+
+//--
 
 
 class ofxSurfingBoxInteractive /* : public ofBaseApp*/
@@ -57,6 +66,7 @@ public:
 
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 		bUseBorder.removeListener(this, &ofxSurfingBoxInteractive::Changed_Border);
+		bGui.removeListener(this, &ofxSurfingBoxInteractive::Changed_bGui);
 
 		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
 	}
@@ -213,14 +223,16 @@ public:
 	void setUseBorder(bool b) { bUseBorder = b; }
 	void setBorderColor(ofColor c) { _colorBorder = c; }
 
+	void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hidde.
+
 private:
 
 	//bool bUseBorder = false;
 	//bool bUseBorder = true;
 
 	std::string path_RectHelpBox = "myBox";
-	std::string path_Global = "ofxSurfingBoxInteractive/"; // can be setted before setup
-	//std::string path_Name = "appSettings"; // subfolder for app session settings
+	std::string path_Global = "ofxSurfingBoxInteractive/"; // can be settled before setup
+	//std::string path_Name = "appSettings"; // sub folder for app session settings
 	std::string path_AppSession = "AppSession.xml";
 
 	ofColor _colorButton;// bg selected button
@@ -228,6 +240,8 @@ private:
 	ofColor _colorShadow;
 	ofColor _colorBorder;
 	bool _bUseShadow;
+
+	bool bWorflow = false;
 
 	bool bCenter = true;
 	bool bLeftPosition = false;
@@ -332,6 +346,7 @@ public:
 
 		bEdit.addListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 		bUseBorder.addListener(this, &ofxSurfingBoxInteractive::Changed_Border);
+		bGui.addListener(this, &ofxSurfingBoxInteractive::Changed_bGui);
 
 		doubleClicker.set(0, 0, ofGetWidth(), ofGetHeight()); // default full screen
 
@@ -363,11 +378,14 @@ public:
 
 		//--
 
-		//// We dont need draggable borders and decoration.
+		//// We don't need draggable borders and decoration.
 		//rect_Box.setLockResize(true);
 		////rect_Box.setLockResize(!bNoText);
 		//rect_Box.setTransparent();
+
+		//rect_Box.setRectConstraintMin
 	}
+
 	//--------------------------------------------------------------
 	void Changed_Edit(bool& edit) {
 		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "Edit : " << edit;
@@ -377,6 +395,27 @@ public:
 	void Changed_Border(bool& b) {
 		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "Border: " << b;
 		setUseBorder(b);
+	}
+	
+	//--------------------------------------------------------------
+	void Changed_bGui(bool& b)
+	{
+		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "bGui: " << b;
+
+		//workflow
+		if (b) 
+		{
+			//rect_Box.enableEdit();
+			doubleClicker.enableAllEvents();
+		}
+
+		else {
+			//workflow
+			if (bWorflow) {
+			rect_Box.disableEdit();
+			doubleClicker.disableAllEvents();
+			}
+		}
 	}
 
 	//--------------------------------------------------------------
