@@ -87,7 +87,8 @@ public:
 		// Body Font
 
 		size_TTF = 11;
-		name_TTF = "JetBrainsMonoNL-ExtraBold.ttf";
+		name_TTF = FONT_FILE_BIG;
+		//name_TTF = "JetBrainsMonoNL-ExtraBold.ttf";
 		//name_TTF = "JetBrainsMono-Bold.ttf";
 
 		//--
@@ -95,7 +96,8 @@ public:
 		// Title Font
 
 		size_TTF2 = 22;
-		name_TTF2 = "JetBrainsMono-ExtraBold.ttf";
+		name_TTF2 = FONT_FILE_SMALL;
+		//name_TTF2 = "JetBrainsMono-ExtraBold.ttf";
 
 		//--
 
@@ -147,23 +149,48 @@ public:
 	//--------------------------------------------------------------
 	void setup()
 	{
-		ofLogNotice(__FUNCTION__); 
+		ofLogNotice(__FUNCTION__);
 
-		string pathRoot = "assets/fonts/";
+		//string pathRoot = FONT_FILES_PATH;
+		//string pathRoot = "assets/fonts/";
 		// this is hardcoded. 
 		// Put your font files there!
 		// You can customize only the font file name.
 
-		path_TTF = pathRoot + name_TTF;
-		bool bLoaded = myFont.load(path_TTF, size_TTF, true, true);
+		//path_TTF = FONT_FILES_PATH + ofToString(FONT_FILE_SMALL);
+		//path_TTF = FONT_FILES_PATH + name_TTF;
+		bool bLoaded = myFont.load(FONT_FILES_PATH + name_TTF, size_TTF, true, true);
+		if (!bLoaded) {
+			bLoaded = myFont.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_TTF, true, true);
+		}
+		if (!bLoaded) {
+			bLoaded = myFont.load(FONT_FILES_PATH + ofToString(FONT_FILE_SMALL), size_TTF, true, true);
+		}
+		if (!bLoaded) {
+			bLoaded = myFont.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT1), size_TTF, true, true);
+		}
+		if (!bLoaded) {
+			bLoaded = myFont.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_TTF, true, true);
+		}
 		if (!bLoaded) bLoaded = myFont.load(OF_TTF_MONO, size_TTF, true, true);
 
 		if (bTitleSetted)
 		{
-			path_TTF2 = pathRoot + name_TTF2;
-			bool bLoaded2 = myFont2.load(path_TTF2, size_TTF2, true, true);
-			if (!bLoaded2) bLoaded2 = myFont2.load(path_TTF, size_TTF2, true, true);
-			if (!bLoaded2) bLoaded2 = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
+			//path_TTF2 = FONT_FILES_PATH + name_TTF2;
+			bool bLoaded2 = myFont2.load(FONT_FILES_PATH + name_TTF2, size_TTF2, true, true);
+			if (!bLoaded) {
+				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_TTF2, true, true);
+			}
+			if (!bLoaded) {
+				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_SMALL), size_TTF2, true, true);
+			}
+			if (!bLoaded) {
+				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT1), size_TTF2, true, true);
+			}
+			if (!bLoaded) {
+				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_TTF2, true, true);
+			}
+			if (!bLoaded) bLoaded = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
 
 			titleNumLines = getTitleHeightLines() + 1;
 			ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
@@ -465,12 +492,12 @@ public:
 	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
 
 	ofParameter<bool> bGui{ "Help", true }; //exposed toggle to be used or linked in other parent scope guis!
-	
-											// Example: 
-	// Can be linked before calling setup()
-	//boxHelpInfo.bGui.makeReferenceTo(ui.bHelp);
 
-	//-
+	// Example: 
+// Can be linked before calling setup()
+//boxHelpInfo.bGui.makeReferenceTo(ui.bHelp);
+
+//-
 
 public:
 
@@ -599,13 +626,13 @@ private:
 
 	// font to label clicker boxes
 	ofTrueTypeFont myFont;
-	std::string path_TTF;
+	//std::string path_TTF;
 	std::string name_TTF;
 	int size_TTF;
 	std::string textInfo = "ofxSurfingBoxHelpText \n empty content"; // info text to display shortcuts or path settings
 
 	ofTrueTypeFont myFont2;
-	std::string path_TTF2;
+	//std::string path_TTF2;
 	std::string name_TTF2;
 	int size_TTF2;
 	std::string textTitle = "NO TITLE"; // info text to display shortcuts or path settings
