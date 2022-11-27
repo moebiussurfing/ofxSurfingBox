@@ -730,6 +730,8 @@ private:
 			i++;
 			if (i >= NUM_LAYOUTS) { modeLayout = FREE_LAYOUT; }
 			else { modeLayout = BOX_LAYOUT(i); }
+
+			bIsChanged = true;
 		}
 
 		//--
