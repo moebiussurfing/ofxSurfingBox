@@ -1,21 +1,43 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup() {
+void ofApp::setup()
+{
+	//--
+	
+	// Optional
 
-	// Box
-	boxWidget.setName("Demo");
-	boxWidget.setPath("MyPath/");
+	//// Customize to avoid collide 
+	//// when using multiple instances!
+	//boxWidget.setName("Demo"); // for the filename
+	//boxWidget.setPath("MyAddon/"); // for the container folder
+
+	//--
+
 	boxWidget.setup();
-	boxWidget.setUseBorder(true);
-	boxWidget.setMode(ofxSurfingBoxInteractive::FREE_LAYOUT);
-	boxWidget.setRectConstraintMin(glm::vec2(50, 50));
 
-	// Scene
-	colors.push_back(ofColor::red);
-	colors.push_back(ofColor::green);
-	colors.push_back(ofColor::blue);
-	colors.push_back(ofColor::yellow);
+	//--
+
+	// Optional
+	
+	// Force edit
+	boxWidget.setEdit(true);
+
+	// Borders
+	//boxWidget.setUseBorder(true);
+	//boxWidget.setUseBorderBlinking(true);
+
+	// Force layout position
+	//boxWidget.setMode(ofxSurfingBoxInteractive::FREE_LAYOUT);
+
+	// Constraint sizes
+	//boxWidget.setRectConstraintMin(glm::vec2(50, 50));
+	//boxWidget.setRectConstraintMax(glm::vec2(ofGetWidth() - 25, ofGetHeight() - 25));
+
+	// Draggable borders
+	//boxWidget.setLockW(true); // disable width
+	//boxWidget.setLockH(true); // disable height
+	//boxWidget.setBorderColor(c);
 }
 
 //--------------------------------------------------------------
@@ -25,28 +47,14 @@ void ofApp::draw()
 	drawScene();
 
 	// Box Interactive
-	boxWidget.setBorderColor(c);
 	boxWidget.draw();
-	boxWidget.drawBorderBlinking();
 }
 
 //--------------------------------------------------------------
 void ofApp::drawScene()
 {
 	int d = 60;
-
-	float s = ofMap(ofGetFrameNum() % d, 0, d, 0.5f, 1.f);//inner
-	//float s = ofMap(ofGetFrameNum() % d, 0, d, 1.1f, 1.2f);//outer
-
-	bool b = (ofGetFrameNum() % d == 0);
-
-	// Changes the color after an amount of d frames. 
-	if (b)
-	{
-		static int k = 0;
-		k = ++k % colors.size();
-		c = colors[k];
-	}
+	float s = ofMap(ofGetFrameNum() % d, 0, d, 0.5f, 1.f);
 
 	//--
 
@@ -54,24 +62,26 @@ void ofApp::drawScene()
 
 	// Here we get the ofRectangle from the Box object!
 	ofRectangle r = boxWidget.getRectangle();
-
-	// rescale
+	
+	// Animate scale
 	r.scaleFromCenter(s);
 
 	ofPushStyle();
 	ofFill();
-	//ofNoFill();
-	//ofSetLineWidth(4);
-	ofSetColor(c);
-	ofDrawRectRounded(r, 0);
+	ofSetColor(ofColor::blue);
+
+	ofDrawRectangle(r);
+
 	ofPopStyle();
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key) 
+void ofApp::keyPressed(int key)
 {
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
+	if (key == 'B') boxWidget.setToggleUseBorder();
+	if (key == 'K') boxWidget.setToggleUseBorderBlinking();
 	if (key == 'D') boxWidget.setToggleDebugDoubleClick();
 	if (key == OF_KEY_TAB) boxWidget.setToggleMode();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();

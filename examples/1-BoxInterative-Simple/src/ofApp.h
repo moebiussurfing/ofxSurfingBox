@@ -4,7 +4,8 @@
 
 #include "ofxSurfingBoxInteractive.h"
 
-class ofApp : public ofBaseApp {
+class ofApp : public ofBaseApp 
+{
 
 public:
 
@@ -15,8 +16,4 @@ public:
 	
 	// Box
 	ofxSurfingBoxInteractive boxWidget;
-
-	// Scene
-	vector<ofColor> colors;
-	ofColor c;
 };

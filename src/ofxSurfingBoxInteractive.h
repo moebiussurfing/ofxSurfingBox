@@ -54,7 +54,7 @@ public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive::ofxSurfingBoxInteractive()
 	{
-
+		//setName("myBox");
 	}
 
 	//--------------------------------------------------------------
@@ -126,10 +126,10 @@ public:
 	void setLockH(bool b) { rect_Box.setLockH(b); };//set enable/disable drag height interaction
 
 private:
-	
+
 	bool bDebugDoubleClick = false;
 
-	ofParameterGroup params_AppSession{ "AppSession" };
+	ofParameterGroup params_AppSession{ "Settings" };
 
 
 	bool bEnableMouseWheel = true;
@@ -230,6 +230,22 @@ public:
 	float getHeight() { return rect_Box.getHeight(); }
 
 	void setUseBorder(bool b) { bUseBorder = b; }
+
+	//--------------------------------------------------------------
+	void setUseBorderBlinking(bool b) {
+		bUseBorderBlinking = b;
+		if (b) bUseBorder = true;
+	}
+	//--------------------------------------------------------------
+	void setToggleUseBorder() {
+		bUseBorder = !bUseBorder;
+	}
+	//--------------------------------------------------------------
+	void setToggleUseBorderBlinking() {
+		bUseBorderBlinking = !bUseBorderBlinking;
+		if (bUseBorderBlinking) bUseBorder = true;
+	}
+
 	void setBorderColor(ofColor c) { _colorBorder = c; }
 
 	void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hidde.
@@ -243,7 +259,8 @@ private:
 	std::string path_RectHelpBox = "myBox";
 	std::string path_Global = "ofxSurfingBoxInteractive/"; // can be settled before setup
 	//std::string path_Name = "appSettings"; // sub folder for app session settings
-	std::string path_AppSession = "AppSession.xml";
+	std::string suffixSettings = "Settings.xml";
+	std::string path_AppSession = path_RectHelpBox + "_" + suffixSettings;
 
 	ofColor _colorButton;// bg selected button
 	ofColor _colorBg;// background color
@@ -275,11 +292,13 @@ public:
 	ofParameter<bool> bEdit;
 	ofParameter<bool> bTransparent;
 	ofParameter<bool> bUseBorder;
+	ofParameter<bool> bUseBorderBlinking;
 
 	//--------------------------------------------------------------
 	void setName(string name) {
 		path_RectHelpBox = name;
 		bGui.setName(name);
+		path_AppSession = name + "_" + suffixSettings;
 	}
 
 	//--
@@ -348,7 +367,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void reset(bool bOnlySize = true, int width = 320) {
+	void reset(bool bOnlySize = false, int width = 320) {
 
 		int sz = width;
 		rect_Box.setWidth(sz);
@@ -359,8 +378,9 @@ public:
 	//--------------------------------------------------------------
 	void setup()
 	{
-		bEdit.set("Edit Box", false);
+		bEdit.set("Edit", false);
 		bUseBorder.set("Border", false);
+		bUseBorderBlinking.set("Blink", false);
 		bTransparent.set("Transparent", false);
 
 		bEdit.addListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
@@ -390,8 +410,9 @@ public:
 
 		// extra settings
 		params_AppSession.add(bEdit);
-		params_AppSession.add(bUseBorder);
 		params_AppSession.add(bTransparent);
+		params_AppSession.add(bUseBorder);
+		params_AppSession.add(bUseBorderBlinking);
 
 		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/" + path_AppSession);
 
@@ -415,14 +436,14 @@ public:
 		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "Border: " << b;
 		setUseBorder(b);
 	}
-	
+
 	//--------------------------------------------------------------
 	void Changed_bGui(bool& b)
 	{
 		ofLogNotice("ofxSurfingBoxInteractive") << (__FUNCTION__) << "bGui: " << b;
 
 		//workflow
-		if (b) 
+		if (b)
 		{
 			//rect_Box.enableEdit();
 			doubleClicker.enableAllEvents();
@@ -431,8 +452,8 @@ public:
 		else {
 			//workflow
 			if (bWorflow) {
-			rect_Box.disableEdit();
-			doubleClicker.disableAllEvents();
+				rect_Box.disableEdit();
+				doubleClicker.disableAllEvents();
 			}
 		}
 	}
@@ -475,175 +496,187 @@ public:
 		if (!bGui) return;//TODO:
 
 		ofPushStyle();
-
-		//--
-
-		// Simple callbacks
-
-		static ofRectangle rect_Box_PRE = rect_Box.getRect();
-		static BOX_LAYOUT modeLayout_PRE = NUM_LAYOUTS;
-		static bool bLockedAspectRatio_PRE = false;
-
-		// size changed
-		if (rect_Box.getRect() != rect_Box_PRE) {
-			rect_Box_PRE = rect_Box.getRect();
-			bIsChanged = true;
-		}
-
-		// aspect changed
-		if (bLockedAspectRatio != bLockedAspectRatio_PRE)
 		{
-			bLockedAspectRatio_PRE = bLockedAspectRatio;
-			bIsChanged = true;
-		}
+			//--
 
-		//--
+			// Simple callbacks
 
-		// Changed Mode
+			static ofRectangle rect_Box_PRE = rect_Box.getRect();
+			static BOX_LAYOUT modeLayout_PRE = NUM_LAYOUTS;
+			static bool bLockedAspectRatio_PRE = false;
 
-		// memorize free layout mode to not be overwritten by other predefined (top,left..) layout positions.
-		if (modeLayout != modeLayout_PRE)
-		{
-			if (modeLayout_PRE == FREE_LAYOUT)
+			// size changed
+			if (rect_Box.getRect() != rect_Box_PRE) {
+				rect_Box_PRE = rect_Box.getRect();
+				bIsChanged = true;
+			}
+
+			// aspect changed
+			if (bLockedAspectRatio != bLockedAspectRatio_PRE)
 			{
-				// store
-				rect_Box_PRE = rect_Box;
-			}
-			else
-			{
-				// restore
-				rect_Box.set(rect_Box_PRE);
-			}
-
-			//-
-
-			modeLayout_PRE = modeLayout;
-			bIsChanged = true;
-
-			// workflow
-			if (modeLayout != FREE_LAYOUT)
-			{
-				setEdit(false);
-			}
-		}
-
-		//--
-
-		updateDoubleClicker();
-
-		//--
-
-		int _w = ofGetWidth();
-		int _h = ofGetHeight();
-
-		int _ww = rect_Box.getWidth();
-		int _hh = rect_Box.getHeight();
-
-		int _xx;
-		int _yy;
-
-		//-
-
-		if (modeLayout == FREE_LAYOUT) {
-
-			_xx = rect_Box.getX();
-			_yy = rect_Box.getY();
-		}
-		else
-		{
-			//-
-
-			// Top 
-
-			if (modeLayout == TOP_LEFT) {
-				_xx = xleft;
-				_yy = ytop;
-			}
-			else if (modeLayout == TOP_CENTER) {
-				_xx = xcenter;
-				_yy = ytop;
-			}
-			else if (modeLayout == TOP_RIGHT) {
-				_xx = xright;
-				_yy = ytop;
-			}
-
-			//-
-
-			// Center 
-
-			else if (modeLayout == CENTER) {
-
-				_xx = xcenter;
-				_yy = ycenter;
-			}
-
-			//-
-
-			// Bottom
-
-			else if (modeLayout == BOTTOM_LEFT) {
-				_xx = xleft;
-				_yy = ybottom;
-			}
-			else if (modeLayout == BOTTOM_CENTER) {
-				_xx = xcenter;
-				_yy = ybottom;
-			}
-			else if (modeLayout == BOTTOM_RIGHT) {
-				_xx = xright;
-				_yy = ybottom;
+				bLockedAspectRatio_PRE = bLockedAspectRatio;
+				bIsChanged = true;
 			}
 
 			//--
 
-			// Set
+			// Changed Mode
 
-			rect_Box.setX(_xx);
-			rect_Box.setY(_yy);
-		}
-
-		//-
-
-		if (modeLayout == FREE_LAYOUT)
-		{
-			if (rect_Box.isEditing())
+			// memorize free layout mode to not be overwritten by other predefined (top,left..) layout positions.
+			if (modeLayout != modeLayout_PRE)
 			{
-				rect_Box.draw();
+				if (modeLayout_PRE == FREE_LAYOUT)
+				{
+					// store
+					rect_Box_PRE = rect_Box;
+				}
+				else
+				{
+					// restore
+					rect_Box.set(rect_Box_PRE);
+				}
+
+				//-
+
+				modeLayout_PRE = modeLayout;
+				bIsChanged = true;
+
+				// workflow
+				if (modeLayout != FREE_LAYOUT)
+				{
+					setEdit(false);
+				}
 			}
+
+			//--
+
+			updateDoubleClicker();
+
+			//--
+
+			int _w = ofGetWidth();
+			int _h = ofGetHeight();
+
+			int _ww = rect_Box.getWidth();
+			int _hh = rect_Box.getHeight();
+
+			int _xx;
+			int _yy;
+
+			//-
+
+			if (modeLayout == FREE_LAYOUT) {
+
+				_xx = rect_Box.getX();
+				_yy = rect_Box.getY();
+			}
+			else
+			{
+				//-
+
+				// Top 
+
+				if (modeLayout == TOP_LEFT) {
+					_xx = xleft;
+					_yy = ytop;
+				}
+				else if (modeLayout == TOP_CENTER) {
+					_xx = xcenter;
+					_yy = ytop;
+				}
+				else if (modeLayout == TOP_RIGHT) {
+					_xx = xright;
+					_yy = ytop;
+				}
+
+				//-
+
+				// Center 
+
+				else if (modeLayout == CENTER) {
+
+					_xx = xcenter;
+					_yy = ycenter;
+				}
+
+				//-
+
+				// Bottom
+
+				else if (modeLayout == BOTTOM_LEFT) {
+					_xx = xleft;
+					_yy = ybottom;
+				}
+				else if (modeLayout == BOTTOM_CENTER) {
+					_xx = xcenter;
+					_yy = ybottom;
+				}
+				else if (modeLayout == BOTTOM_RIGHT) {
+					_xx = xright;
+					_yy = ybottom;
+				}
+
+				//--
+
+				// Set
+
+				rect_Box.setX(_xx);
+				rect_Box.setY(_yy);
+			}
+
+			//-
+
+			if (modeLayout == FREE_LAYOUT)
+			{
+				if (rect_Box.isEditing())
+				{
+					rect_Box.draw();
+				}
+			}
+
+			//--
+
+			// Fit Marks
+			xcenter = _w / 2 - _ww / 2 + _padx / 2;
+			ycenter = _h / 2 - _hh / 2;
+			xleft = _padx;
+			xright = _w - _ww - _padx;
+			ytop = _pady;
+			ybottom = _h - _hh - _pady;
+
+			//--
+
+			// Move clicker linked to the box
+			doubleClicker.set(_xx, _yy, _ww, _hh);
+
+			//--
+
+			if (this->isEditing())
+			{
+				drawBorderBlinking();
+			}
+			else
+			{
+				if (!bTransparent)
+				{
+					if (bUseBorder)
+					{
+						if (bUseBorderBlinking) drawBorderBlinking();
+						else drawBorder();
+					}
+				}
+			}
+
+			//--
+
+			// Force fit box inside the window
+			//bool bContraints = true;
+			//if (bContraints) doForceFitOnWindow();
+			doForceFitOnWindow();
+
+			//if (bUseBorder) this->drawBorder();
+			////if (bUseBorder) this->drawBorderBlinking();
 		}
-
-		//--
-
-		// Fit Marks
-		xcenter = _w / 2 - _ww / 2 + _padx / 2;
-		ycenter = _h / 2 - _hh / 2;
-		xleft = _padx;
-		xright = _w - _ww - _padx;
-		ytop = _pady;
-		ybottom = _h - _hh - _pady;
-
-		//--
-
-		// Move clicker linked to the box
-		doubleClicker.set(_xx, _yy, _ww, _hh);
-
-		//--
-
-		if (!bTransparent)
-		{
-			if (bUseBorder) drawBorder();
-		}
-
-		if (this->isEditing()) drawBorderBlinking();
-
-		//--
-
-		// Force fit box inside the window
-		//bool bContraints = true;
-		//if (bContraints) doForceFitOnWindow();
-		doForceFitOnWindow();
-
 		ofPopStyle();
 	}
 
