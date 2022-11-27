@@ -446,7 +446,7 @@ public:
 		ofPopStyle();
 
 		// Force fit box inside the window
-		doForceFitOnWindow();
+		//doForceFitOnWindow();
 
 		//--
 

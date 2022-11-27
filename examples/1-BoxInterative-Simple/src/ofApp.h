@@ -7,17 +7,20 @@
 /*
 
 	HOW TO
+
 	Use mouse to move the box.
+	Double click to edit.
 	Drag borders to change the scale.
-	Use wheel to modify the scale
-	Use control, shift and alt modifiers.
+	Use wheel to modify the scale +
+	control (from center), 
+	shift (width only) and 
+	alt (height only) modifiers.
 	Use mouse wheel too.
 
 */
 
 class ofApp : public ofBaseApp 
 {
-
 public:
 
 	void setup();
@@ -25,6 +28,5 @@ public:
 	void drawScene();
 	void keyPressed(int key);
 	
-	// Box
 	ofxSurfingBoxInteractive boxWidget;
 };

@@ -23,44 +23,41 @@
 
 /*
 
-
 	TODO:
 
-	+ add disable save settings
-		organize path better
-	+ add click + space to easy edit/lock
-	+ add all settings -> get from text box
-	+ fit screen or mini/ big modes to use on a video player.
-
-*/
-
-/*
-		// constraint sizes
-		glm::vec2 shapeMin(200, 400);
-		boxWidgets.setRectConstraintMin(shapeMin);
-		glm::vec2 shapeMax(ofGetWidth(), ofGetHeight());
-		boxWidgets.setRectConstraintMax(shapeMax);
+	+ fix loading well
+	+ store layout mode, not only the free layout
+	+ update text box from this class
+	+ fit screen or mini / big modes to use on a video player.
 */
 
 
 //--
 
 
-class ofxSurfingBoxInteractive /* : public ofBaseApp*/
+class ofxSurfingBoxInteractive
 {
 
+	//--
+
 private:
+
+	bool bForceFitInsideWindow = true;
 	bool bDebug = false;
+
 public:
+
 	void setDebug(bool b) { bDebug = b; };
+
+	//--
 
 public:
 
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive::ofxSurfingBoxInteractive()
 	{
-		//setName("myBox");
 		setRectConstraintMin(glm::vec2(50, 50));
+		setPads(4, 4);
 	}
 
 	//--------------------------------------------------------------
@@ -78,35 +75,37 @@ public:
 	}
 
 	ofParameter<bool> bGui{ "Box Rectangle", true };
-	//exposed toggle to be used or linked in other parent scope guis!
+	// exposed toggle to be used or linked in other parent scope guis!
 
-	//-
+	//--
 
 public:
 
 	enum BOX_LAYOUT
 	{
 		FREE_LAYOUT = 0,
-		BOTTOM_CENTER,
-		BOTTOM_LEFT,
-		BOTTOM_RIGHT,
-		TOP_CENTER,
 		TOP_LEFT,
+		TOP_CENTER,
 		TOP_RIGHT,
-		CENTER,
+		CENTER_LEFT,
+		CENTER_CENTER,
+		CENTER_RIGHT,
+		BOTTOM_LEFT,
+		BOTTOM_CENTER,
+		BOTTOM_RIGHT,
 
 		NUM_LAYOUTS
 	};
 
 private:
 
-	// Fit Marks
-	int xcenter;
-	int ycenter;
-	int xleft;
-	int xright;
-	int ytop;
-	int ybottom;
+	// Fit inside window marks
+	float xcenter;
+	float ycenter;
+	float xleft;
+	float xright;
+	float ytop;
+	float ybottom;
 
 	//--
 
@@ -164,17 +163,20 @@ public:
 
 	// A simple callback to trig when theme or layout changed
 	//--------------------------------------------------------------
-	bool isChanged() {
+	bool isChanged()
+	{
 		if (!bIsChanged) return false;
-		else {
+		else
+		{
 			bIsChanged = false;
 			return true;
 		}
 	}
 
-	// callback to re fresh fbo's
+	// Callback useful i.e to re fresh Fbo's / viewports.
 	//--------------------------------------------------------------
-	bool isChangedShape() {
+	bool isChangedShape()
+	{
 		static float w;
 		static float h;
 
@@ -207,16 +209,30 @@ public:
 	//--------------------------------------------------------------
 	string getModeLayoutString() {
 		str_modeLayout = "UNKNOWN";
+		/*
+		FREE_LAYOUT = 0,
+		TOP_LEFT,
+		TOP_CENTER,
+		TOP_RIGHT,
+		CENTER_LEFT,
+		CENTER_CENTER,
+		CENTER_RIGHT,
+		BOTTOM_LEFT,
+		BOTTOM_CENTER,
+		BOTTOM_RIGHT,
+		*/
 		switch (modeLayout)
 		{
 		case 0: str_modeLayout = "FREE_LAYOUT"; break;
-		case 1: str_modeLayout = "BOTTOM_CENTER"; break;
-		case 2: str_modeLayout = "BOTTOM_LEFT"; break;
-		case 3: str_modeLayout = "BOTTOM_RIGHT"; break;
-		case 4: str_modeLayout = "TOP_CENTER"; break;
-		case 5: str_modeLayout = "TOP_LEFT"; break;
-		case 6: str_modeLayout = "TOP_RIGHT"; break;
-		case 7: str_modeLayout = "CENTER"; break;
+		case 1: str_modeLayout = "TOP_LEFT"; break;
+		case 2: str_modeLayout = "TOP_CENTER"; break;
+		case 3: str_modeLayout = "TOP_RIGHT"; break;
+		case 4: str_modeLayout = "CENTER_LEFT"; break;
+		case 5: str_modeLayout = "CENTER_CENTER"; break;
+		case 6: str_modeLayout = "CENTER_RIGHT"; break;
+		case 7: str_modeLayout = "BOTTOM_LEFT"; break;
+		case 8: str_modeLayout = "BOTTOM_CENTER"; break;
+		case 9: str_modeLayout = "BOTTOM_RIGHT"; break;
 		default: str_modeLayout = "UNKNOWN LAYOUT"; break;
 		}
 		return str_modeLayout;
@@ -236,6 +252,13 @@ public:
 	float getHeight() { return rect_Box.getHeight(); }
 
 	void setUseBorder(bool b) { bUseBorder = b; }
+
+	//--------------------------------------------------------------
+	void setPads(float x, float y) {//call after setup
+		xpad = x;
+		ypad = y;
+		rect_Box.setPads(xpad, ypad);
+	}
 
 	//--------------------------------------------------------------
 	void setUseBorderBlinking(bool b) {
@@ -285,8 +308,8 @@ private:
 	float round = 5;
 	//int marginBorders = 50;
 
-	int _padx;
-	int _pady;
+	float xpad = 0;
+	float ypad = 0;
 
 	bool bIsEditing = false;
 
@@ -375,10 +398,10 @@ public:
 	//--------------------------------------------------------------
 	void reset(bool bOnlySize = false, int width = 400) {
 
-		int sz = width;
+		float sz = width;
 		rect_Box.setWidth(sz);
 		rect_Box.setHeight(sz);
-		if (!bOnlySize) rect_Box.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
+		if (!bOnlySize) rect_Box.setPosition(ofGetWidth() / 2.f - (sz / 2.f), ofGetHeight() / 2.f - (sz / 2.f));
 	}
 
 	//--------------------------------------------------------------
@@ -400,12 +423,7 @@ public:
 		// Default position
 		reset(false);
 
-		// Fit Marks
-		// padding to borders
-		_padx = 0;
-		_pady = _padx;
-
-		//----
+		//--
 
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 
@@ -413,6 +431,9 @@ public:
 		rect_Box.loadSettings(path_RectHelpBox, path_Global + "/", false);
 
 		rect_Box.setEnableMouseWheel(true);
+		rect_Box.setAutoSave(false);
+
+		//--
 
 		// extra settings
 		params_AppSession.add(bEdit);
@@ -478,7 +499,6 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	//void drawBorderBlinking(ofColor color = ofColor(255, 200))
 	void drawBorderBlinking()
 	{
 		if (!bGui) return;//TODO:
@@ -486,7 +506,6 @@ public:
 		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
 		ofColor c = ofColor(_colorBorder, a);
 
-		//drawBorder(c);
 		// Border
 		ofPushStyle();
 		ofNoFill();
@@ -499,7 +518,7 @@ public:
 	//--------------------------------------------------------------
 	void draw()
 	{
-		if (!bGui) return;//TODO:
+		if (!bGui) return;
 
 		ofPushStyle();
 		{
@@ -507,20 +526,16 @@ public:
 
 			// Simple callbacks
 
-			static ofRectangle rect_Box_PRE = rect_Box.getRect();
+			static ofRectangle rect_Box_PRE;
+			static ofRectangle rect_Box_STORE;
 			static BOX_LAYOUT modeLayout_PRE = NUM_LAYOUTS;
-			static bool bLockedAspectRatio_PRE = false;
+			static bool bLockedAspectRatio_PRE = !bLockedAspectRatio;
 
-			// size changed
-			if (rect_Box.getRect() != rect_Box_PRE) {
-				rect_Box_PRE = rect_Box.getRect();
-				bIsChanged = true;
-			}
-
-			// aspect changed
-			if (bLockedAspectRatio != bLockedAspectRatio_PRE)
+			//TODO:
+			// Pos/Size changed
+			if (rect_Box.getRect() != rect_Box_PRE)
 			{
-				bLockedAspectRatio_PRE = bLockedAspectRatio;
+				rect_Box_PRE = rect_Box.getRect();
 				bIsChanged = true;
 			}
 
@@ -528,17 +543,24 @@ public:
 
 			// Changed Mode
 
-			// memorize free layout mode to not be overwritten by other predefined (top,left..) layout positions.
+			// Memorize free layout mode 
+			// to not be overwritten by 
+			// other predefined (top,left..) layout positions.
 			if (modeLayout != modeLayout_PRE)
 			{
+				// If we are leaving free mode, 
+				// we must remember the rectangle@
 				if (modeLayout_PRE == FREE_LAYOUT)
 				{
-					// store
-					rect_Box_PRE = rect_Box;
+					// Store
+					rect_Box_STORE = rect_Box.getRect();
+					rect_Box_PRE = rect_Box.getRect();
 				}
-				else
+				// Changed to free layout
+				else if (modeLayout == FREE_LAYOUT)
 				{
-					// restore
+					// Restore
+					rect_Box.set(rect_Box_STORE);
 					rect_Box.set(rect_Box_PRE);
 				}
 
@@ -556,68 +578,83 @@ public:
 
 			//--
 
-			updateDoubleClicker();
+			// window
+			float _w = ofGetWidth();
+			float _h = ofGetHeight();
+
+			// box size
+			float _ww = rect_Box.getWidth();
+			float _hh = rect_Box.getHeight();
+
+			// box pos
+			float _xx = 0;
+			float _yy = 0;
 
 			//--
 
-			int _w = ofGetWidth();
-			int _h = ofGetHeight();
-
-			int _ww = rect_Box.getWidth();
-			int _hh = rect_Box.getHeight();
-
-			int _xx;
-			int _yy;
-
-			//-
-
-			if (modeLayout == FREE_LAYOUT) {
-
+			if (modeLayout == FREE_LAYOUT)
+			{
 				_xx = rect_Box.getX();
 				_yy = rect_Box.getY();
 			}
 			else
 			{
-				//-
+				//--
 
 				// Top 
 
-				if (modeLayout == TOP_LEFT) {
+				if (modeLayout == TOP_LEFT)
+				{
 					_xx = xleft;
 					_yy = ytop;
 				}
-				else if (modeLayout == TOP_CENTER) {
+				else if (modeLayout == TOP_CENTER)
+				{
 					_xx = xcenter;
 					_yy = ytop;
 				}
-				else if (modeLayout == TOP_RIGHT) {
+				else if (modeLayout == TOP_RIGHT)
+				{
 					_xx = xright;
 					_yy = ytop;
 				}
 
-				//-
+				//--
 
 				// Center 
 
-				else if (modeLayout == CENTER) {
-
+				else if (modeLayout == CENTER_LEFT)
+				{
+					_xx = xleft;
+					_yy = ycenter;
+				}
+				else if (modeLayout == CENTER_CENTER)
+				{
 					_xx = xcenter;
 					_yy = ycenter;
 				}
+				else if (modeLayout == CENTER_RIGHT)
+				{
+					_xx = xright;
+					_yy = ycenter;
+				}
 
-				//-
+				//--
 
 				// Bottom
 
-				else if (modeLayout == BOTTOM_LEFT) {
+				else if (modeLayout == BOTTOM_LEFT)
+				{
 					_xx = xleft;
 					_yy = ybottom;
 				}
-				else if (modeLayout == BOTTOM_CENTER) {
+				else if (modeLayout == BOTTOM_CENTER)
+				{
 					_xx = xcenter;
 					_yy = ybottom;
 				}
-				else if (modeLayout == BOTTOM_RIGHT) {
+				else if (modeLayout == BOTTOM_RIGHT)
+				{
 					_xx = xright;
 					_yy = ybottom;
 				}
@@ -630,7 +667,45 @@ public:
 				rect_Box.setY(_yy);
 			}
 
-			//-
+			//--
+
+			// Calculate Fit Marks
+			{
+				xcenter = _w / 2.f - _ww / 2.f;
+				ycenter = _h / 2.f - _hh / 2.f;
+
+				xleft = xpad;
+				xright = _w - _ww - xpad;
+
+				ytop = ypad;
+				ybottom = _h - _hh - ypad;
+			}
+
+			//--
+
+			// Force fit box inside the window
+			if (bForceFitInsideWindow) doForceFitOnWindow();
+
+			//----
+
+			// Double clicker handler
+			updateDoubleClicker();
+
+			// Move clicker linked to the box
+			doubleClicker.set(_xx, _yy, _ww, _hh);
+
+			//----
+
+			// Aspect changed
+			if (bLockedAspectRatio != bLockedAspectRatio_PRE)
+			{
+				bLockedAspectRatio_PRE = bLockedAspectRatio;
+				bIsChanged = true;
+			}
+
+			//--
+
+			// Draw
 
 			if (modeLayout == FREE_LAYOUT)
 			{
@@ -640,22 +715,7 @@ public:
 				}
 			}
 
-			//--
-
-			// Fit Marks
-			xcenter = _w / 2 - _ww / 2 + _padx / 2;
-			ycenter = _h / 2 - _hh / 2;
-			xleft = _padx;
-			xright = _w - _ww - _padx;
-			ytop = _pady;
-			ybottom = _h - _hh - _pady;
-
-			//--
-
-			// Move clicker linked to the box
-			doubleClicker.set(_xx, _yy, _ww, _hh);
-
-			//--
+			//----
 
 			if (this->isEditing())
 			{
@@ -675,65 +735,86 @@ public:
 
 			//--
 
-			// Force fit box inside the window
-			//bool bContraints = true;
-			//if (bContraints) doForceFitOnWindow();
-			doForceFitOnWindow();
+			// Detect changes
+			// types and change colors.
 
-			//if (bUseBorder) this->drawBorder();
-			////if (bUseBorder) this->drawBorderBlinking();
+			if (bDebug)
+			{
+				auto r = this->getRectangle();
+
+				ofColor c1, c2;
+				static ofRectangle r_;
+
+				bool bChanged = false;
+				bool bChangedSz = false;
+				bool bChangedPos = false;
+
+				glm::vec2 sz(r.getWidth(), r.getHeight());
+				glm::vec2 pos(r.getX(), r.getY());
+				static glm::vec2 sz_;
+				static glm::vec2 pos_;
+
+				if (r != r_) {
+					r_ = r;
+					bChanged = true;
+				}
+				if (sz != sz_) {
+					sz_ = sz;
+					bChangedSz = true;
+				}
+				if (pos != pos_) {
+					pos_ = pos;
+					bChangedPos = true;
+				}
+
+				string s1 = "Pos  " + ofToString(r.getX(), 0) + " " + ofToString(r.getY(), 0);
+				string s2 = "Sz   " + ofToString(r.getWidth(), 0) + "x" + ofToString(r.getHeight(), 0);
+				c1 = 0;
+				c2 = 0;
+				if (bChangedPos) c1 = ofColor::red;
+				if (bChangedSz) c2 = ofColor::green;
+
+				auto p = r.getTopLeft() + glm::vec2(9 + BORDER_DRAG_SIZE, 19 + BORDER_DRAG_SIZE);
+				ofDrawBitmapStringHighlight(s1, p, c1, 255);
+
+				p = p + glm::vec2(0, 20);
+				ofDrawBitmapStringHighlight(s2, p, c2, 255);
+
+				string s3 = "";
+				s3 += "MODE       " + this->getModeLayoutString() + "\n";
+				s3 += "EDIT       " + ofToString(this->isEditing() ? "TRUE" : "FALSE") + "\n\n";
+				s3 += "xPad       " + ofToString(xpad, 0) + "\n";
+				s3 += "yPad       " + ofToString(ypad, 0) + "\n\n";
+				s3 += "xLeft      " + ofToString(xleft, 0) + "\n";
+				s3 += "yTop       " + ofToString(ytop, 0) + "\n";
+				s3 += "xRight     " + ofToString(xright, 0) + "  " + ofToString(ofGetWidth() - xright - _ww, 0) + "\n";
+				s3 += "yBottom    " + ofToString(ybottom, 0) + "  " + ofToString(ofGetHeight() - ybottom - _hh, 0) + "\n\n";
+				s3 += "xCenter    " + ofToString(xcenter, 0) + "\n";
+				s3 += "yCenter    " + ofToString(ycenter, 0) + "\n\n";
+				s3 += "TopR       " + ofToString(r.getTopRight().x, 0) + ", " + ofToString(r.getTopRight().y, 0) + "\n";
+				s3 += "BottomR    " + ofToString(r.getBottomRight().x, 0) + ", " + ofToString(r.getBottomRight().y, 0) + "\n\n";
+				s3 += "Window     " + ofToString(ofGetWidth()) + "x" + ofToString(ofGetHeight()) /*+ "\n\n"*/;
+				//s3 += "Drag Diff  " + ofToString(rect_Box.diffx) + ", " + ofToString(rect_Box.diffy);
+
+				p = p + glm::vec2(0, 40);
+				ofDrawBitmapStringHighlight(s3, p, 0, 255);
+			}
 		}
 		ofPopStyle();
-
-		//--
-
-		// Detect changes types and change colors
-		if (bDebug)
-		{
-			auto r = this->getRectangle();
-
-			ofColor c1, c2;
-			static ofRectangle r_;
-
-			bool bChanged = false;
-			bool bChangedSz = false;
-			bool bChangedPos = false;
-
-			glm::vec2 sz(r.getWidth(), r.getHeight());
-			glm::vec2 pos(r.getX(), r.getY());
-			static glm::vec2 sz_;
-			static glm::vec2 pos_;
-
-			if (r != r_) {
-				r_ = r;
-				bChanged = true;
-			}
-			if (sz != sz_) {
-				sz_ = sz;
-				bChangedSz = true;
-			}
-			if (pos != pos_) {
-				pos_ = pos;
-				bChangedPos = true;
-			}
-
-			string s1 = "Pos  " + ofToString(r.getX(), 0) + " " + ofToString(r.getY(), 0);
-			string s2 = "Sz   " + ofToString(r.getWidth(), 0) + "x" + ofToString(r.getHeight(), 0);
-			auto p = r.getTopLeft() + glm::vec2(9 + BORDER_DRAG_SIZE, 19 + BORDER_DRAG_SIZE);
-			c1 = 0;
-			c2 = 0;
-			if (bChangedPos) c1 = ofColor::red;
-			if (bChangedSz) c2 = ofColor::green;
-
-			ofDrawBitmapStringHighlight(s1, p, c1, 255);
-			p = p + glm::vec2(0, 24);
-			ofDrawBitmapStringHighlight(s2, p, c2, 255);
-		}
 	}
 
 	//--------------------------------------------------------------
 	void doForceFitOnWindow()
 	{
+		// size
+		if (rect_Box.getWidth() > ofGetWidth() - 2 * xpad) {
+			rect_Box.setWidth(ofGetWidth() - 2 * xpad);
+		}
+		else if (rect_Box.getHeight() > ofGetHeight() - 2 * ypad) {
+			rect_Box.setHeight(ofGetHeight() - 2 * ypad);
+		}
+
+		// position
 		if (rect_Box.getY() > ybottom) // bottom
 		{
 			rect_Box.setY(ybottom);
@@ -794,28 +875,31 @@ private:
 		//--
 
 		// 2. Left pressed + right click : close box!
-		if (this->isEditing())
+		if (this->isEditing()) {
 			if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick()) {
 				//if (doubleClicker.isMouseRightPressedThenPressedLeft()) {
 				ofLogWarning("TextBoxWidget") << (__FUNCTION__);
 				bGui = false;
 			}
+		}
 
 		//--
 
 		// 3. Right click swap modeLayout mode
 		if (doubleClicker.isMouseRightClick())
+		{
 			// 3. Triple clicks swap modeLayout mode
 			//if (doubleClicker.isMouseTripleClick())
-		{
-			bState2 = !bState2;
+			{
+				bState2 = !bState2;
 
-			int i = modeLayout;
-			i++;
-			if (i >= NUM_LAYOUTS) { modeLayout = FREE_LAYOUT; }
-			else { modeLayout = BOX_LAYOUT(i); }
+				int i = modeLayout;
+				i++;
+				if (i >= NUM_LAYOUTS) { modeLayout = FREE_LAYOUT; }
+				else { modeLayout = BOX_LAYOUT(i); }
 
-			bIsChanged = true;
+				bIsChanged = true;
+			}
 		}
 
 		//--
@@ -859,35 +943,16 @@ public:
 		bIsChanged = true;
 	}
 
-	////--------------------------------------------------------------
-	//void setToggleTheme() {
-	//	bThemeDarkOrLight = !bThemeDarkOrLight;
-	//	setTheme(bThemeDarkOrLight);
-	//}
-
-	////--------------------------------------------------------------
-	//void setTheme(bool bTheme) {
-	//	bThemeDarkOrLight = bTheme;
-	//	// Light theme (false = light)
-	//	if (!bThemeDarkOrLight)
-	//	{
-	//		//_colorText = ofColor(0, 255);
-	//		_colorShadow = ofColor(255, 64);
-	//		_colorBg = ofColor(225, 64);
-	//	}
-	//	// Dark theme (white lines & black bg) (true = dark)
-	//	else
-	//	{
-	//		//_colorText = ofColor(255, 150);
-	//		_colorShadow = ofColor(16, 225);
-	//		_colorBg = ofColor(0, 200);
-	//	}
-	//}
-
 	//--------------------------------------------------------------
-	void setToggleMode() {
+	void setToggleMode(bool bBack = false) {
 		int i = BOX_LAYOUT(modeLayout);
-		i++;
+
+		if (!bBack) i++;
+		else {//reverse
+			if (i == FREE_LAYOUT) i = BOTTOM_RIGHT;
+			else i--;
+		}
+
 		i = i % NUM_LAYOUTS;
 		modeLayout = BOX_LAYOUT(i);
 	}
@@ -945,9 +1010,36 @@ public:
 		return bLockedAspectRatio;
 	}
 
+	//----
+
+	//if (key == 'T') boxWidget.setToggleLocked();
+	//helpInfo += "LOCKED CLICKS " + (string)(boxWidget.isLocked() ? "TRUE" : "FALSE");
+
+	//--
+
+	////--------------------------------------------------------------
+	//void setToggleTheme() {
+	//	bThemeDarkOrLight = !bThemeDarkOrLight;
+	//	setTheme(bThemeDarkOrLight);
+	//}
+
+	////--------------------------------------------------------------
+	//void setTheme(bool bTheme) {
+	//	bThemeDarkOrLight = bTheme;
+	//	// Light theme (false = light)
+	//	if (!bThemeDarkOrLight)
+	//	{
+	//		//_colorText = ofColor(0, 255);
+	//		_colorShadow = ofColor(255, 64);
+	//		_colorBg = ofColor(225, 64);
+	//	}
+	//	// Dark theme (white lines & black bg) (true = dark)
+	//	else
+	//	{
+	//		//_colorText = ofColor(255, 150);
+	//		_colorShadow = ofColor(16, 225);
+	//		_colorBg = ofColor(0, 200);
+	//	}
+	//}
+
 };
-
-//if (key == 'T') boxWidget.setToggleLocked();
-//helpInfo += "LOCKED CLICKS " + (string)(boxWidget.isLocked() ? "TRUE" : "FALSE");
-
-//--

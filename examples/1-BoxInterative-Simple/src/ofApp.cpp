@@ -22,11 +22,14 @@ void ofApp::setup()
 
 	// Optional
 	
-	// Force edit
-	boxWidget.setEdit(true);
+	// Force edit on startup
+	//boxWidget.setEdit(true);
 
 	// Debug
-	boxWidget.setDebug(true);
+	//boxWidget.setDebug(true);
+
+	// Set distance to window borders. Default is 4
+	//boxWidget.setPads(10, 10);
 
 	// Borders
 	//boxWidget.setUseBorder(true);
@@ -84,10 +87,14 @@ void ofApp::drawScene()
 void ofApp::keyPressed(int key)
 {
 	if (key == ' ') boxWidget.setToggleEdit();
+
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
 	if (key == 'B') boxWidget.setToggleUseBorder();
 	if (key == 'K') boxWidget.setToggleUseBorderBlinking();
 	if (key == 'D') boxWidget.setToggleDebugDoubleClick();
-	if (key == OF_KEY_TAB) boxWidget.setToggleMode();
+
+	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);
+	if (key == OF_KEY_RIGHT) boxWidget.setToggleMode();
+	
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 }

@@ -553,3 +553,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+*.xml
+*.xml
+examples/1-BoxInterative-Simple/bin/data/ofxSurfingBoxInteractive/myBox_Rect.xml
+examples/1-BoxInterative-Simple/bin/data/ofxSurfingBoxInteractive/myBox_Settings.xml
+examples/1-BoxInterative-Simple/enc_temp_folder/d8b07eb350168aa7be6858194f2ed8e5/ofxInteractiveRect.cpp
