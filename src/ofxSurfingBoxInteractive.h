@@ -52,13 +52,13 @@ class ofxSurfingBoxInteractive /* : public ofBaseApp*/
 public:
 
 	//--------------------------------------------------------------
-	ofxSurfingBoxInteractive()
+	ofxSurfingBoxInteractive::ofxSurfingBoxInteractive()
 	{
 
 	}
 
 	//--------------------------------------------------------------
-	~ofxSurfingBoxInteractive()
+	ofxSurfingBoxInteractive::~ofxSurfingBoxInteractive()
 	{
 		// All app settings
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
@@ -117,11 +117,20 @@ private:
 	bool bLockedAspectRatio = false;
 	bool bIsChanged = false;
 
+public:
+
+	// Lock drag borders
+	void setLockX(bool b) { rect_Box.setLockX(b); };//set enable/disable drag x interaction
+	void setLockY(bool b) { rect_Box.setLockY(b); };//set enable/disable drag y interaction
+	void setLockW(bool b) { rect_Box.setLockW(b); };//set enable/disable drag width interaction
+	void setLockH(bool b) { rect_Box.setLockH(b); };//set enable/disable drag height interaction
+
+private:
+	
 	bool bDebugDoubleClick = false;
 
 	ofParameterGroup params_AppSession{ "AppSession" };
 
-private:
 
 	bool bEnableMouseWheel = true;
 
@@ -225,6 +234,7 @@ public:
 
 	void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hidde.
 
+
 private:
 
 	//bool bUseBorder = false;
@@ -269,6 +279,7 @@ public:
 	//--------------------------------------------------------------
 	void setName(string name) {
 		path_RectHelpBox = name;
+		bGui.setName(name);
 	}
 
 	//--
@@ -801,7 +812,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void setLocked(bool b) {
+	void setLocked(bool b) {//enable/disable move and resize and all interaction
 		bLocked = b;
 		if (b) doubleClicker.disableAllEvents();
 		else doubleClicker.enableAllEvents();
