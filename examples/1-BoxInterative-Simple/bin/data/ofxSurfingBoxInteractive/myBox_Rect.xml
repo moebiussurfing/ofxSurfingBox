@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxSurfingBoxInteractive//</path>
-	<x>0</x>
-	<y>753</y>
-	<width>802</width>
-	<height>296</height>
+	<x>38</x>
+	<y>33</y>
+	<width>150</width>
+	<height>373</height>
 	<name>myBox</name>
 	<isEditing>1</isEditing>
 </interactiveRect>

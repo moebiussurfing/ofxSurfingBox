@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	ofSetWindowPosition(-1920, 25);
+
 	//--
 	
 	// Optional
@@ -22,6 +24,9 @@ void ofApp::setup()
 	
 	// Force edit
 	boxWidget.setEdit(true);
+
+	// Debug
+	boxWidget.setDebug(true);
 
 	// Borders
 	//boxWidget.setUseBorder(true);

@@ -49,12 +49,18 @@
 class ofxSurfingBoxInteractive /* : public ofBaseApp*/
 {
 
+private:
+	bool bDebug = false;
+public:
+	void setDebug(bool b) { bDebug = b; };
+
 public:
 
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive::ofxSurfingBoxInteractive()
 	{
 		//setName("myBox");
+		setRectConstraintMin(glm::vec2(50, 50));
 	}
 
 	//--------------------------------------------------------------
@@ -367,7 +373,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void reset(bool bOnlySize = false, int width = 320) {
+	void reset(bool bOnlySize = false, int width = 400) {
 
 		int sz = width;
 		rect_Box.setWidth(sz);
@@ -678,6 +684,51 @@ public:
 			////if (bUseBorder) this->drawBorderBlinking();
 		}
 		ofPopStyle();
+
+		//--
+
+		// Detect changes types and change colors
+		if (bDebug)
+		{
+			auto r = this->getRectangle();
+
+			ofColor c1, c2;
+			static ofRectangle r_;
+
+			bool bChanged = false;
+			bool bChangedSz = false;
+			bool bChangedPos = false;
+
+			glm::vec2 sz(r.getWidth(), r.getHeight());
+			glm::vec2 pos(r.getX(), r.getY());
+			static glm::vec2 sz_;
+			static glm::vec2 pos_;
+
+			if (r != r_) {
+				r_ = r;
+				bChanged = true;
+			}
+			if (sz != sz_) {
+				sz_ = sz;
+				bChangedSz = true;
+			}
+			if (pos != pos_) {
+				pos_ = pos;
+				bChangedPos = true;
+			}
+
+			string s1 = "Pos  " + ofToString(r.getX(), 0) + " " + ofToString(r.getY(), 0);
+			string s2 = "Sz   " + ofToString(r.getWidth(), 0) + "x" + ofToString(r.getHeight(), 0);
+			auto p = r.getTopLeft() + glm::vec2(9 + BORDER_DRAG_SIZE, 19 + BORDER_DRAG_SIZE);
+			c1 = 0;
+			c2 = 0;
+			if (bChangedPos) c1 = ofColor::red;
+			if (bChangedSz) c2 = ofColor::green;
+
+			ofDrawBitmapStringHighlight(s1, p, c1, 255);
+			p = p + glm::vec2(0, 24);
+			ofDrawBitmapStringHighlight(s2, p, c2, 255);
+		}
 	}
 
 	//--------------------------------------------------------------
