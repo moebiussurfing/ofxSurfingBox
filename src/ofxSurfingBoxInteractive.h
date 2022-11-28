@@ -411,7 +411,7 @@ private:
 	ofColor _colorShadow;
 	ofColor _colorBorder;
 
-	bool bWorflow = false;
+	//bool bWorflow = true;
 
 	bool bIsEditing = false;
 	bool bIsChanged = false;
@@ -560,7 +560,7 @@ public:
 	//--
 
 	//--------------------------------------------------------------
-	bool isVisible() { return bGui.get(); }
+	bool isVisible() const { return bGui.get(); }
 
 	//--------------------------------------------------------------
 	ofRectangle getRectangle() {
@@ -605,7 +605,7 @@ public:
 	void setBorderColor(ofColor c) { _colorBorder = c; }
 
 	//--------------------------------------------------------------
-	void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hide.
+	//void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hide.
 
 	//--------------------------------------------------------------
 	void setName(string name) {
@@ -705,7 +705,7 @@ public:
 		}
 		else //workflow
 		{
-			if (bWorflow)
+			//if (bWorflow)
 			{
 				rect_Box.disableEdit();
 				doubleClicker.disableAllEvents();
@@ -854,9 +854,6 @@ private:
 	{
 		if (!bGui) return;
 
-		//TODO: too tricky maybe. can be simplified.
-		// some drawing are not requiring when not debugging!
-
 		//--
 
 		// 1. Double click to swap edit mode
@@ -876,24 +873,30 @@ private:
 				setEdit(bStateEdit);
 
 				// workflow
+				// set free layout mode
 				if (bStateEdit)
 				{
 					if (modeLayout != FREE_LAYOUT) modeLayout = FREE_LAYOUT;
 				}
+
+				return;
 			}
-	}
+		}
 
 		//--
 
 		// 2. Left pressed + right click : to close box!
 
-		if (this->isEditing())
+		//if (this->isEditing())
 		{
 			//if (doubleClicker.isMouseRightPressedThenPressedLeft()) 
 			if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick())
 			{
 				ofLogWarning("ofxSurfingBoxInteractive") << " " << (__FUNCTION__);
+
 				bGui = false;
+
+				return;
 			}
 		}
 
@@ -915,13 +918,15 @@ private:
 				else { modeLayout = BOX_LAYOUT(i); }
 
 				bIsChanged = true;
+
+				return;
 			}
 		}
 
 		//--
 
-		doubleClicker.draw();
-}
+		if (bDebugDoubleClick) doubleClicker.draw();
+	}
 
 public:
 
@@ -947,6 +952,8 @@ public:
 			{
 				modeLayout = FREE_LAYOUT;
 			}
+
+			//doubleClicker.enableAllEvents();
 		}
 		else
 		{
@@ -955,6 +962,8 @@ public:
 			//TODO: autosave
 			// Save
 			//rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
+
+			//doubleClicker.disableAllEvents();
 		}
 
 		bIsChanged = true;

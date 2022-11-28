@@ -54,14 +54,15 @@ void ofApp::setup()
 void ofApp::draw()
 {
 	// Scene
-	drawScene();
+	// We can link visibility with the widget
+	if (boxWidget.isVisible()) drawSceneBoxed();
 
 	// Box Interactive
 	boxWidget.draw();
 }
 
 //--------------------------------------------------------------
-void ofApp::drawScene()
+void ofApp::drawSceneBoxed()
 {
 	// Draw an animated inner box 
 	// attached to the box rectangle widget
@@ -95,6 +96,7 @@ void ofApp::keyPressed(int key)
 	if (key == 'B') boxWidget.setToggleUseBorder();
 	if (key == 'K') boxWidget.setToggleUseBorderBlinking();
 
+	if (key == 'G') boxWidget.setToggleVisible();
 	if (key == 'D') boxWidget.setToggleDebug();
 	if (key == 'd') boxWidget.setToggleDebugDoubleClick();
 }

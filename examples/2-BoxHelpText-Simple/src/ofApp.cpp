@@ -1,30 +1,37 @@
 #include "ofApp.h"
 
-#define USE_TITLE 0
+#define USE_TITLE 1 // Set to 1 or 0 to use title or not 
 
 //--------------------------------------------------------------
-void ofApp::setup() {
+void ofApp::setup()
+{
 	ofSetWindowPosition(-1900, 100);
 
-	// without title
+	// Optional
+	
+	textBoxWidget.setName("Demo");
+	textBoxWidget.setPath("myAddon");
+
+	//textBoxWidget.setRounded(0);
+	//textBoxWidget.setRounded(50);
+
+	// Without title
 	if (!USE_TITLE)
 	{
 		textBoxWidget.setup();
 	}
-	// using title  
+	// Using title  
 	else
 	{
-		textBoxWidget.setup(true);
-
-		// Set a custom tittle
+		// Pick one
 		//helpTitle = "HELP BOX";
 		helpTitle = "HELP\nBOX";
 		//helpTitle = "HELP\nmyBOX\nAdd-on";
 
 		textBoxWidget.setTitle(helpTitle);
-	}
 
-	//--
+		textBoxWidget.setup();
+	}
 }
 
 //--------------------------------------------------------------
@@ -51,8 +58,9 @@ void ofApp::draw()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 
-	if (key == 'h') textBoxWidget.setToggleVisible();
-	if (key == 't') textBoxWidget.setToggleTheme();
+	if (key == ' ') textBoxWidget.setToogleEdit();
+	if (key == 'H') textBoxWidget.setToggleVisible();
+	if (key == 'T') textBoxWidget.setToggleTheme();
 	if (key == OF_KEY_TAB) textBoxWidget.setToggleLayoutMode();
 }
 
@@ -73,13 +81,15 @@ void ofApp::buildHelpInfo()
 
 	helpInfo += "KEY COMMANDS \n";
 	helpInfo += "\n";
-	helpInfo += "h      HELP \n";
+	helpInfo += "SPACE  EDIT \n";
 	helpInfo += "\n";
-	helpInfo += "t      TOGGLE THEME \n";
-	helpInfo += "       " + textBoxWidget.getThemeName() + "\n";
+	helpInfo += "H      HELP \n";
+	helpInfo += "\n";
+	helpInfo += "T      TOGGLE THEME \n";
+	helpInfo += "       > " + textBoxWidget.getThemeName() + "\n";
 	helpInfo += "\n";
 	helpInfo += "TAB    TOGGLE POSITION \n";
-	helpInfo += "       " + textBoxWidget.getModeName() + "\n";
+	helpInfo += "       > " + textBoxWidget.getModeName();
 
 	textBoxWidget.setText(helpInfo);
 }

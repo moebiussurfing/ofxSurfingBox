@@ -1,6 +1,17 @@
 
 #pragma once
 
+/*
+
+	TODO:
+
+	+ fix broken layout when not using title
+	+ fix top less spacing when not using title
+
+*/
+
+//----
+
 #include "ofMain.h"
 
 #include "ofxSurfingHelpers.h"
@@ -12,26 +23,16 @@
 // Originally taken from ofxSurfingHelpers/gui/widgets/TextBoxWidget.h
 // This class is more updated!
 
-/*
-
-Default fonts to be placed into dat/assets/fonts
-
-JetBrainsMonoNL-ExtraBold.ttf
-JetBrainsMono-ExtraBold.ttf
-
-*/
+//--
 
 /*
 
-	TODO:
+	Default fonts to be placed into /bin/data/assets/fonts
 
-	+ fix broken layout when using
-		a title with one line only!
-		Now we must use two lines.
-	+ use ctrl modifier bc three clicks interferes with double..
+	JetBrainsMonoNL-ExtraBold.ttf
+	JetBrainsMono-ExtraBold.ttf
 
 */
-
 
 /*
 
@@ -49,24 +50,27 @@ JetBrainsMono-ExtraBold.ttf
 // Extra Customization
 /*
 
-//TODO:
-//boxHelpInfo.setFixedHeight(1);
+	//TODO: Currently layout broken if changed
+	textBoxWidget.setPadBox(100);
+	textBoxWidget.setPads(50);
 
- Call before call setup!
-boxHelpInfo.setPath(path_GLOBAL + "HelpBox/");
+	//TODO:
+	//boxHelpInfo.setFixedHeight(1);
 
- Customize Mode
-//boxHelpInfo.setMode(ofxSurfingBoxHelpText::FREE_LAYOUT);
-boxHelpInfo.setMode(ofxSurfingBoxHelpText::BOTTOM_CENTER);
+	 Call before call setup!
+	boxHelpInfo.setPath(path_GLOBAL + "HelpBox/");
 
-// Custom Theme
-boxHelpInfo.setTheme(true); // dark
-//boxHelpInfo.setTheme(false); // light
+	 Customize Mode
+	//boxHelpInfo.setMode(ofxSurfingBoxHelpText::FREE_LAYOUT);
+	boxHelpInfo.setMode(ofxSurfingBoxHelpText::BOTTOM_CENTER);
+
+	// Custom Theme
+	boxHelpInfo.setTheme(true); // dark
+	//boxHelpInfo.setTheme(false); // light
 
 */
 
 //--
-
 
 //#define LOCK_EDIT_ON_NON_FREE_LAYOUT_MODE
 
@@ -78,11 +82,6 @@ public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxHelpText()
 	{
-		//TODO:
-		//doubleClicker.enableAllEvents();
-
-		//--
-
 		// Default Fonts
 
 		//--
@@ -101,40 +100,6 @@ public:
 		size_TTF2 = 22;
 		name_TTF2 = FONT_FILE_SMALL;
 		//name_TTF2 = "JetBrainsMono-ExtraBold.ttf";
-
-		//--
-
-		/*
-		//size_TTF = 10;
-		//name_TTF = "telegrama_render.otf";
-
-		//size_TTF = 12;
-		//name_TTF = "Inconsolata-Bold.ttf";
-
-		//size_TTF = 11;
-		//name_TTF = "JetBrainsMonoNL-SemiBold.ttf";
-
-		//size_TTF = 12;
-		//name_TTF = "UbuntuMono-Bold.ttf";
-
-		//name_TTF = "AnonymousPro-Bold.ttf";
-
-		//name_TTF = "Inconsolata-Medium.ttf";
-		//name_TTF = "Inconsolata-Regular.ttf";
-		//name_TTF = "Inconsolata-Light.ttf";
-		//name_TTF = "Inconsolata-ExtraLight.ttf";
-		//name_TTF = "Inconsolata-Black.ttf";
-		//name_TTF = "Inconsolata_Expanded-Black.ttf";
-
-		//size_TTF = 14;
-		//name_TTF = "Inconsolata_ExtraCondensed-Black.ttf";
-		//
-		//size_TTF = 10;
-		//name_TTF = "overpass-mono-bold.otf";
-
-		//size_TTF = 11;
-		//name_TTF = "telegrama_render.otf";
-		*/
 	}
 
 	//--------------------------------------------------------------
@@ -143,18 +108,20 @@ public:
 		// All app settings
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 
-		rect_HelpTextBox.saveSettings(nameBoxFile, path_Global + "/", false);
+		rBox.saveSettings(nameBoxFile, path_Global + "/", false);
 
-		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
+		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + nameBoxFile + "_Settings.xml");
+		//ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
 		ofRemoveListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 	}
 
 	//--------------------------------------------------------------
-	void setup(bool bUsingTitle = false)
+	//void setup(bool bUsingTitle = false)
+	void setup()
 	{
 		ofLogNotice("ofxSurfingBoxHelpText") << (__FUNCTION__);
 
-		setUseTitle(bUsingTitle);
+		//setUseTitle(bUsingTitle);
 
 		// Fonts path is hardcoded "assets/fonts/";
 		// Put your font files there!
@@ -180,7 +147,6 @@ public:
 		bool bLoaded2 = false;
 		if (bUseTitle)
 		{
-			//path_TTF2 = FONT_FILES_PATH + name_TTF2;
 			bLoaded2 = myFont2.load(FONT_FILES_PATH + name_TTF2, size_TTF2, true, true);
 			if (!bLoaded2) {
 				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_TTF2, true, true);
@@ -196,10 +162,6 @@ public:
 			}
 			if (!bLoaded2)
 				bLoaded2 = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
-
-			titleNumLines = getTitleHeightLines() + 1;
-			ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
-			titleHeight = _r.getHeight() + 5;
 		}
 
 		//--
@@ -226,13 +188,15 @@ public:
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 
 		// Load settings
-		rect_HelpTextBox.loadSettings(nameBoxFile, path_Global + "/", false);
+		rBox.loadSettings(nameBoxFile, path_Global + "/", false);
 
 		// We don't need to resize, draggable borders and decoration.
-		//rect_HelpTextBox.setLockResize(!bNoText);
-		rect_HelpTextBox.setLockResize(true);
-		rect_HelpTextBox.setTransparent();//no hide drawing
-		rect_HelpTextBox.setEnableMouseWheel(false);//bc it's auto resized by amount of added text size!
+		//rBox.setLockResize(!bNoText);
+		rBox.setLockResize(true);
+		rBox.setLockAspectRatio(false);
+		rBox.setTransparent();//no hide drawing
+		rBox.setEnableMouseWheel(false);//bc it's auto resized by amount of added text size!
+		rBox.setPads(xpad, ypad);
 
 		//--
 
@@ -246,9 +210,12 @@ public:
 
 		ofAddListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 
-		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
+		//ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
+		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/" + nameBoxFile + "_Settings.xml");
 
 		bIsChanged = true;
+
+		bDoneSetup = true;
 	}
 
 	//--------------------------------------------------------------
@@ -262,81 +229,104 @@ public:
 	//--------------------------------------------------------------
 	void draw()
 	{
+		if (ofGetFrameNum() == 0)
+		{
+			if (bUseTitle && !bReadyTitle)
+			{
+				if (bDoneSetup) doRefreshTitle();
+			}
+		}
+
+		//--
+
 		if (!bGui) return;
 
 		ofPushStyle();
+		ofSetCircleResolution(100);
 
 		//----
 
 		float _w = ofGetWidth();
 		float _h = ofGetHeight();
 
-		int _xx = 0;
-		int _yy = 0;
+		float _xx = 0;
+		float _yy = 0;
 
 		float _ww = 0;
 		float _hh = 0;
 
 		//--
 
-		updateDoubleClicker();
+		// make spacing for title
+		string ss = "";
+		if (bUseTitle)
+		{
+			//add empty lines
+			string l = "   \n";
+			for (size_t i = 0; i < amountLinesTitle; i++) ss += l;
+
+			ss = ss + text_Body;
+		}
+		else ss = text_Body;
 
 		//--
 
-		if (bNoText)
+		if (!bNoText)
 		{
-			_ww = rect_HelpTextBox.getWidth();
-			_hh = rect_HelpTextBox.getHeight();
+			_ww = ofxSurfingHelpers::getWidthBBtextBoxed(myFont, ss, tpad);
+			_hh = ofxSurfingHelpers::getHeightBBtextBoxed(myFont, ss, tpad);
+
+			rBox.setHeight(_hh);
+			rBox.setWidth(_ww);
 		}
 		else
 		{
-			_ww = ofxSurfingHelpers::getWidthBBtextBoxed(myFont, text_Body, xpad);
-			_hh = ofxSurfingHelpers::getHeightBBtextBoxed(myFont, text_Body, ypad);
-
-			rect_HelpTextBox.setHeight(_hh);
-			rect_HelpTextBox.setWidth(_ww);
+			_ww = rBox.getWidth();
+			_hh = rBox.getHeight();
 		}
 
 		//--
 
 		// Calculate Fit Marks
 
-		//{
-		//	//TODO:
-		//  //must be fixed on ofxSurfingHelpers::drawTextBoxed
-		//	//...manual correction could break layout... 
-		//	// also when not using tittle breaks layout too...
-		//	//float yoffset = tpad;
-		//	float yoffset = 0;
-		//	//float yoffset = size_TTF + 0;
-
-		//	xcenter = _w / 2.f - _ww / 2.f + xpad / 2.f;
-		//	ycenter = _h / 2.f - _hh / 2.f;
-
-		//	ytop = tpad / 2.f - ypad - yoffset;
-		//	ybottom = _h - _hh - ypad - ypad - tpad / 2.f;
-
-		//	xleft = xpad + tpad / 2.f;
-		//	xright = _w - _ww - tpad / 2.f;
-		//}
+		//TODO:
+		//must be fixed on ofxSurfingHelpers::drawTextBoxed
+		//...manual correction could break layout... 
+		// also when not using tittle breaks layout too...
+		//float yoffset = tpad;
 
 		{
-			xpad = 2;
-			ypad = 2;
+			_ww = rBox.getWidth();
+			_hh = rBox.getHeight();
 
-			float xoffset = 2;
-			float yoffset = 14;
+			//round = 0;
+			//round = 50;
 
-			xleft = xpad + tpad / 2.f + xoffset;
-			ytop = ypad + tpad / 2.f + yoffset;
+			//tpad = 0;
+			//xpad = 0;
+			//ypad = 0;
 
-			ybottom = _h - _hh - yoffset;
+			//tpad = 50;
+			//xpad = 4;
+			//ypad = 4;
 
-			xright = _w - _ww - tpad / 2.f - xpad;
+			//tpad = 100;
+			//xpad = 20;
+			//ypad = 20;
 
-			xcenter = _w / 2.f - _ww / 2.f;
-			ycenter = _h / 2.f - _hh / 2.f;
+			//rBox.setPads(xpad, ypad);
+
+			xleft = xpad + tpad / 2;
+			ytop = ypad + tpad / 2;
+
+			xright = _w - _ww + tpad / 2 - xpad;
+			ybottom = _h - _hh + tpad / 2 - ypad;
+
+			xcenter = _w / 2.f - _ww / 2.f + tpad / 2;
+			ycenter = _h / 2.f - _hh / 2.f + tpad / 2;
 		}
+
+		//--
 
 		// Force fit box inside the window
 		doForceFitOnWindow();
@@ -347,25 +337,8 @@ public:
 
 		if (index_ModeLayout.get() == FREE_LAYOUT)
 		{
-			_xx = rect_HelpTextBox.getX();
-			_yy = rect_HelpTextBox.getY();
-		}
-
-		//--
-
-		// Center 
-
-		else if (index_ModeLayout.get() == CENTER_LEFT) {
-			_xx = xleft;
-			_yy = ycenter;
-		}
-		else if (index_ModeLayout.get() == CENTER_CENTER) {
-			_xx = xcenter;
-			_yy = ycenter;
-		}
-		else if (index_ModeLayout.get() == CENTER_RIGHT) {
-			_xx = xright;
-			_yy = ycenter;
+			_xx = rBox.getX();
+			_yy = rBox.getY();
 		}
 
 		//--
@@ -383,6 +356,23 @@ public:
 		else if (index_ModeLayout.get() == TOP_RIGHT) {
 			_xx = xright;
 			_yy = ytop;
+		}
+
+		//--
+
+		// Center 
+
+		else if (index_ModeLayout.get() == CENTER_LEFT) {
+			_xx = xleft;
+			_yy = ycenter;
+		}
+		else if (index_ModeLayout.get() == CENTER_CENTER) {
+			_xx = xcenter;
+			_yy = ycenter;
+		}
+		else if (index_ModeLayout.get() == CENTER_RIGHT) {
+			_xx = xright;
+			_yy = ycenter;
 		}
 
 		//--
@@ -408,31 +398,23 @@ public:
 
 		if (index_ModeLayout.get() == FREE_LAYOUT)
 		{
-			if (rect_HelpTextBox.isEditing())
+			if (rBox.isEditing())
 			{
 				float a = ofxSurfingHelpers::getFadeBlink(0.6f, 1.f);
 				ofColor c = ofColor(_colorBg, _colorBg.a * a);
-
-				rect_HelpTextBox.draw();
-
+				rBox.draw();
 				colorBg = c;
 			}
-			else
-			{
-				colorBg = _colorBg;
-			}
+			else colorBg = _colorBg;
 		}
-		else
-		{
-			colorBg = _colorBg;
-		}
+		else colorBg = _colorBg;
 
 		//--
 
 		if (!bNoText)
 		{
-			//bFixedHeight = false;
-			int h = (bFixedHeight ? hLocked : -1); // Unlocked to resize related to text size
+			//int h = (bFixedHeight ? hLocked : -1); // Unlocked to resize related to text size
+			int h = -1;
 
 			//--
 
@@ -440,26 +422,23 @@ public:
 
 			// 1. Body Text
 
-			ofxSurfingHelpers::drawTextBoxed(myFont, text_Body,
+			ofxSurfingHelpers::drawTextBoxed(myFont, ss,
 				_xx, _yy,
 				_colorText, colorBg, _bUseShadow, _colorShadow,
-				tpad, round, h, true);
+				tpad, round, h, true);//noPad
 
 			//--
 
-			// 2. Tittle Text
+			// 2. Title Text
 
 			if (bUseTitle)
 			{
-				// Get shape
-
 				int _xx2 = _xx;
-				int _yy2 = _yy + titleHeight - size_TTF2;
+				int _yy2 = _yy + tpad/2;
 
 				//--
 
 				// Text shadow
-
 				if (_bUseShadow)
 				{
 					ofSetColor(_colorShadow);
@@ -467,7 +446,6 @@ public:
 				}
 
 				// Text
-
 				ofSetColor(_colorText);
 				myFont2.drawString(text_Title, _xx2, _yy2);
 			}
@@ -475,15 +453,13 @@ public:
 
 		//--
 
-		ofPopStyle();
-
-		// Force fit box inside the window
-		//doForceFitOnWindow();
+		updateDoubleClicker();
+		doubleClicker.set(_xx, _yy, _ww, _hh);
+		doubleClicker.draw();
 
 		//--
 
-		doubleClicker.set(_xx, _yy, _ww, _hh);
-		doubleClicker.draw();
+		ofPopStyle();
 	}
 
 	//--
@@ -567,21 +543,21 @@ private:
 	//--------------------------------------------------------------
 	void doForceFitOnWindow()
 	{
-		if (rect_HelpTextBox.getY() > ybottom) // bottom
+		if (rBox.getY() > ybottom) // bottom
 		{
-			rect_HelpTextBox.setY(ybottom);
+			rBox.setY(ybottom);
 		}
-		else if (rect_HelpTextBox.getX() < xleft) // left
+		else if (rBox.getX() < xleft) // left
 		{
-			rect_HelpTextBox.setX(xleft);
+			rBox.setX(xleft);
 		}
-		else if (rect_HelpTextBox.getX() > xright) // right
+		else if (rBox.getX() > xright) // right
 		{
-			rect_HelpTextBox.setX(xright);
+			rBox.setX(xright);
 		}
-		else if (rect_HelpTextBox.getY() < ytop) // top
+		else if (rBox.getY() < ytop) // top
 		{
-			rect_HelpTextBox.setY(ytop);
+			rBox.setY(ytop);
 		}
 	};
 
@@ -601,12 +577,12 @@ public:
 
 	//--------------------------------------------------------------
 	string getEditingString() {
-		if (rect_HelpTextBox.isEditing()) return "Editing"; else return "Not Editing";
+		if (rBox.isEditing()) return "Editing"; else return "Not Editing";
 	}
 
 	//--------------------------------------------------------------
 	bool getIsEditing() {
-		return rect_HelpTextBox.isEditing();
+		return rBox.isEditing();
 	}
 
 	//--------------------------------------------------------------
@@ -639,34 +615,33 @@ public:
 
 private:
 
-	ofxInteractiveRect rect_HelpTextBox = { "Help_ofxPresetsManager" };
+	ofxInteractiveRect rBox = { "Help_ofxPresetsManager" };
+
 	string nameBoxFile = "HelpBox";
 	string path_Global = "ofxSurfingBoxHelpText/"; // can be setted before setup
 
 	//--
 
-	// font to label clicker boxes
 	ofTrueTypeFont myFont;
-	//string path_TTF;
 	string name_TTF;
-	int size_TTF;
-
-	//// info text to display shortcuts or path settings
-	//string textInfo = "ofxSurfingBoxHelpText \n empty content"; 
+	float size_TTF;
 
 	ofTrueTypeFont myFont2;
-	//string path_TTF2;
 	string name_TTF2;
-	int size_TTF2;
+	float size_TTF2;
 
+	string text_Body = "";
 	string text_Title = "NO TITLE"; // info text to display shortcuts or path settings
 
 	bool bUseTitle = false;
-	int titleHeight = 0;
-	int titleNumLines = 0;
-	// estimated amount lines of the title, but measured on plain text lines height.
+	bool bReadyTitle = false;
+	bool bDoneSetup = false;
+
 	// workaround
+	// Estimated amount lines of the title, but measured on plain text lines height.
 	// that's to discount into the box to make space on top!
+	int amountLinesTitle = 0;
+	//int titleHeight = 0;
 
 	float xpad = 4;
 	float ypad = 4;
@@ -675,9 +650,6 @@ private:
 	float tpad = 50;
 
 	float round = 5;
-
-	//TODO: should be called when the text is settled only.
-	string text_Body = "";
 
 	//--
 
@@ -702,24 +674,29 @@ public:
 		bUseTitle = b;
 	}
 
+private: // disable
 	//--------------------------------------------------------------
 	void setTextMode(bool b) {
 		bNoText = !b;
-		rect_HelpTextBox.setLockResize(b);
+		rBox.setLockResize(b);
 	}
 	//--------------------------------------------------------------
 	void setNoTextMode(bool b) {
 		bNoText = b;
-		rect_HelpTextBox.setLockResize(!b);
+		rBox.setLockResize(!b);
 	}
 	//--------------------------------------------------------------
 	void setToggleNoTextMode() {
 		bNoText = !bNoText;
-		rect_HelpTextBox.setLockResize(!bNoText);
+		rBox.setLockResize(!bNoText);
 	}
+
+	//public:
+private: // disable
+
 	//--------------------------------------------------------------
 	void setShape(ofRectangle shape) {
-		rect_HelpTextBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
+		rBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
 	}
 
 public:
@@ -744,11 +721,11 @@ public:
 		round = r;
 	}
 	//--------------------------------------------------------------
-	void setPadding(int pad = 50) {
+	void setPadBox(int pad = 50) { // Inner padding between box borders an text paragraph
 		tpad = pad;
 	}
 	//--------------------------------------------------------------
-	void setPaddingBorders(int pad = 10) {
+	void setPads(int pad = 4) { // Pad from box to window borders
 		xpad = ypad = pad;
 	}
 
@@ -770,18 +747,10 @@ public:
 		name_TTF2 = name;
 	}
 
-	////--------------------------------------------------------------
-	//void reset() {
-	//	int sz = 200;
-	//	rect_HelpTextBox.setPosition(ofGetWidth() / 2 - (sz / 2), ofGetHeight() / 2 - (sz / 2));
-	//	rect_HelpTextBox.setWidth(sz);
-	//	rect_HelpTextBox.setHeight(sz);
-	//}
-
 	//--------------------------------------------------------------
-	int getTitleHeightLines() {
+	int getTitleAmountLinesUsingBodyFont(string str) {//get amount of title lines but on body font units. to add that spacing after!
 
-		ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
+		ofRectangle _r(myFont2.getStringBoundingBox(str, 0, 0));
 		float _h = _r.getHeight();
 
 		return (_h / (float)size_TTF);
@@ -883,16 +852,16 @@ public:
 	{
 		if (bEdit)
 		{
-			rect_HelpTextBox.enableEdit();
+			rBox.enableEdit();
 
 			if (index_ModeLayout.get() != FREE_LAYOUT) index_ModeLayout = FREE_LAYOUT;
 		}
 		else
 		{
-			rect_HelpTextBox.disableEdit();
+			rBox.disableEdit();
 
 			// All app settings
-			rect_HelpTextBox.saveSettings(nameBoxFile, path_Global + "/", false);
+			rBox.saveSettings(nameBoxFile, path_Global + "/", false);
 		}
 
 		bIsChanged = true;
@@ -901,7 +870,7 @@ public:
 	//--------------------------------------------------------------
 	void setToogleEdit()
 	{
-		bool b = rect_HelpTextBox.isEditing();
+		bool b = rBox.isEditing();
 		setEdit(!b);
 	}
 
@@ -988,7 +957,7 @@ public:
 		//if (bUseTitle)
 		//{
 		//	string _l = "   \n";
-		//	for (size_t i = 0; i < titleNumLines; i++) text_Body += _l;
+		//	for (size_t i = 0; i < amountLinesTitle; i++) text_Body += _l;
 		//	text_Body = text_Body + ss;
 		//}
 		//else text_Body = ss;
@@ -1007,23 +976,28 @@ public:
 
 		text_Title = text;
 
-		//text_Title = "\n";
-		//text_Title += text;
+		if (bDoneSetup) doRefreshTitle();
+	}
 
-		titleNumLines = getTitleHeightLines() + 1;
-		ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
-		titleHeight = _r.getHeight() + 5;
+private:
 
-		//// Only required to update title on the fly!
-		//string ss = textInfo;
-		//text_Body = "\n";
-		//if (bUseTitle)
-		//{
-		//	string _l = "   \n";
-		//	for (size_t i = 0; i < titleNumLines; i++) text_Body += _l;
-		//	text_Body = text_Body + ss;
-		//}
-		//else text_Body = ss;
+	//--------------------------------------------------------------
+	void doRefreshTitle()
+	{
+		amountLinesTitle = getTitleAmountLinesUsingBodyFont(text_Title);
+		//amountLinesTitle += 1; // extra spacing
+		//amountLinesTitle += 1; // extra spacing
+
+		if (amountLinesTitle < 3) amountLinesTitle += 2; // extra spacing
+		else if (amountLinesTitle < 6) amountLinesTitle += 1; // extra spacing
+		// fix workaround to avoid too big space
+
+		//TODO:
+		//ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
+		//titleHeight = _r.getHeight();
+		//titleHeight += 5;//pad
+
+		bReadyTitle = true;
 	}
 
 	//--
