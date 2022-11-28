@@ -1,26 +1,47 @@
 #include "ofApp.h"
 
+#define USE_TITLE 0
+
 //--------------------------------------------------------------
 void ofApp::setup() {
+	ofSetWindowPosition(-1900, 100);
 
-	// Set a custom tittle
-	// before calling setup()
-	std::string helpTitle = "";
-	helpTitle += "HELP \n";
-	helpTitle += "BOX \n";
-	textBoxWidget.setTitle(helpTitle);
+	// without title
+	if (!USE_TITLE)
+	{
+		textBoxWidget.setup();
+	}
+	// using title  
+	else
+	{
+		textBoxWidget.setup(true);
+
+		// Set a custom tittle
+		//helpTitle = "HELP BOX";
+		helpTitle = "HELP\nBOX";
+		//helpTitle = "HELP\nmyBOX\nAdd-on";
+
+		textBoxWidget.setTitle(helpTitle);
+	}
 
 	//--
-
-	textBoxWidget.setup();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	// Maybe, with a callback, we could build the info only when we want to be updated.
-	// Here is updated on every frame.
-	buildHelpInfo();
+	// update
+	//textBoxWidget.setTitle(helpTitle + " " + ofToString(ofGetFrameRate(), 0));
+
+	// Maybe, with a callback, 
+	// we could build the box info 
+	// only when we want to be updated.
+	// We use the own internal callback 
+	// top detect that some internal stuff changed.
+	if (textBoxWidget.isChanged())
+	{
+		buildHelpInfo();
+	}
 
 	//--
 
@@ -43,12 +64,13 @@ void ofApp::buildHelpInfo()
 	std::string helpInfo = "";
 
 	bool b = textBoxWidget.getIsEditing();
-	
-	helpInfo += "DoubleClick to " + ofToString(b ? "LOCK" : "EDIT") + ". \n\n";
-	helpInfo += "LeftClick + RightClick to close.\n\n";
-	helpInfo += "Drag the Box around the window! \n\n";
-	helpInfo += "Layout will be auto saved. \n\n";
-	helpInfo += "\n";
+	helpInfo += ofToString(!b ? "LOCKED! " : "EDITING!");
+	helpInfo += "\nDoubleClick > " + ofToString(b ? "LOCK" : "EDIT") + ". \n\n";
+
+	helpInfo += "LeftClick + RightClick to close.\n";
+	helpInfo += "Drag the Box around the window!\n";
+	helpInfo += "Layout will be auto saved.\n\n";
+
 	helpInfo += "KEY COMMANDS \n";
 	helpInfo += "\n";
 	helpInfo += "h      HELP \n";

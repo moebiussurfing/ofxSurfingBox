@@ -7,6 +7,8 @@
 #include "ofxInteractiveRect.h"
 #include "DoubleClicker.h"
 
+#define AUTO_CASE_CREATE(a) case a: return #a
+
 // Originally taken from ofxSurfingHelpers/gui/widgets/TextBoxWidget.h
 // This class is more updated!
 
@@ -23,7 +25,8 @@ JetBrainsMono-ExtraBold.ttf
 
 	TODO:
 
-	+ fix broken layout when using a title with one line only!
+	+ fix broken layout when using
+		a title with one line only!
 		Now we must use two lines.
 	+ use ctrl modifier bc three clicks interferes with double..
 
@@ -147,18 +150,17 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void setup()
+	void setup(bool bUsingTitle = false)
 	{
-		ofLogNotice(__FUNCTION__);
+		ofLogNotice("ofxSurfingBoxHelpText") << (__FUNCTION__);
 
-		//string pathRoot = FONT_FILES_PATH;
-		//string pathRoot = "assets/fonts/";
-		// this is hardcoded. 
+		setUseTitle(bUsingTitle);
+
+		// Fonts path is hardcoded "assets/fonts/";
 		// Put your font files there!
 		// You can customize only the font file name.
+		// path = FONT_FILES_PATH + name;
 
-		//path_TTF = FONT_FILES_PATH + ofToString(FONT_FILE_SMALL);
-		//path_TTF = FONT_FILES_PATH + name_TTF;
 		bool bLoaded = myFont.load(FONT_FILES_PATH + name_TTF, size_TTF, true, true);
 		if (!bLoaded) {
 			bLoaded = myFont.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_TTF, true, true);
@@ -172,36 +174,39 @@ public:
 		if (!bLoaded) {
 			bLoaded = myFont.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_TTF, true, true);
 		}
-		if (!bLoaded) bLoaded = myFont.load(OF_TTF_MONO, size_TTF, true, true);
+		if (!bLoaded)
+			bLoaded = myFont.load(OF_TTF_MONO, size_TTF, true, true);
 
-		if (bTitleSetted)
+		bool bLoaded2 = false;
+		if (bUseTitle)
 		{
 			//path_TTF2 = FONT_FILES_PATH + name_TTF2;
-			bool bLoaded2 = myFont2.load(FONT_FILES_PATH + name_TTF2, size_TTF2, true, true);
-			if (!bLoaded) {
+			bLoaded2 = myFont2.load(FONT_FILES_PATH + name_TTF2, size_TTF2, true, true);
+			if (!bLoaded2) {
 				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_TTF2, true, true);
 			}
-			if (!bLoaded) {
-				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_SMALL), size_TTF2, true, true);
+			if (!bLoaded2) {
+				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_SMALL), size_TTF2, true, true);
 			}
-			if (!bLoaded) {
-				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT1), size_TTF2, true, true);
+			if (!bLoaded2) {
+				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT1), size_TTF2, true, true);
 			}
-			if (!bLoaded) {
-				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_TTF2, true, true);
+			if (!bLoaded2) {
+				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_TTF2, true, true);
 			}
-			if (!bLoaded) bLoaded = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
+			if (!bLoaded2)
+				bLoaded2 = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
 
 			titleNumLines = getTitleHeightLines() + 1;
-			ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
+			ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
 			titleHeight = _r.getHeight() + 5;
 		}
 
 		//--
 
-		//TODO: auto set padding...
+		//TODO: auto set tpad...
 		//round = 5;
-		//padding = size_TTF * 20;
+		//tpad = size_TTF * 20;
 
 		//--
 
@@ -242,6 +247,8 @@ public:
 		ofAddListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 
 		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
+
+		bIsChanged = true;
 	}
 
 	//--------------------------------------------------------------
@@ -283,8 +290,8 @@ public:
 		}
 		else
 		{
-			_ww = ofxSurfingHelpers::getWidthBBtextBoxed(myFont, _ss, _padx);
-			_hh = ofxSurfingHelpers::getHeightBBtextBoxed(myFont, _ss, _pady);
+			_ww = ofxSurfingHelpers::getWidthBBtextBoxed(myFont, text_Body, xpad);
+			_hh = ofxSurfingHelpers::getHeightBBtextBoxed(myFont, text_Body, ypad);
 
 			rect_HelpTextBox.setHeight(_hh);
 			rect_HelpTextBox.setWidth(_ww);
@@ -292,22 +299,44 @@ public:
 
 		//--
 
-		// Fit Marks
+		// Calculate Fit Marks
 
-		//TODO:L must be fixed on ofxSurfingHelpers::drawTextBoxed
-		//...manual correction could break layout... 
-		// also when not using tittle breaks layout too...
-		float offset = 0;
-		//float offset = size_TTF + 0;
+		//{
+		//	//TODO:
+		//  //must be fixed on ofxSurfingHelpers::drawTextBoxed
+		//	//...manual correction could break layout... 
+		//	// also when not using tittle breaks layout too...
+		//	//float yoffset = tpad;
+		//	float yoffset = 0;
+		//	//float yoffset = size_TTF + 0;
 
-		ytop = padding / 2 - _pady - offset;
-		ybottom = _h - _hh - _pady - _pady - padding / 2;
+		//	xcenter = _w / 2.f - _ww / 2.f + xpad / 2.f;
+		//	ycenter = _h / 2.f - _hh / 2.f;
 
-		xcenter = _w / 2 - _ww / 2 + _padx / 2;
-		ycenter = _h / 2 - _hh / 2;
+		//	ytop = tpad / 2.f - ypad - yoffset;
+		//	ybottom = _h - _hh - ypad - ypad - tpad / 2.f;
 
-		xleft = _padx + padding / 2;
-		xright = _w - _ww - padding / 2;
+		//	xleft = xpad + tpad / 2.f;
+		//	xright = _w - _ww - tpad / 2.f;
+		//}
+
+		{
+			xpad = 2;
+			ypad = 2;
+
+			float xoffset = 2;
+			float yoffset = 14;
+
+			xleft = xpad + tpad / 2.f + xoffset;
+			ytop = ypad + tpad / 2.f + yoffset;
+
+			ybottom = _h - _hh - yoffset;
+
+			xright = _w - _ww - tpad / 2.f - xpad;
+
+			xcenter = _w / 2.f - _ww / 2.f;
+			ycenter = _h / 2.f - _hh / 2.f;
+		}
 
 		// Force fit box inside the window
 		doForceFitOnWindow();
@@ -322,13 +351,20 @@ public:
 			_yy = rect_HelpTextBox.getY();
 		}
 
-		//-
+		//--
 
 		// Center 
 
-		else if (index_ModeLayout.get() == CENTER) {
-
+		else if (index_ModeLayout.get() == CENTER_LEFT) {
+			_xx = xleft;
+			_yy = ycenter;
+		}
+		else if (index_ModeLayout.get() == CENTER_CENTER) {
 			_xx = xcenter;
+			_yy = ycenter;
+		}
+		else if (index_ModeLayout.get() == CENTER_RIGHT) {
+			_xx = xright;
 			_yy = ycenter;
 		}
 
@@ -402,18 +438,18 @@ public:
 
 			// Draw
 
-			// Body Text
+			// 1. Body Text
 
-			ofxSurfingHelpers::drawTextBoxed(myFont, _ss,
+			ofxSurfingHelpers::drawTextBoxed(myFont, text_Body,
 				_xx, _yy,
 				_colorText, colorBg, _bUseShadow, _colorShadow,
-				padding, round, h, true);
+				tpad, round, h, true);
 
 			//--
 
-			// Tittle Text
+			// 2. Tittle Text
 
-			if (bTitleSetted)
+			if (bUseTitle)
 			{
 				// Get shape
 
@@ -427,19 +463,15 @@ public:
 				if (_bUseShadow)
 				{
 					ofSetColor(_colorShadow);
-					myFont2.drawString(textTitle, _xx2 + 1, _yy2 + 1);
+					myFont2.drawString(text_Title, _xx2 + 1, _yy2 + 1);
 				}
 
 				// Text
 
 				ofSetColor(_colorText);
-				myFont2.drawString(textTitle, _xx2, _yy2);
+				myFont2.drawString(text_Title, _xx2, _yy2);
 			}
 		}
-
-		//--
-
-		doubleClicker.set(_xx, _yy, _ww, _hh);
 
 		//--
 
@@ -450,6 +482,7 @@ public:
 
 		//--
 
+		doubleClicker.set(_xx, _yy, _ww, _hh);
 		doubleClicker.draw();
 	}
 
@@ -460,8 +493,8 @@ private:
 	//--------------------------------------------------------------
 	void Changed(ofAbstractParameter& e)
 	{
-		std::string name = e.getName();
-		ofLogNotice(__FUNCTION__) << name << " : " << e;
+		string name = e.getName();
+		ofLogNotice("ofxSurfingBoxHelpText") << (__FUNCTION__) << name << " : " << e;
 
 		//--
 
@@ -485,29 +518,27 @@ private:
 		}
 	}
 
-	bool bEnableMouseWheel = false;
-
 public:
-
-	void setEnableMouseWheel(bool b) { bEnableMouseWheel = b; }
 
 	ofParameter<bool> bGui{ "Help", true }; //exposed toggle to be used or linked in other parent scope guis!
 
 	// Example: 
-// Can be linked before calling setup()
-//boxHelpInfo.bGui.makeReferenceTo(ui.bHelp);
+	// Can be linked before calling setup()
+	//boxHelpInfo.bGui.makeReferenceTo(ui.bHelp);
 
-//-
+	//-
 
 public:
 
 	enum BOX_LAYOUT
 	{
 		FREE_LAYOUT = 0,
-		CENTER,
 		TOP_LEFT,
 		TOP_CENTER,
 		TOP_RIGHT,
+		CENTER_LEFT,
+		CENTER_CENTER,
+		CENTER_RIGHT,
 		BOTTOM_LEFT,
 		BOTTOM_CENTER,
 		BOTTOM_RIGHT,
@@ -526,12 +557,12 @@ private:
 	bool bIsChanged = false;
 
 	// Fit Marks
-	int xcenter;
-	int ycenter;
-	int xleft;
-	int xright;
-	int ytop;
-	int ybottom;
+	float xcenter;
+	float ycenter;
+	float xleft;
+	float xright;
+	float ytop;
+	float ybottom;
 
 	//--------------------------------------------------------------
 	void doForceFitOnWindow()
@@ -590,65 +621,63 @@ public:
 
 	//--------------------------------------------------------------
 	string getModeName() {
-		name_ModeLayout = "UNKNOWN";
-
-		//FREE_LAYOUT = 0,
-		//CENTER,
-		//TOP_LEFT,
-		//TOP_CENTER,
-		//TOP_RIGHT,
-		//BOTTOM_LEFT,
-		//BOTTOM_CENTER,
-		//BOTTOM_RIGHT,
-
-		switch (index_ModeLayout)
-		{
-		case 0: name_ModeLayout = "FREE_LAYOUT"; break;
-		case 1: name_ModeLayout = "CENTER"; break;
-		case 2: name_ModeLayout = "TOP_LEFT"; break;
-		case 3: name_ModeLayout = "TOP_CENTER"; break;
-		case 4: name_ModeLayout = "TOP_RIGHT"; break;
-		case 5: name_ModeLayout = "BOTTOM_LEFT"; break;
-		case 6: name_ModeLayout = "BOTTOM_CENTER"; break;
-		case 7: name_ModeLayout = "BOTTOM_RIGHT"; break;
-		default: name_ModeLayout = "UNKNOWN LAYOUT"; break;
+		BOX_LAYOUT modeLayout = BOX_LAYOUT(index_ModeLayout.get());
+		switch (modeLayout) {
+			AUTO_CASE_CREATE(FREE_LAYOUT);
+			AUTO_CASE_CREATE(TOP_LEFT);
+			AUTO_CASE_CREATE(TOP_CENTER);
+			AUTO_CASE_CREATE(TOP_RIGHT);
+			AUTO_CASE_CREATE(CENTER_LEFT);
+			AUTO_CASE_CREATE(CENTER_CENTER);
+			AUTO_CASE_CREATE(CENTER_RIGHT);
+			AUTO_CASE_CREATE(BOTTOM_LEFT);
+			AUTO_CASE_CREATE(BOTTOM_CENTER);
+			AUTO_CASE_CREATE(BOTTOM_RIGHT);
+		default: return "UNKNOWN LAYOUT";
 		}
-		return name_ModeLayout;
 	}
 
 private:
 
 	ofxInteractiveRect rect_HelpTextBox = { "Help_ofxPresetsManager" };
-	std::string nameBoxFile = "HelpBox";
-	std::string path_Global = "ofxSurfingBoxHelpText/"; // can be setted before setup
+	string nameBoxFile = "HelpBox";
+	string path_Global = "ofxSurfingBoxHelpText/"; // can be setted before setup
 
 	//--
 
 	// font to label clicker boxes
 	ofTrueTypeFont myFont;
-	//std::string path_TTF;
-	std::string name_TTF;
+	//string path_TTF;
+	string name_TTF;
 	int size_TTF;
-	std::string textInfo = "ofxSurfingBoxHelpText \n empty content"; // info text to display shortcuts or path settings
+
+	//// info text to display shortcuts or path settings
+	//string textInfo = "ofxSurfingBoxHelpText \n empty content"; 
 
 	ofTrueTypeFont myFont2;
-	//std::string path_TTF2;
-	std::string name_TTF2;
+	//string path_TTF2;
+	string name_TTF2;
 	int size_TTF2;
-	std::string textTitle = "NO TITLE"; // info text to display shortcuts or path settings
 
-	bool bTitleSetted = false;
+	string text_Title = "NO TITLE"; // info text to display shortcuts or path settings
+
+	bool bUseTitle = false;
 	int titleHeight = 0;
 	int titleNumLines = 0;
 	// estimated amount lines of the title, but measured on plain text lines height.
 	// workaround
 	// that's to discount into the box to make space on top!
 
-	int _padx = 10;
-	int _pady = 10;
+	float xpad = 4;
+	float ypad = 4;
 
-	//TODO: should be called when the text is setted only.
-	string _ss = "";
+	// to inner text
+	float tpad = 50;
+
+	float round = 5;
+
+	//TODO: should be called when the text is settled only.
+	string text_Body = "";
 
 	//--
 
@@ -662,14 +691,16 @@ private:
 
 	bool bStateEdit = false;
 
-	float round = 5;
-	int padding = 50;
-
 	bool bNoText = false;
 
 	ofParameter<bool> bThemeDarkOrLight{ "Theme", true };
 
 public:
+
+	//--------------------------------------------------------------
+	void setUseTitle(bool b) {
+		bUseTitle = b;
+	}
 
 	//--------------------------------------------------------------
 	void setTextMode(bool b) {
@@ -714,11 +745,11 @@ public:
 	}
 	//--------------------------------------------------------------
 	void setPadding(int pad = 50) {
-		padding = pad;
+		tpad = pad;
 	}
 	//--------------------------------------------------------------
 	void setPaddingBorders(int pad = 10) {
-		_padx = _pady = pad;
+		xpad = ypad = pad;
 	}
 
 	//--------------------------------------------------------------
@@ -750,10 +781,10 @@ public:
 	//--------------------------------------------------------------
 	int getTitleHeightLines() {
 
-		ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
-		int _h = _r.getHeight();
+		ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
+		float _h = _r.getHeight();
 
-		return (_h / size_TTF);
+		return (_h / (float)size_TTF);
 	}
 
 	//-
@@ -811,8 +842,10 @@ private:
 
 		if (ofGetMousePressed(0) && doubleClicker.isMouseRightClick()) {
 			//if (doubleClicker.isMouseRightPressedThenPressedLeft()) {
-			ofLogWarning("TextBoxWidget") << (__FUNCTION__);
+			ofLogWarning("ofxSurfingBoxHelpText") << (__FUNCTION__);
 			bGui = false;
+
+			bIsChanged = true;
 		}
 
 		//--
@@ -823,7 +856,7 @@ private:
 		{
 			if (getIsEditing())
 			{
-				ofLogNotice(__FUNCTION__) << "isMouseRightClick";
+				ofLogNotice("ofxSurfingBoxHelpText") << (__FUNCTION__) << "isMouseRightClick";
 
 				int i = index_ModeLayout.get();
 				i++;
@@ -831,8 +864,6 @@ private:
 				else { index_ModeLayout = BOX_LAYOUT(i); }
 			}
 		}
-
-		//--
 
 		//--
 	}
@@ -843,6 +874,8 @@ public:
 	void setDebug(bool b)//must call after setup!
 	{
 		doubleClicker.setDebug(b);
+
+		bIsChanged = true;
 	}
 
 	//--------------------------------------------------------------
@@ -861,6 +894,8 @@ public:
 			// All app settings
 			rect_HelpTextBox.saveSettings(nameBoxFile, path_Global + "/", false);
 		}
+
+		bIsChanged = true;
 	}
 
 	//--------------------------------------------------------------
@@ -895,6 +930,8 @@ public:
 			_colorShadow = ofColor(16, 225);
 			_colorBg = ofColor(0, 200);
 		}
+
+		bIsChanged = true;
 	}
 
 	//--------------------------------------------------------------
@@ -904,11 +941,15 @@ public:
 		i = i % NUM_LAYOUTS;
 
 		index_ModeLayout = i;
+
+		bIsChanged = true;
 	}
 
 	//--------------------------------------------------------------
 	void setMode(BOX_LAYOUT mode) {
 		index_ModeLayout = mode;
+
+		bIsChanged = true;
 	}
 
 	//--------------------------------------------------------------
@@ -917,6 +958,8 @@ public:
 
 		//if (b) doubleClicker.disableAllEvents();
 		//else doubleClicker.enableAllEvents();
+
+		bIsChanged = true;
 	}
 
 	//--
@@ -924,10 +967,14 @@ public:
 	//--------------------------------------------------------------
 	void setVisible(bool b) {
 		bGui = b;
+
+		bIsChanged = true;
 	}
 	//--------------------------------------------------------------
 	void setToggleVisible() {
 		bGui = !bGui;
+
+		bIsChanged = true;
 	}
 
 public:
@@ -935,56 +982,57 @@ public:
 	//--------------------------------------------------------------
 	// Must be called after	calling setup if using tittle!
 	void setText(string text) {//erase text and create new text
-		textInfo = text;
+		text_Body = text;
 
-		std::string ss = textInfo;
-		_ss = "\n";
-		if (bTitleSetted)
-		{
-			string _l = "   \n";
-			for (size_t i = 0; i < titleNumLines; i++) _ss += _l;
-			_ss = _ss + ss;
-		}
-		else _ss = ss;
+		//text_Body = "\n";
+		//if (bUseTitle)
+		//{
+		//	string _l = "   \n";
+		//	for (size_t i = 0; i < titleNumLines; i++) text_Body += _l;
+		//	text_Body = text_Body + ss;
+		//}
+		//else text_Body = ss;
 	}
 
 	//--------------------------------------------------------------
 	void addText(string text) {//queue text at end
-		textInfo += text;
+		text_Body += text;
 	}
 
+	//TODO: BUG: sometimes happens some memory leaking?
 	// Must be called before calling setup!
-	// //TODO: BUG: sometimes happens some memory leaking?
 	//--------------------------------------------------------------
 	void setTitle(string text) {//must call before setup to correct layout!
-		bTitleSetted = true;
+		bUseTitle = true;
 
-		textTitle = "\n";
-		textTitle += text;
+		text_Title = text;
+
+		//text_Title = "\n";
+		//text_Title += text;
 
 		titleNumLines = getTitleHeightLines() + 1;
-		ofRectangle _r(myFont2.getStringBoundingBox(textTitle, 0, 0));
+		ofRectangle _r(myFont2.getStringBoundingBox(text_Title, 0, 0));
 		titleHeight = _r.getHeight() + 5;
 
-		// Only required to update title on the fly!
-		std::string ss = textInfo;
-		_ss = "\n";
-		if (bTitleSetted)
-		{
-			string _l = "   \n";
-			for (size_t i = 0; i < titleNumLines; i++) _ss += _l;
-			_ss = _ss + ss;
-		}
-		else _ss = ss;
+		//// Only required to update title on the fly!
+		//string ss = textInfo;
+		//text_Body = "\n";
+		//if (bUseTitle)
+		//{
+		//	string _l = "   \n";
+		//	for (size_t i = 0; i < titleNumLines; i++) text_Body += _l;
+		//	text_Body = text_Body + ss;
+		//}
+		//else text_Body = ss;
 	}
 
 	//--
 
-//	//TODO:
-//	// Should be added to the ofxSurfingHelpers::drawTextBoxed, adding a bool flag to force height..
-//	// A workaround to lock the box height to the amount of lines using a 'I' char, 
-//	// then it will not depends to the chars of the text. 
-//	// An using case could be an only one line text and his box height will no being different depending on used chars..
+	//TODO:
+	// Should be added to the ofxSurfingHelpers::drawTextBoxed, adding a bool flag to force height..
+	// A workaround to lock the box height to the amount of lines using a 'I' char, 
+	// then it will not depends to the chars of the text. 
+	// An using case could be an only one line text and his box height will no being different depending on used chars..
 
 private:
 
@@ -995,14 +1043,15 @@ private:
 public:
 
 	//TODO: workaround
+	// An small tweak to fix box size to an amount of lines
 	//--------------------------------------------------------------
-	void setFixedHeight(int amntLines = 1) { // an small tweak to fix box size to an amount of lines
+	void setFixedHeight(int amntLines = 1) {
 		bFixedHeight = true;
 		numLines = amntLines;
 
-		std::string _ss = "";
+		string _ss = "";
 		for (int i = 0; i < numLines; i++) { _ss += "I" + (i == 0 && i < numLines - 1) ? "" : "\n"; }
-		//std::string _ss = "I";
+		//string _ss = "I";
 		hLocked = ofxSurfingHelpers::getHeightBBtextBoxed(myFont, _ss);
 	}
 

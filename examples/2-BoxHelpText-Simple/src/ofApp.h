@@ -13,6 +13,8 @@ class ofApp : public ofBaseApp
 		void keyPressed(int key);
 		
 		void buildHelpInfo(); 
+		
+		string helpTitle = "";
 
 		ofxSurfingBoxHelpText textBoxWidget;
 };
