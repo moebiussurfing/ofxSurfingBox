@@ -32,8 +32,8 @@ void ofApp::setup() {
 	// Customize Style
 	if (0) // uncomment to use the default styles.
 	{
-		textBoxWidget.setPaddingBorders(0);
-		textBoxWidget.setPadding(0);
+		textBoxWidget.setPads(0);
+		textBoxWidget.setPadBox(0);
 		textBoxWidget.setRounded(0);
 
 		//textBoxWidget.setPadding(120);
@@ -99,8 +99,9 @@ void ofApp::keyPressed(int key) {
 	if (key == OF_KEY_TAB) textBoxWidget.setToggleLayoutMode();
 	if (key == ' ') textBoxWidget.setToogleEdit();
 	if (key == 'h' || key == 'H') textBoxWidget.setToggleVisible();
-	if (key == 't') textBoxWidget.setToggleTheme();
-	if (key == 'm') bMinimized = !bMinimized;
+	if (key == 'G') textBoxWidget.setToggleVisible();
+	if (key == 'T') textBoxWidget.setToggleTheme();
+	if (key == 'M') bMinimized = !bMinimized;
 }
 
 //--------------------------------------------------------------
