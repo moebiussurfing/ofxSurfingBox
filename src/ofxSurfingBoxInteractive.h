@@ -42,14 +42,14 @@ class ofxSurfingBoxInteractive
 public:
 
 	//--------------------------------------------------------------
-	ofxSurfingBoxInteractive::ofxSurfingBoxInteractive()
+    ofxSurfingBoxInteractive()
 	{
 		setRectConstraintMin(glm::vec2(50, 50));
 		setPads(4, 4);
 	}
 
 	//--------------------------------------------------------------
-	ofxSurfingBoxInteractive::~ofxSurfingBoxInteractive()
+    ~ofxSurfingBoxInteractive()
 	{
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 		bUseBorder.removeListener(this, &ofxSurfingBoxInteractive::Changed_Border);
