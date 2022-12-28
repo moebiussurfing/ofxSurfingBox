@@ -3,100 +3,149 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	//ofSetWindowPosition(-1920, 23);
+	ofSetWindowPosition(-1920, 23);
 
 	//--
 
-	// Optional
+	//// Optional
 
-	// Customize to avoid collide 
-	// when using multiple instances!
-	boxWidget.setName("Demo"); // for the filename
-	boxWidget.setPath("MyAddon/"); // for the container folder
+	//// Customize to avoid collide 
+	//// when using multiple instances!
+	//boxWidget.setName("Demo"); // for the filename
+	//boxWidget.setPath("MyAddon/"); // for the container folder
 
 	//--
 
 	boxWidget.setup();
 
-	//--
+	buildHelpInfo();
+	//boxWidget.setPadX(50);
+	//boxWidget.setPadY(100);
+	//boxWidget.setPadX(0);
+	//boxWidget.setPadY(0);
+}
 
-	// Optional
+//--------------------------------------------------------------
+void ofApp::update()
+{
+	if (bModeSimple)
+	{
+		// Using simple text without formatting
 
-	// Debug
-	//boxWidget.setDebug(true);
-	//boxWidget.setDebugDoubleClick(true);
+		if (boxWidget.isChanged()) buildHelpInfo();
+	}
+	else {
 
-	// Force edit on startup
-	//boxWidget.setEdit(true);
+		// Using style tags
 
-	// Set distance to window borders. Default is 4
-	//boxWidget.setPads(25, 25);
+		string dynamicSizeTag =
+			"<style font='F1' size='" +
+			ofToString(18 + 1 * sinf(30 * ofGetElapsedTimef()), 2) +
+			"' color='#888888'>";
 
-	// Borders
-	//boxWidget.setUseBorder(true);
-	//boxWidget.setUseBorderBlinking(true); // forces above border too
+		string blinkTag =
+			"<style font='F2' size='18' color='#FFFFFF" +
+			string(ofGetFrameNum() % 20 < 10 ? "11" : "EE") + "'>";
 
-	// Constraint box sizes
-	//boxWidget.setRectConstraintMin(glm::vec2(50, 50)); // Min shape
-	//boxWidget.setRectConstraintMax(glm::vec2(ofGetWidth() - 25, ofGetHeight() - 25)); // Max shape
+		string styledText =
+			u8"<body>"
+			"<br/><br/>"
+			"<bodyBold>ofxFontStash2</bodyBold> allows you to draw text. It can draw individual "
+			"Visitar l’àvia des del balcó."
+			"Com farem les pràctiques des de casa?!"
+			"Conèixer millor els veïns"
+			"lines of text, or longer texts constrained to a column. "
+			"It offers text alignment (left, center, right).<br/><br/>"
+			"It also allows you to mix and match different text <bodyItalic>styles</bodyItalic> in the same "
+			"paragraph. You can do so by <bodyBold>creating styles that can be applied at an "
+			"individual <bodyBold>cha<bodyBold>rac</bodyBold>ter level</bodyBold> with style nesting</bodyBold>. You can also inline styles."
+			"<br/><br/>"
+			"Here, we demo the inline styles feature by dynamically "
+			"setting a font " + dynamicSizeTag + "size.</style><br/>"
+			"Here we show how to easily make text " + blinkTag + "blink.</style>"
+			"<br/><br/>"
+			"Here we test what happens when to styles are <bodyBold>side</bodyBold> <bodyItalic> by side. </bodyItalic>"
+			"Here we test inline style <bodyItalic color='#66'>overrides.</bodyItalic>"
+			"<br/><br/>"
+			"Here we test a 1/2 lineHeight line break...<br/><br heightMult='0.5'/>"
+			"And we are done testing. Let's go home."
+			"</body>";
 
-	// Draggable borders
-	//boxWidget.setLockW(true); // disable x/width
-	//boxWidget.setLockH(true); // disable y/height
-	//boxWidget.setBorderColor(c); // custom color
-
-	// Force layout position
-	//boxWidget.setMode(ofxSurfingBoxInteractive::BOTTOM_RIGHT);
-	//boxWidget.setMode(ofxSurfingBoxInteractive::CENTER_LEFT);
+		boxWidget.setTitle("ofxSurfingBoxParagraph");
+		//boxWidget.setTitle("ofxSurfingBoxParagraph\nFORMATTING");
+		boxWidget.setText(styledText);
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	// Scene
-	// We can link visibility with the widget
-	if (boxWidget.isVisible()) drawSceneBoxed();
-
-	// Box Interactive
 	boxWidget.draw();
-}
-
-//--------------------------------------------------------------
-void ofApp::drawSceneBoxed()
-{
-	// Draw an animated inner box 
-	// attached to the box rectangle widget
-
-	int d = 60;
-	float s = ofMap(ofGetFrameNum() % d, 0, d, 0.5f, 1.f);
-
-	// Here we get the ofRectangle from the Box object!
-	ofRectangle r = boxWidget.getRectangle();
-
-	// Animate scale
-	r.scaleFromCenter(s);
-
-	ofPushStyle();
-	ofFill();
-	ofSetColor(ofColor::blue);
-	ofDrawRectangle(r);
-	ofPopStyle();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
+	// switch mode
+	if (key == OF_KEY_F1) {
+		bModeSimple = !bModeSimple;
+
+		boxWidget.setLockW(bModeSimple);
+		//true bc we are not using a paragraph. we don't need formatting.
+		// or false bc we want formatting dragging box width.
+	}
+
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
 	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);
 	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();
 
-	if (key == 'A') boxWidget.setToggleLockAspectRatio();
 	if (key == 'B') boxWidget.setToggleUseBorder();
 	if (key == 'K') boxWidget.setToggleUseBorderBlinking();
 
-	if (key == 'G') boxWidget.setToggleVisible();
+	if (key == 'H') boxWidget.setToggleVisible();
 	if (key == 'D') boxWidget.setToggleDebug();
 	if (key == 'd') boxWidget.setToggleDebugDoubleClick();
+
+	if (key == 'T') boxWidget.setToggleTheme();
+}
+
+//--------------------------------------------------------------
+void ofApp::buildHelpInfo()
+{
+	// Using plain text without style tags
+
+	std::string helpInfo = "";
+
+	helpInfo += "\n\n";
+	helpInfo += "\n\n";
+
+	bool b = boxWidget.isEditing();
+	helpInfo += ofToString(!b ? "LOCKED! " : "EDITING!");
+	helpInfo += "\nDoubleClick > " + ofToString(b ? "LOCK" : "EDIT") + ". \n\n";
+
+	helpInfo += "Drag the Box around the window!\n";
+	helpInfo += "LeftClick + RightClick to close.\n";
+	helpInfo += "Layout will be auto saved.\n\n";
+
+	helpInfo += "KEY COMMANDS \n";
+	helpInfo += "\n";
+	helpInfo += "SPACE    EDIT \n";
+	helpInfo += "\n";
+	helpInfo += "H        HELP \n";
+	helpInfo += "\n";
+	helpInfo += "T        TOGGLE THEME \n";
+	helpInfo += "         > " + boxWidget.getThemeName() + "\n";
+	helpInfo += "\n";
+	helpInfo += "TAB      TOGGLE POSITION \n";
+	helpInfo += "         > " + boxWidget.getModeName();
+	helpInfo += "\n\n";
+	helpInfo += "F1       TOGGLE TEXT MODE \n";
+	helpInfo += "         > " + string(bModeSimple ? "SIMPLE" : "FORMATTING");
+
+	boxWidget.setTitle("ofxSurfingBoxParagraph");
+	//boxWidget.setTitle("ofxSurfingBoxParagraph\nSIMPLE TEXT HELP");
+
+	boxWidget.setText(helpInfo);
 }

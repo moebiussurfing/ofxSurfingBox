@@ -60,9 +60,9 @@ public:
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 
 		// Restore the one from free layout mode before save
-		if (modeLayout != FREE_LAYOUT) rect_Box.set(rect_Box_STORE);
+		if (modeLayout != FREE_LAYOUT) rBox.set(rect_Box_STORE);
 
-		rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
+		rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
 
 		iModeLayout = (int)modeLayout;//read value before save
 
@@ -71,6 +71,12 @@ public:
 
 	//--------------------------------------------------------------
 	void setup()
+	{
+		setup(true);
+	}
+
+	//--------------------------------------------------------------
+	void setup(bool b)
 	{
 		bEdit.set("Edit", false);
 		bUseBorder.set("Border", false);
@@ -94,13 +100,13 @@ public:
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 
 		// Load settings
-		rect_Box.loadSettings(path_RectHelpBox, path_Global + "/", false);
+		rBox.loadSettings(path_RectHelpBox, path_Global + "/", false);
 
 		// Store
-		rect_Box_STORE = rect_Box.getRect();
+		rect_Box_STORE = rBox.getRect();
 
-		rect_Box.setEnableMouseWheel(true);
-		rect_Box.setAutoSave(false);
+		rBox.setEnableMouseWheel(true);
+		rBox.setAutoSave(false);
 
 		//--
 
@@ -119,6 +125,14 @@ public:
 	//--------------------------------------------------------------
 	void draw()
 	{
+		draw(true);
+	}
+
+	//--------------------------------------------------------------
+	void draw(bool b)
+	{
+		if (!b) return;
+
 		if (!bGui) return;
 
 		ofPushStyle();
@@ -135,9 +149,9 @@ public:
 			//TODO:
 			// Check if rectangle changed
 			// Pos / Size 
-			if (rect_Box.getRect() != rect_Box_PRE)
+			if (rBox.getRect() != rBox_PRE)
 			{
-				rect_Box_PRE = rect_Box.getRect();
+				rBox_PRE = rBox.getRect();
 				bIsChanged = true;
 			}
 
@@ -150,20 +164,20 @@ public:
 			// other predefined (top,left..) layout positions.
 			if (modeLayout != modeLayout_PRE)
 			{
-				str_modeLayout = getModeLayoutString();
+				str_modeLayout = getModeName();
 
 				// If we are leaving free mode, 
 				// we must remember the rectangle@
 				if (modeLayout_PRE == FREE_LAYOUT)
 				{
 					// Store
-					rect_Box_STORE = rect_Box.getRect();
+					rect_Box_STORE = rBox.getRect();
 				}
 				// Changed to free layout
 				else if (modeLayout == FREE_LAYOUT)
 				{
 					// Restore
-					rect_Box.set(rect_Box_STORE);
+					rBox.set(rect_Box_STORE);
 				}
 
 				//--
@@ -188,8 +202,8 @@ public:
 			float _h = ofGetHeight();
 
 			// box size
-			float _ww = rect_Box.getWidth();
-			float _hh = rect_Box.getHeight();
+			float _ww = rBox.getWidth();
+			float _hh = rBox.getHeight();
 
 			// box pos
 			float _xx = 0;
@@ -199,8 +213,8 @@ public:
 
 			if (modeLayout == FREE_LAYOUT)
 			{
-				_xx = rect_Box.getX();
-				_yy = rect_Box.getY();
+				_xx = rBox.getX();
+				_yy = rBox.getY();
 			}
 			else
 			{
@@ -268,8 +282,8 @@ public:
 
 				// Set
 
-				rect_Box.setX(_xx);
-				rect_Box.setY(_yy);
+				rBox.setX(_xx);
+				rBox.setY(_yy);
 			}
 
 			//--
@@ -314,9 +328,9 @@ public:
 
 			if (modeLayout == FREE_LAYOUT)
 			{
-				if (rect_Box.isEditing())
+				if (rBox.isEditing())
 				{
-					rect_Box.draw();
+					rBox.draw();
 				}
 			}
 
@@ -352,9 +366,10 @@ public:
 
 	//--
 
-private:
+//private:
+public:
 
-	ofxInteractiveRect rect_Box = { "_" };
+	ofxInteractiveRect rBox = { "_" };
 
 	//--
 
@@ -384,7 +399,7 @@ public:
 	BOX_LAYOUT modeLayout = FREE_LAYOUT;
 	string str_modeLayout = "";
 
-	ofRectangle rect_Box_PRE;
+	ofRectangle rBox_PRE;
 	ofRectangle rect_Box_STORE;
 
 	//--
@@ -404,7 +419,6 @@ private:
 	std::string suffixSettings = "Settings.xml";
 	std::string path_AppSession = path_RectHelpBox + "_" + suffixSettings;
 
-	ofParameterGroup params_AppSession{ "Settings" };
 
 	ofColor _colorButton;// bg selected button
 	ofColor _colorBg;// background color
@@ -414,12 +428,16 @@ private:
 	//bool bWorflow = true;
 
 	bool bIsEditing = false;
-	bool bIsChanged = false;
 
 	bool bLocked = false;
 	bool bLockedAspectRatio = false;
 
 	bool bForceFitInsideWindow = true;
+
+public:
+
+	ofParameterGroup params_AppSession{ "Settings" };
+	bool bIsChanged = false;
 	bool bDebug = false;
 
 private:
@@ -451,13 +469,13 @@ public:
 
 	// Lock drag borders
 	//--------------------------------------------------------------
-	void setLockX(bool b) { rect_Box.setLockX(b); };//set enable/disable drag x interaction
+	void setLockX(bool b) { rBox.setLockX(b); };//set enable/disable drag x interaction
 	//--------------------------------------------------------------
-	void setLockY(bool b) { rect_Box.setLockY(b); };//set enable/disable drag y interaction
+	void setLockY(bool b) { rBox.setLockY(b); };//set enable/disable drag y interaction
 	//--------------------------------------------------------------
-	void setLockW(bool b) { rect_Box.setLockW(b); };//set enable/disable drag width interaction
+	void setLockW(bool b) { rBox.setLockW(b); };//set enable/disable drag width interaction
 	//--------------------------------------------------------------
-	void setLockH(bool b) { rect_Box.setLockH(b); };//set enable/disable drag height interaction
+	void setLockH(bool b) { rBox.setLockH(b); };//set enable/disable drag height interaction
 
 public:
 
@@ -525,7 +543,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	string getModeLayoutString() {
+	string getModeName() {
 		switch (modeLayout) {
 			AUTO_CASE_CREATE(FREE_LAYOUT);
 			AUTO_CASE_CREATE(TOP_LEFT);
@@ -564,17 +582,17 @@ public:
 
 	//--------------------------------------------------------------
 	ofRectangle getRectangle() {
-		return rect_Box;
+		return rBox;
 	}
 
 	//--------------------------------------------------------------
-	float getX() { return rect_Box.x; }
+	float getX() { return rBox.x; }
 	//--------------------------------------------------------------
-	float getY() { return rect_Box.y; }
+	float getY() { return rBox.y; }
 	//--------------------------------------------------------------
-	float getWidth() { return rect_Box.getWidth(); }
+	float getWidth() { return rBox.getWidth(); }
 	//--------------------------------------------------------------
-	float getHeight() { return rect_Box.getHeight(); }
+	float getHeight() { return rBox.getHeight(); }
 
 	//--------------------------------------------------------------
 	void setUseBorder(bool b) { bUseBorder = b; }
@@ -583,7 +601,7 @@ public:
 	void setPads(float x, float y) {//call after setup
 		xpad = x;
 		ypad = y;
-		rect_Box.setPads(xpad, ypad);
+		rBox.setPads(xpad, ypad);
 	}
 
 	//--------------------------------------------------------------
@@ -620,11 +638,11 @@ public:
 
 	//--------------------------------------------------------------
 	void setRectConstraintMin(glm::vec2 shape) {
-		rect_Box.setRectConstraintMin(shape);
+		rBox.setRectConstraintMin(shape);
 	}
 	//--------------------------------------------------------------
 	void setRectConstraintMax(glm::vec2 shape) {
-		rect_Box.setRectConstraintMax(shape);
+		rBox.setRectConstraintMax(shape);
 	}
 
 	//--
@@ -635,28 +653,28 @@ public:
 	}
 	//--------------------------------------------------------------
 	void setShape(ofRectangle shape) {
-		rect_Box.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
+		rBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
 	}
 	//--------------------------------------------------------------
 	void setPosition(float x, float y) {
-		rect_Box.setX(x);
-		rect_Box.setY(y);
+		rBox.setX(x);
+		rBox.setY(y);
 	}
 	//--------------------------------------------------------------
 	void setX(float x) {
-		rect_Box.setX(x);
+		rBox.setX(x);
 	}
 	//--------------------------------------------------------------
 	void setY(float y) {
-		rect_Box.setY(y);
+		rBox.setY(y);
 	}
 	//--------------------------------------------------------------
 	void setWidth(float w) {
-		rect_Box.setWidth(w);
+		rBox.setWidth(w);
 	}
 	//--------------------------------------------------------------
 	void setHeight(float h) {
-		rect_Box.setHeight(h);
+		rBox.setHeight(h);
 	}
 
 	//--
@@ -677,9 +695,9 @@ public:
 	void reset(bool bOnlySize = false, int width = 400) {
 
 		float sz = width;
-		rect_Box.setWidth(sz);
-		rect_Box.setHeight(sz);
-		if (!bOnlySize) rect_Box.setPosition(ofGetWidth() / 2.f - (sz / 2.f), ofGetHeight() / 2.f - (sz / 2.f));
+		rBox.setWidth(sz);
+		rBox.setHeight(sz);
+		if (!bOnlySize) rBox.setPosition(ofGetWidth() / 2.f - (sz / 2.f), ofGetHeight() / 2.f - (sz / 2.f));
 	}
 
 	//--------------------------------------------------------------
@@ -707,7 +725,7 @@ public:
 		{
 			//if (bWorflow)
 			{
-				rect_Box.disableEdit();
+				rBox.disableEdit();
 				doubleClicker.disableAllEvents();
 			}
 		}
@@ -745,7 +763,7 @@ public:
 	void drawDebug()
 	{
 		//auto r = this->getRectangle();
-		auto r = rect_Box;
+		auto r = rBox;
 
 		// box size
 		float _ww = r.getWidth();
@@ -792,7 +810,7 @@ public:
 		ofDrawBitmapStringHighlight(s2, p, c2, 255);
 
 		string s3 = "";
-		s3 += "MODE       " + this->getModeLayoutString() + "\n";
+		s3 += "MODE       " + this->getModeName() + "\n";
 		s3 += "EDIT       " + ofToString(this->isEditing() ? "TRUE" : "FALSE") + "\n\n";
 		s3 += "xPad       " + ofToString(xpad, 0) + "\n";
 		s3 += "yPad       " + ofToString(ypad, 0) + "\n\n";
@@ -805,7 +823,7 @@ public:
 		s3 += "TopR       " + ofToString(r.getTopRight().x, 0) + ", " + ofToString(r.getTopRight().y, 0) + "\n";
 		s3 += "BottomR    " + ofToString(r.getBottomRight().x, 0) + ", " + ofToString(r.getBottomRight().y, 0) + "\n\n";
 		s3 += "Window     " + ofToString(ofGetWidth()) + "x" + ofToString(ofGetHeight()) /*+ "\n\n"*/;
-		//s3 += "Drag Diff  " + ofToString(rect_Box.diffx) + ", " + ofToString(rect_Box.diffy);
+		//s3 += "Drag Diff  " + ofToString(rBox.diffx) + ", " + ofToString(rBox.diffy);
 
 		p = p + glm::vec2(0, 40);
 		ofDrawBitmapStringHighlight(s3, p, 0, 255);
@@ -815,33 +833,33 @@ public:
 	void doForceFitOnWindow()
 	{
 		// Size
-		if (rect_Box.getWidth() > ofGetWidth() - 2 * xpad)
+		if (rBox.getWidth() > ofGetWidth() - 2 * xpad)
 		{
-			rect_Box.setWidth(ofGetWidth() - 2 * xpad);
+			rBox.setWidth(ofGetWidth() - 2 * xpad);
 		}
-		else if (rect_Box.getHeight() > ofGetHeight() - 2 * ypad)
+		else if (rBox.getHeight() > ofGetHeight() - 2 * ypad)
 		{
-			rect_Box.setHeight(ofGetHeight() - 2 * ypad);
+			rBox.setHeight(ofGetHeight() - 2 * ypad);
 		}
 
 		//--
 
 		// Position
-		if (rect_Box.getY() > ybottom) // bottom
+		if (rBox.getY() > ybottom) // bottom
 		{
-			rect_Box.setY(ybottom);
+			rBox.setY(ybottom);
 		}
-		else if (rect_Box.getX() < xleft) // left
+		else if (rBox.getX() < xleft) // left
 		{
-			rect_Box.setX(xleft);
+			rBox.setX(xleft);
 		}
-		else if (rect_Box.getX() > xright) // right
+		else if (rBox.getX() > xright) // right
 		{
-			rect_Box.setX(xright);
+			rBox.setX(xright);
 		}
-		else if (rect_Box.getY() < ytop) // top
+		else if (rBox.getY() < ytop) // top
 		{
-			rect_Box.setY(ytop);
+			rBox.setY(ytop);
 		}
 	}
 
@@ -933,7 +951,7 @@ public:
 	//--------------------------------------------------------------
 	void setToggleEdit()
 	{
-		setEdit(!rect_Box.isEditing());
+		setEdit(!rBox.isEditing());
 	}
 
 	//--------------------------------------------------------------
@@ -945,7 +963,7 @@ public:
 
 		if (bEdit)
 		{
-			rect_Box.enableEdit();
+			rBox.enableEdit();
 
 			// workflow
 			if (modeLayout != FREE_LAYOUT)
@@ -957,11 +975,11 @@ public:
 		}
 		else
 		{
-			rect_Box.disableEdit();
+			rBox.disableEdit();
 
 			//TODO: autosave
 			// Save
-			//rect_Box.saveSettings(path_RectHelpBox, path_Global + "/", false);
+			//rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
 
 			//doubleClicker.disableAllEvents();
 		}
@@ -1024,13 +1042,13 @@ public:
 	//--------------------------------------------------------------
 	void setLockAspectRatio(bool b) {
 		bLockedAspectRatio = b;
-		rect_Box.setLockAspectRatio(bLockedAspectRatio);
+		rBox.setLockAspectRatio(bLockedAspectRatio);
 	}
 
 	//--------------------------------------------------------------
 	void setToggleLockAspectRatio() {
 		bLockedAspectRatio = !bLockedAspectRatio;
-		rect_Box.setLockAspectRatio(bLockedAspectRatio);
+		rBox.setLockAspectRatio(bLockedAspectRatio);
 	}
 
 	//--------------------------------------------------------------

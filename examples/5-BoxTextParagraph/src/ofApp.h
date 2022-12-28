@@ -2,9 +2,9 @@
 
 #include "ofMain.h"
 
-#define NANOVG_GL2_IMPLEMENTATION
+//#define NANOVG_GL2_IMPLEMENTATION
 
-#include "ofxSurfingBoxInteractive.h"
+#include "ofxSurfingBoxParagraph.h"
 
 
 /*
@@ -39,9 +39,16 @@ class ofApp : public ofBaseApp
 public:
 
 	void setup();
+	void update();
 	void draw();
 	void keyPressed(int key);
 	
 	void drawSceneBoxed();
-	ofxSurfingBoxInteractive boxWidget;
+
+	ofxSurfingBoxParagraph boxWidget;
+
+	std::string helpInfo = "";
+	void buildHelpInfo();
+
+	bool bModeSimple = false; // simple text or allow formating
 };

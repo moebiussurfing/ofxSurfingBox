@@ -1,13 +1,15 @@
 # ofxSurfingBox
 
 ## Overview
-This add-on has two classes: 
+This add-on has three classes: 
 1. A draggable rectangle: **ofxSurfingBoxInteractive** 
 2. A draggable rectangle with text info: **ofxSurfingBoxHelpText**
+3. Same but with `Fontstash` with paragraph formatting with tag styles: **ofxSurfingBoxParagraph**
 
 ## Screenshots
 ![](/examples/2-BoxHelpText-Simple/Capture.PNG)
 ![](/examples/3-BoxHelpText-Debug/Capture.PNG)
+![](/examples/5-BoxTextParagraph/Capture.PNG)
 
 ## Features
 
@@ -27,14 +29,18 @@ This add-on has two classes:
 - Useful to display **Help Info** boxes in your apps.
 - Tittle font for the first text lines.
 
+### ofxSurfingBoxParagraph.h
+- Same as `ofxSurfingBoxHelpText` with powerful tag styling.
+
 ## Usage
 - See the examples.
 
 ## Dependencies
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
+* [ofxFontStash2](https://github.com/moebiussurfing/ofxFontStash2) / Only for using ofxSurfingBoxParagraph.
 
 ## Third Party add-ons bundled into **ofxSurfingHelpers**
-Already added to `OFX_ADDON/libs/`. No need to add into **PROJECT GENERATOR**.  
+Already added to `OFX_ADDON/libs/`. No need to add to **PROJECT GENERATOR**.  
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect) / _Fork from [roymacdonald](https://github.com/roymacdonald/ofxScaleDragRect)_  
 * [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) / _Fork from [memo](https://github.com/memo/ofxMSAInteractiveObject)_  
 
