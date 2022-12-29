@@ -97,9 +97,9 @@ public:
 
 		// Title Font
 
-		size_TTF2 = 22;
-		name_TTF2 = FONT_FILE_SMALL;
-		//name_TTF2 = "JetBrainsMono-ExtraBold.ttf";
+		size_Style2 = 22;
+		font_Style2 = FONT_FILE_SMALL;
+		//font_Style2 = "JetBrainsMono-ExtraBold.ttf";
 	}
 
 	//--------------------------------------------------------------
@@ -147,21 +147,21 @@ public:
 		bool bLoaded2 = false;
 		if (bUseTitle)
 		{
-			bLoaded2 = myFont2.load(FONT_FILES_PATH + name_TTF2, size_TTF2, true, true);
+			bLoaded2 = myFont2.load(FONT_FILES_PATH + font_Style2, size_Style2, true, true);
 			if (!bLoaded2) {
-				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_TTF2, true, true);
+				bLoaded = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_BIG), size_Style2, true, true);
 			}
 			if (!bLoaded2) {
-				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_SMALL), size_TTF2, true, true);
+				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_SMALL), size_Style2, true, true);
 			}
 			if (!bLoaded2) {
-				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT1), size_TTF2, true, true);
+				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT1), size_Style2, true, true);
 			}
 			if (!bLoaded2) {
-				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_TTF2, true, true);
+				bLoaded2 = myFont2.load(FONT_FILES_PATH + ofToString(FONT_FILE_ALT2), size_Style2, true, true);
 			}
 			if (!bLoaded2)
-				bLoaded2 = myFont2.load(OF_TTF_MONO, size_TTF2, true, true);
+				bLoaded2 = myFont2.load(OF_TTF_MONO, size_Style2, true, true);
 		}
 
 		//--
@@ -627,8 +627,8 @@ private:
 	float size_TTF;
 
 	ofTrueTypeFont myFont2;
-	string name_TTF2;
-	float size_TTF2;
+	string font_Style2;
+	float size_Style2;
 
 	string text_Body = "";
 	string text_Title = "NO TITLE"; // info text to display shortcuts or path settings
@@ -740,11 +740,11 @@ public:
 
 	//--------------------------------------------------------------
 	void setFontTitleSize(int size = 10) { // Call before setup. Default it's 10
-		size_TTF2 = size;
+		size_Style2 = size;
 	}
 	//--------------------------------------------------------------
 	void setFontTitleName(string name) { // Set the name only. path is /assets/fonts/*name*
-		name_TTF2 = name;
+		font_Style2 = name;
 	}
 
 	//--------------------------------------------------------------

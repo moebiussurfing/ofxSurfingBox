@@ -491,6 +491,8 @@ public:
 	void setToggleDebugDoubleClick() {
 		bDebugDoubleClick = !bDebugDoubleClick;
 		doubleClicker.setDebug(bDebugDoubleClick);
+
+		bIsChanged = true;
 	}
 	//--------------------------------------------------------------
 	bool isDebugDoubleClick() {

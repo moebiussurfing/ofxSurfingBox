@@ -6,6 +6,7 @@
 	TODO:
 
 	+ add shadow mode
+	+ add align
 
 */
 
@@ -20,39 +21,47 @@
 class ofxSurfingBoxParagraph : public ofxSurfingBoxInteractive
 {
 
-private:
+public:
 
 	ofxFontStash2::Fonts fonts;
+
+private:
 
 	string text_Styled = "";
 	string text_Body = "";
 	string text_Title = "";
 	string text_TitleRaw = "";
+	string s;
 
 	bool bStyled = false;
 	bool bUseTitle = false;
 
 	float round = 5;
 
+	ofColor _colorText; // lines and text color
+	ofColor _colorBg; // background color
+	ofColor _colorShadow; // bg selected button
+	bool _bUseShadow;
+
+	//--
+
 	// styles
-	float size_Title;
+	float size_Title1;
+	float size_Title2;
+	float size_Style1;
+	float size_Style2;
+	float size_Style3;
 
-	string name_TTF1;
-	float size_TTF1;
+	string font_Style1;
+	string font_Style2;
 
-	string name_TTF2;
-	float size_TTF2;
+	//--
 
 	float xpad = 20;
 	float ypad = 20;
 
 	ofRectangle bbox;
 	ofRectangle bboxHeader;
-
-	ofColor _colorText; // lines and text color
-	ofColor _colorBg; // background color
-	ofColor _colorShadow; // bg selected button
-	bool _bUseShadow;
 
 	ofParameter<bool> bThemeDarkOrLight{ "Theme", true };
 
@@ -70,29 +79,29 @@ public:
 		ofLogNotice("ofxSurfingBoxHelpText") << (__FUNCTION__);
 
 		// colors
-		_bUseShadow = true;
 		params_AppSession.add(bThemeDarkOrLight);
 
 		this->ofxSurfingBoxInteractive::setup();
 
+		_bUseShadow = false;
 
 		//--
 
 		fonts.setup(false);
 
-		size_Title = 44;
-		size_TTF1 = 25;
-		size_TTF2 = 15;
+		size_Title1 = 45;
+		size_Title2 = 35;
+		size_Style1 = 25;
+		size_Style2 = 15;
+		size_Style3 = 10;
 
-		name_TTF1 = FONT_FILES_PATH + ofToString(FONT_FILE_BIG);
-		name_TTF2 = FONT_FILES_PATH + ofToString(FONT_FILE_SMALL);
+		font_Style1 = FONT_FILES_PATH + ofToString(FONT_FILE_BIG);
+		font_Style2 = FONT_FILES_PATH + ofToString(FONT_FILE_SMALL);
 
-		fonts.addFont("F1", name_TTF1);
-		fonts.addFont("F2", name_TTF2);
+		fonts.addFont("F1", font_Style1);
+		fonts.addFont("F2", font_Style2);
 
-		buildFonts();
-
-		//ofDisableAntiAliasing(); // to get precise lines
+		buildFonts(_colorText);
 
 		fonts.pixelDensity = 2.0;
 
@@ -109,25 +118,8 @@ public:
 private:
 
 	//--------------------------------------------------------------
-	void buildFonts()
+	void buildFonts(ofColor __colorText)
 	{
-		//add fonts to the stash
-		//fonts.addFont("robo", "fonts/Roboto-Regular.ttf");
-		//fonts.addFont("roboBold", "fonts/Roboto-Bold.ttf");
-		//fonts.addFont("roboItalic", "fonts/Roboto-Italic.ttf");
-		//fonts.addFont("roboBlack", "fonts/Roboto-Black.ttf");
-		////define font styles
-		//fonts.addStyle("header", ofxFontStash2::Style("roboBlack", size_Title, ofColor::white));
-		//fonts.addStyle("body", ofxFontStash2::Style("robo", 18, ofColor(244)));
-		//fonts.addStyle("bodyBold", ofxFontStash2::Style("roboBold", 18, ofColor::white));
-		//fonts.addStyle("bodyItalic", ofxFontStash2::Style("roboItalic", 18, ofColor::white));
-		//fonts.addStyle("bodyRed", ofxFontStash2::Style("robo", 18, ofColor::red));
-		//fonts.addStyle("bodyGreen", ofxFontStash2::Style("robo", 18, ofColor::green));
-		//fonts.addStyle("bodyBlue", ofxFontStash2::Style("robo", 18, ofColor::blue));
-		//fonts.addStyle("bodyDarkgreen", ofxFontStash2::Style("robo", 18, ofColor::darkGreen));
-
-		//--
-
 		// clear styles
 		auto styles = fonts.getStyles();
 		for (auto& it : styles) {
@@ -135,10 +127,17 @@ private:
 		}
 
 		// define font styles
-		fonts.addStyle("header", ofxFontStash2::Style("F1", size_Title, _colorText));
-		fonts.addStyle("body", ofxFontStash2::Style("F2", size_TTF1, _colorText));
-		fonts.addStyle("bodyBold", ofxFontStash2::Style("F2", size_TTF2, _colorText));
-		fonts.addStyle("bodyItalic", ofxFontStash2::Style("F2", size_TTF2, _colorText));
+		fonts.addStyle("header", ofxFontStash2::Style("F1", size_Title1, __colorText));
+		fonts.addStyle("header2", ofxFontStash2::Style("F1", size_Title2, __colorText));
+
+		fonts.addStyle("body", ofxFontStash2::Style("F2", size_Style1, __colorText));
+		fonts.addStyle("bold", ofxFontStash2::Style("F2", size_Style2, __colorText));//TODO: add ttf
+		fonts.addStyle("italic", ofxFontStash2::Style("F2", size_Style2, __colorText));//TODO: add ttf
+
+		fonts.addStyle("H1", ofxFontStash2::Style("F2", size_Title2, __colorText));
+		fonts.addStyle("H2", ofxFontStash2::Style("F2", size_Style1, __colorText));
+		fonts.addStyle("H3", ofxFontStash2::Style("F2", size_Style2, __colorText));
+		fonts.addStyle("H4", ofxFontStash2::Style("F2", size_Style3, __colorText));
 	}
 
 public:
@@ -158,6 +157,8 @@ public:
 	//--------------------------------------------------------------
 	void setText(string text) {
 		// we add plain text without tags easily
+
+		bStyled = false;
 
 		text_Body = "<body>";
 		text_Body += text;
@@ -181,10 +182,10 @@ public:
 		this->ofxSurfingBoxInteractive::draw(true);
 
 		float x = this->getX() + xpad;
-		float y = this->getY() + size_Title + ypad;
+		float y = this->getY() + size_Title1 + ypad;
 		float w = this->getWidth() - 2 * xpad;
 
-		//----
+		//--
 
 		// Bg
 
@@ -213,7 +214,7 @@ public:
 
 		// Text
 
-		string s = "";
+		s = "";
 
 		if (bStyled)
 		{
@@ -224,51 +225,57 @@ public:
 			if (bUseTitle)
 			{
 				s += text_Title;
-
-				//TODO:
-				// constraint
-				bool bConstraint = false;
-				if (bConstraint) {
-					// title
-					ofxFontStash2::Style style = ofxFontStash2::Style("F1", size_Title, 255);
-					bboxHeader = fonts.getTextBounds(text_TitleRaw, style, 0, 0);
-
-					// force width to fit title as minimum width
-					float w1 = bbox.getWidth() + 2 * xpad;
-					float w2 = bboxHeader.getWidth() + 2 * xpad;
-
-					float w0;
-					if (w1 < w2) w0 = w2;
-					else w0 = w1;
-					this->setWidth(w0);
-
-					//cout << "w1:" << w1 << endl;
-					//cout << "w2:" << w2 << endl;
-					//cout << "w0:" << w0 << endl<< endl;
-				}
-				else {
-					float w1 = bbox.getWidth() + 2 * xpad;
-					this->setWidth(w1);
-				}
 			}
 
 			// body
 			s += text_Body;
 		}
 
-		////TODO: requires dual styles..
-		//// shadow
-		//if (_bUseShadow)
-		//{
-		//	ofSetColor(_colorShadow);
-		//	fonts.drawFormattedColumn(s, x + 1, y + 1, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
-		//}
+		//TODO: requires dual styles..
+		// shadow
+		if (_bUseShadow)
+		{
+			buildFonts(_colorShadow);//TODO: could be slow?
+			fonts.drawFormattedColumn(s, x + 1, y + 1, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
+		}
 
 		// draw
+		if (_bUseShadow) buildFonts(_colorText);//TODO: could be slow?
 		bbox = fonts.drawFormattedColumn(s, x, y, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
 
 		// force height
-		this->setHeight(bbox.getHeight() + size_Title + 2 * ypad);
+		this->setHeight(bbox.getHeight() + size_Title1 + 2 * ypad);
+
+		//--
+
+		//TODO:
+		// constraint
+		bool bConstraint = 1;
+
+		if (bConstraint)
+		{
+			// title
+			ofxFontStash2::Style style = ofxFontStash2::Style("F1", size_Title1, 255);
+			bboxHeader = fonts.getTextBounds(text_TitleRaw, style, 0, 0);
+
+			// force width to fit title as minimum width
+			float w1 = bbox.getWidth() + 2 * xpad;
+			float w2 = bboxHeader.getWidth() + 2 * xpad;
+
+			float w0;
+			if (w1 < w2) w0 = w2;
+			else w0 = w1;
+			this->setWidth(w0);
+
+			//cout << "w1:" << w1 << endl;
+			//cout << "w2:" << w2 << endl;
+			//cout << "w0:" << w0 << endl<< endl;
+		}
+		else
+		{
+			float w1 = bbox.getWidth() + 2 * xpad;
+			this->setWidth(w1);
+		}
 	}
 
 	//--------------------------------------------------------------
@@ -293,23 +300,25 @@ public:
 		ypad = pad;
 	}
 
-	//--------------------------------------------------------------
-	void setFontSize(int size = 10) { // Call before setup. Default it's 10
-		size_TTF1 = size;
-	}
-	//--------------------------------------------------------------
-	void setFontName(string name) { // Set the name only. path is /assets/fonts/*name*
-		name_TTF1 = name;
-	}
+	//--
 
-	//--------------------------------------------------------------
-	void setFontTitleSize(int size = 10) { // Call before setup. Default it's 10
-		size_TTF2 = size;
-	}
-	//--------------------------------------------------------------
-	void setFontTitleName(string name) { // Set the name only. path is /assets/fonts/*name*
-		name_TTF2 = name;
-	}
+	////--------------------------------------------------------------
+	//void setFontSize(int size = 10) { // Call before setup. Default it's 10
+	//	size_Style1 = size;
+	//}
+	////--------------------------------------------------------------
+	//void setFontName(string name) { // Set the name only. path is /assets/fonts/*name*
+	//	font_Style1 = name;
+	//}
+
+	////--------------------------------------------------------------
+	//void setFontTitleSize(int size = 10) { // Call before setup. Default it's 10
+	//	size_Style2 = size;
+	//}
+	////--------------------------------------------------------------
+	//void setFontTitleName(string name) { // Set the name only. path is /assets/fonts/*name*
+	//	font_Style2 = name;
+	//}
 
 	//--
 
@@ -341,7 +350,7 @@ public:
 
 		bIsChanged = true;
 
-		buildFonts();
+		buildFonts(_colorText);
 	}
 
 	//--

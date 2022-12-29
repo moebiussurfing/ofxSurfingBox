@@ -34,8 +34,8 @@ void ofApp::update()
 
 		if (boxWidget.isChanged()) buildHelpInfo();
 	}
-	else {
-
+	else 
+	{
 		// Using style tags
 
 		string dynamicSizeTag =
@@ -50,22 +50,22 @@ void ofApp::update()
 		string styledText =
 			u8"<body>"
 			"<br/><br/>"
-			"<bodyBold>ofxFontStash2</bodyBold> allows you to draw text. It can draw individual "
+			"<bold>ofxFontStash2</bold> allows you to draw text. It can draw individual "
 			"Visitar l’àvia des del balcó."
 			"Com farem les pràctiques des de casa?!"
 			"Conèixer millor els veïns"
 			"lines of text, or longer texts constrained to a column. "
 			"It offers text alignment (left, center, right).<br/><br/>"
-			"It also allows you to mix and match different text <bodyItalic>styles</bodyItalic> in the same "
-			"paragraph. You can do so by <bodyBold>creating styles that can be applied at an "
-			"individual <bodyBold>cha<bodyBold>rac</bodyBold>ter level</bodyBold> with style nesting</bodyBold>. You can also inline styles."
+			"It also allows you to mix and match different text <italic>styles</italic> in the same "
+			"paragraph. You can do so by <bold>creating styles that can be applied at an "
+			"individual <bold>cha<bold>rac</bold>ter level</bold> with style nesting</bold>. You can also inline styles."
 			"<br/><br/>"
 			"Here, we demo the inline styles feature by dynamically "
 			"setting a font " + dynamicSizeTag + "size.</style><br/>"
 			"Here we show how to easily make text " + blinkTag + "blink.</style>"
 			"<br/><br/>"
-			"Here we test what happens when to styles are <bodyBold>side</bodyBold> <bodyItalic> by side. </bodyItalic>"
-			"Here we test inline style <bodyItalic color='#66'>overrides.</bodyItalic>"
+			"Here we test what happens when to styles are <bold>side</bold> <italic> by side. </italic>"
+			"Here we test inline style <italic color='#66'>overrides.</italic>"
 			"<br/><br/>"
 			"Here we test a 1/2 lineHeight line break...<br/><br heightMult='0.5'/>"
 			"And we are done testing. Let's go home."
@@ -116,21 +116,36 @@ void ofApp::buildHelpInfo()
 {
 	// Using plain text without style tags
 
-	std::string helpInfo = "";
+	helpInfo = "";
 
-	helpInfo += "\n\n";
-	helpInfo += "\n\n";
+	helpInfo += "<header>";
+	helpInfo += "ofxSurfingBox\nParagraph";
+	helpInfo += "</header>";
 
+	helpInfo += "<br/><br/>";
+	//helpInfo += "\n\n";
+	//helpInfo += "\n\n";
+
+	helpInfo += "<H1>";
 	bool b = boxWidget.isEditing();
 	helpInfo += ofToString(!b ? "LOCKED! " : "EDITING!");
 	helpInfo += "\nDoubleClick > " + ofToString(b ? "LOCK" : "EDIT") + ". \n\n";
+	helpInfo += "</H1>";
 
+	helpInfo += "<H3>";
 	helpInfo += "Drag the Box around the window!\n";
 	helpInfo += "LeftClick + RightClick to close.\n";
 	helpInfo += "Layout will be auto saved.\n\n";
+	helpInfo += "</H3>";
+	
+	helpInfo += "<br/>";
 
+	helpInfo += "<header2>";
 	helpInfo += "KEY COMMANDS \n";
 	helpInfo += "\n";
+	helpInfo += "</header2>";
+
+	helpInfo += "<H2>";
 	helpInfo += "SPACE    EDIT \n";
 	helpInfo += "\n";
 	helpInfo += "H        HELP \n";
@@ -143,9 +158,10 @@ void ofApp::buildHelpInfo()
 	helpInfo += "\n\n";
 	helpInfo += "F1       TOGGLE TEXT MODE \n";
 	helpInfo += "         > " + string(bModeSimple ? "SIMPLE" : "FORMATTING");
+	helpInfo += "</H2>";
 
-	boxWidget.setTitle("ofxSurfingBoxParagraph");
-	//boxWidget.setTitle("ofxSurfingBoxParagraph\nSIMPLE TEXT HELP");
+	//boxWidget.setTitle("ofxSurfingBoxParagraph");
+	//boxWidget.setText(helpInfo);
 
-	boxWidget.setText(helpInfo);
+	boxWidget.setTextStyled(helpInfo);
 }
