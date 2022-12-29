@@ -5,6 +5,7 @@
 
 	TODO:
 
+	+ fix box width weird
 	+ add shadow mode
 	+ add align
 
@@ -23,7 +24,7 @@ class ofxSurfingBoxParagraph : public ofxSurfingBoxInteractive
 
 public:
 
-	ofxFontStash2::Fonts fonts;
+	ofxFontStash2::Fonts fonts;//public to allow handle styles externally.
 
 private:
 
