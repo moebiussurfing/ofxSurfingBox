@@ -25,6 +25,10 @@
 
 	TODO:
 
+	+ add reseter
+	+ add ofRectangle helpers to maximize, full screen
+		or a new types like top left, top center...etc
+	+ fix that setLockX is overwritten with loading settings..
 	+ fix loading well
 	+ store layout mode, not only the free layout
 	+ update text box from this class
@@ -42,14 +46,14 @@ class ofxSurfingBoxInteractive
 public:
 
 	//--------------------------------------------------------------
-    ofxSurfingBoxInteractive()
+	ofxSurfingBoxInteractive()
 	{
 		setRectConstraintMin(glm::vec2(50, 50));
 		setPads(4, 4);
 	}
 
 	//--------------------------------------------------------------
-    ~ofxSurfingBoxInteractive()
+	~ofxSurfingBoxInteractive()
 	{
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 		bUseBorder.removeListener(this, &ofxSurfingBoxInteractive::Changed_Border);
@@ -129,7 +133,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	void draw(bool b)
+	void draw(bool b)//if passed false will skip drawing.
 	{
 		if (!b) return;
 
@@ -463,19 +467,21 @@ private:
 	bool bStateEdit = false;
 	bool bState2 = false;
 
+	bool bEnabledFileSettings = true;
+
 	//--
 
 public:
 
 	// Lock drag borders
 	//--------------------------------------------------------------
-	void setLockX(bool b) { rBox.setLockX(b); };//set enable/disable drag x interaction
+	void setLockX(bool b = true) { rBox.setLockX(b); };//set enable/disable drag x interaction
 	//--------------------------------------------------------------
-	void setLockY(bool b) { rBox.setLockY(b); };//set enable/disable drag y interaction
+	void setLockY(bool b = true) { rBox.setLockY(b); };//set enable/disable drag y interaction
 	//--------------------------------------------------------------
-	void setLockW(bool b) { rBox.setLockW(b); };//set enable/disable drag width interaction
+	void setLockW(bool b = true) { rBox.setLockW(b); };//set enable/disable drag width interaction
 	//--------------------------------------------------------------
-	void setLockH(bool b) { rBox.setLockH(b); };//set enable/disable drag height interaction
+	void setLockH(bool b = true) { rBox.setLockH(b); };//set enable/disable drag height interaction
 
 public:
 
@@ -600,6 +606,9 @@ public:
 	void setUseBorder(bool b) { bUseBorder = b; }
 
 	//--------------------------------------------------------------
+	void setTransparent(bool b) { bTransparent = b; }
+
+	//--------------------------------------------------------------
 	void setPads(float x, float y) {//call after setup
 		xpad = x;
 		ypad = y;
@@ -691,6 +700,8 @@ public:
 	//--------------------------------------------------------------
 	void setPath(string path) {//call before setup. Will set path to save settings into.
 		path_Global = path;
+
+		ofxSurfingHelpers::CheckFolder(path_Global);
 	}
 
 	//--------------------------------------------------------------
@@ -1042,7 +1053,7 @@ public:
 	//--
 
 	//--------------------------------------------------------------
-	void setLockAspectRatio(bool b) {
+	void setLockAspectRatio(bool b = true) {
 		bLockedAspectRatio = b;
 		rBox.setLockAspectRatio(bLockedAspectRatio);
 	}
