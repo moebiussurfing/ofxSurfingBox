@@ -25,17 +25,19 @@
 
 	TODO:
 
-	+ add reseter
-	+ add ofRectangle helpers to maximize, full screen
-		or a new types like top left, top center...etc
+	+ check colliding when multi instances.
+	+ add ofRectangle helpers to maximize, full screen.
+		or a new types like top left, full width bottom, top center...etc.
 	+ fix that setLockX is overwritten with loading settings..
-	+ fix loading well
-	+ store layout mode, not only the free layout
-	+ update text box from this class
+	+ fix loading well.
+	+ store layout mode, not only the free layout.
+	+ update text box from this class.
 	+ fit screen or mini / big modes to use on a video player.
 
 */
 
+
+// Helper to get name
 #define AUTO_CASE_CREATE(a) case a: return #a
 
 //--
@@ -50,7 +52,7 @@ public:
 	{
 		setRectConstraintMin(glm::vec2(50, 50));
 		setPads(4, 4);
-	}
+	};
 
 	//--------------------------------------------------------------
 	~ofxSurfingBoxInteractive()
@@ -71,13 +73,13 @@ public:
 		iModeLayout = (int)modeLayout;//read value before save
 
 		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void setup()
 	{
 		setup(true);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void setup(bool b)
@@ -124,13 +126,13 @@ public:
 		ofxSurfingHelpers::loadGroup(params_AppSession, path_Global + "/" + path_AppSession);
 
 		modeLayout = BOX_LAYOUT(iModeLayout.get());
-	}
+	};
 
 	//--------------------------------------------------------------
 	void draw()
 	{
 		draw(true);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void draw(bool b)//if passed false will skip drawing.
@@ -284,6 +286,30 @@ public:
 
 				//--
 
+				// Extra
+
+				else if (modeLayout == FULL_SCREEN)
+				{
+					_xx = xleft;
+					_yy = ytop;
+
+					float __w = ofGetWidth() - 2 * xleft;
+					float __h = ofGetHeight() - 2 * ytop;
+					if (_ww != __w) rBox.setWidth(__w);
+					if (_hh != __h) rBox.setHeight(__h);
+				}
+
+				else if (modeLayout == FULL_WITH_BOTTOM)
+				{
+					_xx = xleft;
+					_yy = ytop - _hh;
+
+					float __w = ofGetWidth() - 2 * xleft;
+					if (_ww != __w) rBox.setWidth(__w);
+				}
+
+				//--
+
 				// Set
 
 				rBox.setX(_xx);
@@ -370,8 +396,8 @@ public:
 
 	//--
 
-//private:
-public:
+private:
+	//public:
 
 	ofxInteractiveRect rBox = { "_" };
 
@@ -379,7 +405,10 @@ public:
 
 public:
 
-	// Exposed visible toggle to be used or linked in other parent scope GUIs!
+	ofxInteractiveRect& getInteractiveRect() { return rBox; };
+
+	// Exposed visible toggle to be used
+	// or linked in other parent scope GUIs!
 	ofParameter<bool> bGui{ "Box", true };
 
 	enum BOX_LAYOUT
@@ -395,10 +424,16 @@ public:
 		BOTTOM_CENTER,
 		BOTTOM_RIGHT,
 
+		//TODO: 
+		FULL_SCREEN,
+		FULL_WITH_BOTTOM,
+
 		NUM_LAYOUTS
 	};
 
 	//--
+
+private:
 
 	BOX_LAYOUT modeLayout = FREE_LAYOUT;
 	string str_modeLayout = "";
@@ -483,27 +518,32 @@ public:
 	//--------------------------------------------------------------
 	void setLockH(bool b = true) { rBox.setLockH(b); };//set enable/disable drag height interaction
 
-public:
+	//--
 
 	// Debug DoubleClick
 
+private:
+
 	bool bDebugDoubleClick = false;
+
+public:
+
 	//--------------------------------------------------------------
 	void setDebugDoubleClick(bool b) {
 		bDebugDoubleClick = b;
 		doubleClicker.setDebug(bDebugDoubleClick);
-	}
+	};
 	//--------------------------------------------------------------
 	void setToggleDebugDoubleClick() {
 		bDebugDoubleClick = !bDebugDoubleClick;
 		doubleClicker.setDebug(bDebugDoubleClick);
 
 		bIsChanged = true;
-	}
+	};
 	//--------------------------------------------------------------
 	bool isDebugDoubleClick() {
 		return bDebugDoubleClick;
-	}
+	};
 
 	// A simple callback to trig when theme or layout changed
 	//--------------------------------------------------------------
@@ -515,7 +555,7 @@ public:
 			bIsChanged = false;
 			return true;
 		}
-	}
+	};
 
 	// Callback useful i.e to re fresh Fbo's / viewports.
 	//--------------------------------------------------------------
@@ -535,7 +575,7 @@ public:
 		}
 
 		return changed;
-	}
+	};
 
 	//--------------------------------------------------------------
 	bool isEditing() {
@@ -543,16 +583,18 @@ public:
 		bool b = bIsEditing;
 
 		return b;
-	}
+	};
 
 	//--------------------------------------------------------------
 	BOX_LAYOUT getModeLayout() {
 		return modeLayout;
-	}
+	};
 
 	//--------------------------------------------------------------
 	string getModeName() {
-		switch (modeLayout) {
+
+		switch (modeLayout)
+		{
 			AUTO_CASE_CREATE(FREE_LAYOUT);
 			AUTO_CASE_CREATE(TOP_LEFT);
 			AUTO_CASE_CREATE(TOP_CENTER);
@@ -563,9 +605,14 @@ public:
 			AUTO_CASE_CREATE(BOTTOM_LEFT);
 			AUTO_CASE_CREATE(BOTTOM_CENTER);
 			AUTO_CASE_CREATE(BOTTOM_RIGHT);
+
+			//TODO: 
+			AUTO_CASE_CREATE(FULL_SCREEN);
+			AUTO_CASE_CREATE(FULL_WITH_BOTTOM);
+
 		default: return "UNKNOWN LAYOUT";
 		}
-	}
+	};
 
 	//--
 
@@ -581,57 +628,57 @@ public:
 	void setToggleDebug() {
 		bDebug = !bDebug;
 		bUseBorder = bDebug;
-	}
+	};
 
 	//--
 
 	//--------------------------------------------------------------
-	bool isVisible() const { return bGui.get(); }
+	bool isVisible() const { return bGui.get(); };
 
 	//--------------------------------------------------------------
 	ofRectangle getRectangle() {
 		return rBox;
-	}
+	};
 
 	//--------------------------------------------------------------
-	float getX() { return rBox.x; }
+	float getX() { return rBox.x; };
 	//--------------------------------------------------------------
-	float getY() { return rBox.y; }
+	float getY() { return rBox.y; };
 	//--------------------------------------------------------------
-	float getWidth() { return rBox.getWidth(); }
+	float getWidth() { return rBox.getWidth(); };
 	//--------------------------------------------------------------
-	float getHeight() { return rBox.getHeight(); }
+	float getHeight() { return rBox.getHeight(); };
 
 	//--------------------------------------------------------------
-	void setUseBorder(bool b) { bUseBorder = b; }
+	void setUseBorder(bool b) { bUseBorder = b; };
 
 	//--------------------------------------------------------------
-	void setTransparent(bool b) { bTransparent = b; }
+	void setTransparent(bool b) { bTransparent = b; };
 
 	//--------------------------------------------------------------
 	void setPads(float x, float y) {//call after setup
 		xpad = x;
 		ypad = y;
 		rBox.setPads(xpad, ypad);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void setUseBorderBlinking(bool b) {
 		bUseBorderBlinking = b;
 		if (b) bUseBorder = true;
-	}
+	};
 	//--------------------------------------------------------------
 	void setToggleUseBorder() {
 		bUseBorder = !bUseBorder;
-	}
+	};
 	//--------------------------------------------------------------
 	void setToggleUseBorderBlinking() {
 		bUseBorderBlinking = !bUseBorderBlinking;
 		if (bUseBorderBlinking) bUseBorder = true;
-	}
+	};
 
 	//--------------------------------------------------------------
-	void setBorderColor(ofColor c) { _colorBorder = c; }
+	void setBorderColor(ofColor c) { _colorBorder = c; };
 
 	//--------------------------------------------------------------
 	//void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hide.
@@ -641,7 +688,7 @@ public:
 		path_RectHelpBox = name;
 		bGui.setName(name);
 		path_AppSession = name + "_" + suffixSettings;
-	}
+	};
 
 	//--
 
@@ -650,43 +697,43 @@ public:
 	//--------------------------------------------------------------
 	void setRectConstraintMin(glm::vec2 shape) {
 		rBox.setRectConstraintMin(shape);
-	}
+	};
 	//--------------------------------------------------------------
 	void setRectConstraintMax(glm::vec2 shape) {
 		rBox.setRectConstraintMax(shape);
-	}
+	};
 
 	//--
 
 	//--------------------------------------------------------------
 	void setRectangle(ofRectangle shape) {
 		this->setShape(shape);
-	}
+	};
 	//--------------------------------------------------------------
 	void setShape(ofRectangle shape) {
 		rBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
-	}
+	};
 	//--------------------------------------------------------------
 	void setPosition(float x, float y) {
 		rBox.setX(x);
 		rBox.setY(y);
-	}
+	};
 	//--------------------------------------------------------------
 	void setX(float x) {
 		rBox.setX(x);
-	}
+	};
 	//--------------------------------------------------------------
 	void setY(float y) {
 		rBox.setY(y);
-	}
+	};
 	//--------------------------------------------------------------
 	void setWidth(float w) {
 		rBox.setWidth(w);
-	}
+	};
 	//--------------------------------------------------------------
 	void setHeight(float h) {
 		rBox.setHeight(h);
-	}
+	};
 
 	//--
 
@@ -695,14 +742,14 @@ public:
 	//--------------------------------------------------------------
 	void setPathGlobal(string path) {//call before setup. Will set path to save settings into.
 		path_Global = path;
-	}
+	};
 	// Legacy
 	//--------------------------------------------------------------
 	void setPath(string path) {//call before setup. Will set path to save settings into.
 		path_Global = path;
 
 		ofxSurfingHelpers::CheckFolder(path_Global);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void reset(bool bOnlySize = false, int width = 400) {
@@ -711,18 +758,18 @@ public:
 		rBox.setWidth(sz);
 		rBox.setHeight(sz);
 		if (!bOnlySize) rBox.setPosition(ofGetWidth() / 2.f - (sz / 2.f), ofGetHeight() / 2.f - (sz / 2.f));
-	}
+	};
 
 	//--------------------------------------------------------------
 	void Changed_Edit(bool& edit) {
 		ofLogNotice("ofxSurfingBoxInteractive") << " " << (__FUNCTION__) << "Edit : " << edit;
 		setEdit(edit);
-	}
+	};
 	//--------------------------------------------------------------
 	void Changed_Border(bool& b) {
 		ofLogNotice("ofxSurfingBoxInteractive") << " " << (__FUNCTION__) << "Border: " << b;
 		setUseBorder(b);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void Changed_bGui(bool& b)
@@ -742,7 +789,7 @@ public:
 				doubleClicker.disableAllEvents();
 			}
 		}
-	}
+	};
 
 	//--------------------------------------------------------------
 	void drawBorder()
@@ -753,7 +800,7 @@ public:
 		ofSetLineWidth(2.0);
 		ofDrawRectangle(getRectangle());
 		ofPopStyle();
-	}
+	};
 
 	//--------------------------------------------------------------
 	void drawBorderBlinking()
@@ -770,7 +817,7 @@ public:
 		ofSetLineWidth(2.0);
 		ofDrawRectangle(getRectangle());
 		ofPopStyle();
-	}
+	};
 
 	//--------------------------------------------------------------
 	void drawDebug()
@@ -840,7 +887,7 @@ public:
 
 		p = p + glm::vec2(0, 40);
 		ofDrawBitmapStringHighlight(s3, p, 0, 255);
-	}
+	};
 
 	//--------------------------------------------------------------
 	void doForceFitOnWindow()
@@ -874,7 +921,7 @@ public:
 		{
 			rBox.setY(ytop);
 		}
-	}
+	};
 
 	//--
 
@@ -957,7 +1004,7 @@ private:
 		//--
 
 		if (bDebugDoubleClick) doubleClicker.draw();
-	}
+};
 
 public:
 
@@ -965,7 +1012,7 @@ public:
 	void setToggleEdit()
 	{
 		setEdit(!rBox.isEditing());
-	}
+	};
 
 	//--------------------------------------------------------------
 	void setEdit(bool edit)
@@ -998,7 +1045,7 @@ public:
 		}
 
 		bIsChanged = true;
-	}
+	};
 
 	//--------------------------------------------------------------
 	void setToggleMode(bool bBack = false) {
@@ -1013,29 +1060,27 @@ public:
 
 		i = i % NUM_LAYOUTS;
 		modeLayout = BOX_LAYOUT(i);
-	}
-
+	};
 	//--------------------------------------------------------------
 	void setMode(BOX_LAYOUT mode) {
 		modeLayout = mode;
-	}
-
+	};
 	//--------------------------------------------------------------
 	void setLocked(bool b) {//enable/disable move and resize and all interaction
 		bLocked = b;
 		if (b) doubleClicker.disableAllEvents();
 		else doubleClicker.enableAllEvents();
-	}
+	};
 	//--------------------------------------------------------------
 	void setToggleLocked() {
 		bLocked = !bLocked;
 		setLocked(bLocked);
-	}
+	};
 
 private:
 
 	//--------------------------------------------------------------
-	bool isLocked() { return bLocked; }
+	bool isLocked() { return bLocked; };
 
 	//--
 
@@ -1044,11 +1089,11 @@ public:
 	//--------------------------------------------------------------
 	void setVisible(bool b) {
 		bGui = b;
-	}
+	};
 	//--------------------------------------------------------------
 	void setToggleVisible() {
 		bGui = !bGui;
-	}
+	};
 
 	//--
 
@@ -1056,17 +1101,14 @@ public:
 	void setLockAspectRatio(bool b = true) {
 		bLockedAspectRatio = b;
 		rBox.setLockAspectRatio(bLockedAspectRatio);
-	}
-
+	};
 	//--------------------------------------------------------------
 	void setToggleLockAspectRatio() {
 		bLockedAspectRatio = !bLockedAspectRatio;
 		rBox.setLockAspectRatio(bLockedAspectRatio);
-	}
-
+	};
 	//--------------------------------------------------------------
 	bool isLockedAspectRatio() {
 		return bLockedAspectRatio;
-	}
-
+	};
 };
