@@ -1,8 +1,8 @@
 {
     "Settings": {
-        "Blink": "1",
+        "Blink": "0",
         "Border": "1",
-        "Edit": "1",
+        "Edit": "0",
         "ModeLayout": "0",
         "Transparent": "0"
     }

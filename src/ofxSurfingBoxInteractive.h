@@ -62,9 +62,36 @@ public:
 
 		//TODO: 
 		FULL_SCREEN,
+		FULL_WITH_TOP,
 		FULL_WITH_BOTTOM,
 
 		NUM_LAYOUTS
+	};
+
+	// Legacy
+	//--------------------------------------------------------------
+	string getModeName() {
+
+		switch (modeLayout)
+		{
+			AUTO_CASE_CREATE(FREE_LAYOUT);
+			AUTO_CASE_CREATE(TOP_LEFT);
+			AUTO_CASE_CREATE(TOP_CENTER);
+			AUTO_CASE_CREATE(TOP_RIGHT);
+			AUTO_CASE_CREATE(CENTER_LEFT);
+			AUTO_CASE_CREATE(CENTER_CENTER);
+			AUTO_CASE_CREATE(CENTER_RIGHT);
+			AUTO_CASE_CREATE(BOTTOM_LEFT);
+			AUTO_CASE_CREATE(BOTTOM_CENTER);
+			AUTO_CASE_CREATE(BOTTOM_RIGHT);
+
+			//TODO: 
+			AUTO_CASE_CREATE(FULL_SCREEN);
+			AUTO_CASE_CREATE(FULL_WITH_TOP);
+			AUTO_CASE_CREATE(FULL_WITH_BOTTOM);
+
+		default: return string("UNKNOWN LAYOUT");
+		}
 	};
 
 	//--------------------------------------------------------------
@@ -151,21 +178,24 @@ public:
 	//--------------------------------------------------------------
 	void drawHelpInfo()
 	{
-		auto addLineDivider = [](string &s) {
-			s += "\n -------------------------------- ";
+		auto addLineDivider = [](string& _s) {
+			_s += "\n -------------------------------- ";
 		};
 
 		string s;
 
 		s += "\n ofxSurfingBoxInteractive";
 		s += "\n";
-		s += "\n ( INTERNAL )";
+		addLineDivider(s);
+		s += "\n";
+		s += "\n * INTERNAL";
 		s += "\n";
 		s += "\n DOUBLE LEFT-CLICK : EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
 		s += "\n";
 		addLineDivider(s);
 		s += "\n";
-		s += "\n LAYOUT PRESET: \n #" + ofToString(this->getModeLayout()) + " " + this->getModeName() + "\t";
+		s += "\n LAYOUT PRESET: \n";
+		s += "\n #" + ofToString(this->getModeLayout()) + " " + this->getModeName() + "\t";
 		s += "\n";
 		s += "\n [LEFT] : PREV";
 		s += "\n [RIGHT][TAB] : NEXT";
@@ -185,16 +215,18 @@ public:
 		s += "\n";
 		addLineDivider(s);
 		s += "\n";
-		s += "\n ( EXTERNAL. Should add )";
+		s += "\n * EXTERNAL";
+		s += "\n";
+		s += "\n Should add...";
 		s += "\n";
 		s += "\n [G] VISIBLE " + ofToString(this->isVisible() ? "ON" : "OFF");
+		s += "\n [SPACE] EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
+		s += "\n [BACKSPACE] RESET";
 		s += "\n";
 		s += "\n [D] DEBUG " + ofToString(this->isDebug() ? "ON" : "OFF");
 		s += "\n [B] BORDER " + ofToString(this->isBorder() ? "ON" : "OFF");
 		s += "\n [K] BORDER BLINK " + ofToString(this->isBorderBlinking() ? "ON" : "OFF");
 		s += "\n [A] LOCK ASPECT RATIO " + ofToString(this->isLockedAspectRatio() ? "ON" : "OFF");
-		s += "\n";
-		s += "\n [BACKSPACE] RESET";
 		s += "\n";
 
 		ofDrawBitmapStringHighlight(s, 15, 28);
@@ -248,16 +280,23 @@ public:
 			{
 				str_modeLayout = getModeName();
 
-				////modeLayout_PRE == FULL_SCREEN || modeLayout_PRE == FULL_WITH_BOTTOM)
-				//if (modeLayout_PRE == FULL_SCREEN)
-				//{
-				//	rBox.setHeight(_h_PreFullScreen);//restore
-				//}
-				if (modeLayout_PRE == FULL_SCREEN || modeLayout_PRE == FULL_WITH_BOTTOM)
+				if (modeLayout_PRE == FULL_SCREEN ||
+					modeLayout_PRE == FULL_WITH_TOP ||
+					modeLayout_PRE == FULL_WITH_BOTTOM)
 				{
-					// Store
+					rBox.set(rect_Box_STORE);
+				}
+
+				//--
+
+				if (modeLayout == FULL_SCREEN ||
+					modeLayout == FULL_WITH_TOP ||
+					modeLayout == FULL_WITH_BOTTOM)
+				{
 					rect_Box_STORE = rBox.getRect();
 				}
+
+				//--
 
 				// If we are leaving free mode, 
 				// we must store that rectangle.
@@ -273,20 +312,14 @@ public:
 					rBox.set(rect_Box_STORE);
 				}
 
-				//else if (modeLayout_PRE == FULL_SCREEN || modeLayout_PRE == FULL_WITH_BOTTOM)
-				//{
-				//	// Restore
-				//	rBox.set(rect_Box_STORE);
-				//}
+				//----
 
-				//--
-
-				// flag
+				// Update flag
 				modeLayout_PRE = modeLayout;
 				bIsChanged = true;
 
 				//--
-				
+
 				// workflow
 				if (modeLayout != FREE_LAYOUT)
 				{
@@ -398,10 +431,23 @@ public:
 					//_hh = rBox.getHeight();
 				}
 
-				else if (modeLayout == FULL_WITH_BOTTOM)
+				else if (modeLayout == FULL_WITH_TOP)
 				{
 					_xx = xleft;
 					_yy = ytop - _hh;
+
+					float __w = ofGetWidth() - 2 * xleft;
+					if (_ww != __w) rBox.setWidth(__w);
+
+					//TODO:
+					_ww = rBox.getWidth();
+					_hh = rBox.getHeight();
+				}
+
+				else if (modeLayout == FULL_WITH_BOTTOM)
+				{
+					_xx = xleft;
+					_yy = ofGetHeight() - ytop;
 
 					float __w = ofGetWidth() - 2 * xleft;
 					if (_ww != __w) rBox.setWidth(__w);
@@ -443,7 +489,7 @@ public:
 			// Move clicker handler linked to the box
 			doubleClicker.set(_xx, _yy, _ww, _hh);
 
-			// Double clicker handler
+			// Double / right clicker handler
 			drawDoubleClicker();
 
 			//--
@@ -683,30 +729,6 @@ public:
 	//--------------------------------------------------------------
 	BOX_LAYOUT getModeLayout() {
 		return modeLayout;
-	};
-	// Legacy
-	//--------------------------------------------------------------
-	string getModeName() {
-
-		switch (modeLayout)
-		{
-			AUTO_CASE_CREATE(FREE_LAYOUT);
-			AUTO_CASE_CREATE(TOP_LEFT);
-			AUTO_CASE_CREATE(TOP_CENTER);
-			AUTO_CASE_CREATE(TOP_RIGHT);
-			AUTO_CASE_CREATE(CENTER_LEFT);
-			AUTO_CASE_CREATE(CENTER_CENTER);
-			AUTO_CASE_CREATE(CENTER_RIGHT);
-			AUTO_CASE_CREATE(BOTTOM_LEFT);
-			AUTO_CASE_CREATE(BOTTOM_CENTER);
-			AUTO_CASE_CREATE(BOTTOM_RIGHT);
-
-			//TODO: 
-			AUTO_CASE_CREATE(FULL_SCREEN);
-			AUTO_CASE_CREATE(FULL_WITH_BOTTOM);
-
-		default: return string("UNKNOWN LAYOUT");
-		}
 	};
 	//--------------------------------------------------------------
 	string getModeLayoutName() {
@@ -1063,7 +1085,7 @@ private:
 
 				return;
 			}
-	}
+		}
 
 		//--
 
@@ -1107,7 +1129,7 @@ private:
 		//--
 
 		if (bDebugDoubleClick) doubleClicker.draw();
-};
+	};
 
 public:
 
@@ -1157,7 +1179,7 @@ public:
 		if (!bBack) i++; // next
 		else // previous
 		{
-			if (i == FREE_LAYOUT) i = NUM_LAYOUTS - 1;
+			if (i == FREE_LAYOUT) i = NUM_LAYOUTS - 1;//cycle
 			else i--;
 		}
 

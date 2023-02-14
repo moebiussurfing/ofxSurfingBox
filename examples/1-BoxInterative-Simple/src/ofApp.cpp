@@ -69,18 +69,16 @@ void ofApp::drawSceneBoxed()
 	// Draw an animated inner box 
 	// attached to the box rectangle widget
 
-	int d = 60;
-	float s = ofMap(ofGetFrameNum() % d, 0, d, 0.5f, 1.f);
-
 	// Here we get the ofRectangle from the Box object!
 	ofRectangle r = boxWidget.getRectangle();
 
 	// Animate scale
+	float s = ofMap(glm::cos(8 * ofGetElapsedTimef()), -1, 1, 0.5, 1);
 	r.scaleFromCenter(s);
 
 	ofPushStyle();
 	ofFill();
-	ofSetColor(ofColor::blue);
+	ofSetColor(boxWidget.getModeLayout() == 0 ? ofColor::yellow : ofColor::blue);
 	ofDrawRectangle(r);
 	ofPopStyle();
 }
