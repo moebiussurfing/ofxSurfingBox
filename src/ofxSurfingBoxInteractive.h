@@ -155,11 +155,11 @@ public:
 			s += "\n -------------------------------- ";
 		};
 
-		// Help info
 		string s;
+
 		s += "\n ofxSurfingBoxInteractive";
 		s += "\n";
-		s += "\n (INTERNAL)";
+		s += "\n ( INTERNAL )";
 		s += "\n";
 		s += "\n DOUBLE LEFT-CLICK : EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
 		s += "\n";
@@ -179,9 +179,13 @@ public:
 		s += "\n\t + SHIFT WIDTH ONLY";
 		s += "\n\t + ALT HEIGHT ONLY";
 		s += "\n";
+		addLineDivider(s);
+		s += "\n";
 		s += "\n LEFT-CLICK + RIGHT-CLICK : HIDE";
 		s += "\n";
-		s += "\n (EXTERNAL. Should add to ofApp)";
+		addLineDivider(s);
+		s += "\n";
+		s += "\n ( EXTERNAL. Should add )";
 		s += "\n";
 		s += "\n [G] VISIBLE " + ofToString(this->isVisible() ? "ON" : "OFF");
 		s += "\n";
@@ -192,7 +196,8 @@ public:
 		s += "\n";
 		s += "\n [BACKSPACE] RESET";
 		s += "\n";
-		ofDrawBitmapStringHighlight(s, 10, 22);
+
+		ofDrawBitmapStringHighlight(s, 15, 28);
 	};
 
 	//--------------------------------------------------------------
