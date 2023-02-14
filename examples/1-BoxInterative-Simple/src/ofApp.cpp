@@ -8,9 +8,9 @@ void ofApp::setup()
 	//--
 
 	// Optional
-
-	// Customize to avoid collide 
-	// when using multiple instances!
+	// Customize to avoid collide
+	// settings folders when using 
+	// multiple instances!
 	boxWidget.setName("Demo"); // for the filename
 	boxWidget.setPath("MyAddon/"); // for the container folder
 
@@ -21,33 +21,7 @@ void ofApp::setup()
 	//--
 
 	// Optional
-
-	// Debug
-	//boxWidget.setDebug(true);
-	//boxWidget.setDebugDoubleClick(true);
-
-	// Force edit on startup
-	//boxWidget.setEdit(true);
-
-	// Set distance to window borders. Default is 4
-	//boxWidget.setPads(25, 25);
-
-	// Borders
-	//boxWidget.setUseBorder(true);
-	//boxWidget.setUseBorderBlinking(true); // forces above border too
-
-	// Constraint box sizes
-	//boxWidget.setRectConstraintMin(glm::vec2(50, 50)); // Min shape
-	//boxWidget.setRectConstraintMax(glm::vec2(ofGetWidth() - 25, ofGetHeight() - 25)); // Max shape
-
-	// Draggable borders
-	//boxWidget.setLockW(true); // disable x/width
-	//boxWidget.setLockH(true); // disable y/height
-	//boxWidget.setBorderColor(c); // custom color
-
-	// Force layout position
-	//boxWidget.setMode(ofxSurfingBoxInteractive::BOTTOM_RIGHT);
-	//boxWidget.setMode(ofxSurfingBoxInteractive::CENTER_LEFT);
+	setupOptional();
 }
 
 //--------------------------------------------------------------
@@ -79,7 +53,7 @@ void ofApp::drawSceneBoxed()
 	ofPushStyle();
 	ofFill();
 	ofSetColor(boxWidget.getModeLayout() == 0 ? ofColor::yellow : ofColor::blue);
-	ofDrawRectangle(r);
+	ofDrawRectRounded(r, 10);
 	ofPopStyle();
 }
 
@@ -89,7 +63,7 @@ void ofApp::keyPressed(int key)
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
-	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();//net
+	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();//next
 	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);//prev
 
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
@@ -99,4 +73,35 @@ void ofApp::keyPressed(int key)
 	if (key == 'G') boxWidget.setToggleVisible();
 	if (key == 'D') boxWidget.setToggleDebug();
 	if (key == 'd') boxWidget.setToggleDebugDoubleClick();
+}
+
+//--------------------------------------------------------------
+void ofApp::setupOptional()
+{
+	// Debug
+	//boxWidget.setDebug(true);
+	//boxWidget.setDebugDoubleClick(true);
+
+	// Force edit on startup
+	//boxWidget.setEdit(true);
+
+	// Set distance to window borders. Default is 4
+	//boxWidget.setPads(25, 25);
+
+	// Borders
+	//boxWidget.setUseBorder(true);
+	//boxWidget.setUseBorderBlinking(true); // forces above border too
+
+	// Constraint box sizes
+	//boxWidget.setRectConstraintMin(glm::vec2(50, 50)); // Min shape
+	//boxWidget.setRectConstraintMax(glm::vec2(ofGetWidth() - 25, ofGetHeight() - 25)); // Max shape
+
+	// Draggable borders
+	//boxWidget.setLockW(true); // disable x/width
+	//boxWidget.setLockH(true); // disable y/height
+	//boxWidget.setBorderColor(c); // custom color
+
+	// Force layout position
+	//boxWidget.setMode(ofxSurfingBoxInteractive::BOTTOM_RIGHT);
+	//boxWidget.setMode(ofxSurfingBoxInteractive::CENTER_LEFT);
 }

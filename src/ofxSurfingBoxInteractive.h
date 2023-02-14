@@ -179,14 +179,14 @@ public:
 	void drawHelpInfo()
 	{
 		auto addLineDivider = [](string& _s) {
-			_s += "\n -------------------------------- ";
+			_s += "\n ---------------------------------- ";
 		};
 
 		string s;
 
 		s += "\n ofxSurfingBoxInteractive";
-		s += "\n";
 		addLineDivider(s);
+		s += "\n";
 		s += "\n";
 		s += "\n * INTERNAL";
 		s += "\n";
@@ -204,10 +204,10 @@ public:
 		addLineDivider(s);
 		s += "\n";
 		s += "\n MOUSE WHEEL TO RESIZE:";
-		s += "\n\t FROM TOP LEFT";
-		s += "\n\t + CTRL FROM CENTER";
-		s += "\n\t + SHIFT WIDTH ONLY";
-		s += "\n\t + ALT HEIGHT ONLY";
+		s += "\n\  FROM TOP LEFT";
+		s += "\n\  + CTRL FROM CENTER";
+		s += "\n\  + SHIFT WIDTH ONLY";
+		s += "\n\  + ALT HEIGHT ONLY";
 		s += "\n";
 		addLineDivider(s);
 		s += "\n";
@@ -215,21 +215,22 @@ public:
 		s += "\n";
 		addLineDivider(s);
 		s += "\n";
+		s += "\n";
+		s += "\n";
 		s += "\n * EXTERNAL";
 		s += "\n";
 		s += "\n Should add...";
 		s += "\n";
-		s += "\n [G] VISIBLE " + ofToString(this->isVisible() ? "ON" : "OFF");
-		s += "\n [SPACE] EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
+		s += "\n [G]         VISIBLE " + ofToString(this->isVisible() ? "ON" : "OFF");
+		s += "\n [SPACE]     EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
 		s += "\n [BACKSPACE] RESET";
-		s += "\n";
-		s += "\n [D] DEBUG " + ofToString(this->isDebug() ? "ON" : "OFF");
-		s += "\n [B] BORDER " + ofToString(this->isBorder() ? "ON" : "OFF");
-		s += "\n [K] BORDER BLINK " + ofToString(this->isBorderBlinking() ? "ON" : "OFF");
-		s += "\n [A] LOCK ASPECT RATIO " + ofToString(this->isLockedAspectRatio() ? "ON" : "OFF");
+		s += "\n [D]         DEBUG " + ofToString(this->isDebug() ? "ON" : "OFF");
+		s += "\n [B]         BORDER " + ofToString(this->isBorder() ? "ON" : "OFF");
+		s += "\n [K]         BORDER BLINK " + ofToString(this->isBorderBlinking() ? "ON" : "OFF");
+		s += "\n [A]         LOCK ASPECT RATIO " + ofToString(this->isLockedAspectRatio() ? "ON" : "OFF");
 		s += "\n";
 
-		ofDrawBitmapStringHighlight(s, 15, 28);
+		ofDrawBitmapStringHighlight(s, 15, 28, ofColor(0, 225), ofColor(255));
 	};
 
 	//--------------------------------------------------------------
@@ -280,6 +281,10 @@ public:
 			{
 				str_modeLayout = getModeName();
 
+				//--
+
+				// Extras
+
 				if (modeLayout_PRE == FULL_SCREEN ||
 					modeLayout_PRE == FULL_WITH_TOP ||
 					modeLayout_PRE == FULL_WITH_BOTTOM)
@@ -289,12 +294,12 @@ public:
 
 				//--
 
-				if (modeLayout == FULL_SCREEN ||
-					modeLayout == FULL_WITH_TOP ||
-					modeLayout == FULL_WITH_BOTTOM)
-				{
-					rect_Box_STORE = rBox.getRect();
-				}
+				//if (modeLayout == FULL_SCREEN ||
+				//	modeLayout == FULL_WITH_TOP ||
+				//	modeLayout == FULL_WITH_BOTTOM)
+				//{
+				//	rect_Box_STORE = rBox.getRect();
+				//}
 
 				//--
 
@@ -329,7 +334,7 @@ public:
 
 			//--
 
-			// Calculate important point to define layout
+			// Calculate anchir points to define layout
 
 			// window
 			float _w = ofGetWidth();
@@ -546,7 +551,6 @@ public:
 	//--
 
 private:
-	//public:
 
 	ofxInteractiveRect rBox = { "_" };
 
@@ -578,7 +582,7 @@ public:
 	ofParameter<bool> bTransparent;
 	ofParameter<bool> bUseBorder;
 	ofParameter<bool> bUseBorderBlinking;
-	ofParameter<int> iModeLayout;//only used to load/store settings
+	ofParameter<int> iModeLayout; // only used to load/store settings
 
 private:
 
@@ -587,13 +591,10 @@ private:
 	std::string suffixSettings = "Settings.json";
 	std::string path_AppSession = path_RectHelpBox + "_" + suffixSettings;
 
-
-	ofColor _colorButton;// bg selected button
-	ofColor _colorBg;// background color
+	ofColor _colorButton; // bg selected button
+	ofColor _colorBg; // background color
 	ofColor _colorShadow;
 	ofColor _colorBorder;
-
-	//bool bWorflow = true;
 
 	bool bIsEditing = false;
 

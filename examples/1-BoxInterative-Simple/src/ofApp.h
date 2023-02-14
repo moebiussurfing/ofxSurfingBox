@@ -36,6 +36,7 @@ class ofApp : public ofBaseApp
 public:
 
 	void setup();
+	void setupOptional();
 	void draw();
 	void keyPressed(int key);
 	
