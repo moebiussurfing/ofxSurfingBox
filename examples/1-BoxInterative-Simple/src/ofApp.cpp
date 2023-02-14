@@ -59,6 +59,8 @@ void ofApp::draw()
 
 	// Box Interactive
 	boxWidget.draw();
+
+	boxWidget.drawHelpInfo();
 }
 
 //--------------------------------------------------------------
@@ -89,8 +91,8 @@ void ofApp::keyPressed(int key)
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
-	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);
-	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();
+	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();//net
+	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);//prev
 
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
 	if (key == 'B') boxWidget.setToggleUseBorder();
