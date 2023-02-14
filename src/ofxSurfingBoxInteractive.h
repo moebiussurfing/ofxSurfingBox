@@ -151,15 +151,19 @@ public:
 	//--------------------------------------------------------------
 	void drawHelpInfo()
 	{
+		auto addLineDivider = [](string &s) {
+			s += "\n -------------------------------- ";
+		};
+
 		// Help info
 		string s;
 		s += "\n ofxSurfingBoxInteractive";
 		s += "\n";
-		s += "\n INTERNAL";
+		s += "\n (INTERNAL)";
 		s += "\n";
 		s += "\n DOUBLE LEFT-CLICK : EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
 		s += "\n";
-		s += "\n -------------------------------";
+		addLineDivider(s);
 		s += "\n";
 		s += "\n LAYOUT PRESET: \n #" + ofToString(this->getModeLayout()) + " " + this->getModeName() + "\t";
 		s += "\n";
@@ -167,7 +171,7 @@ public:
 		s += "\n [RIGHT][TAB] : NEXT";
 		s += "\n RIGHT-CLICK  : NEXT";
 		s += "\n";
-		s += "\n -------------------------------";
+		addLineDivider(s);
 		s += "\n";
 		s += "\n MOUSE WHEEL TO RESIZE:";
 		s += "\n\t FROM TOP LEFT";
@@ -177,8 +181,7 @@ public:
 		s += "\n";
 		s += "\n LEFT-CLICK + RIGHT-CLICK : HIDE";
 		s += "\n";
-		s += "\n EXTERNAL";
-		s += "\n (should add to ofApp)";
+		s += "\n (EXTERNAL. Should add to ofApp)";
 		s += "\n";
 		s += "\n [G] VISIBLE " + ofToString(this->isVisible() ? "ON" : "OFF");
 		s += "\n";
@@ -235,7 +238,8 @@ public:
 			// Memorize free layout mode 
 			// to not be overwritten by 
 			// other predefined (top,left..) layout positions.
-			if (modeLayout != modeLayout_PRE)
+
+			if (modeLayout != modeLayout_PRE) // changed
 			{
 				str_modeLayout = getModeName();
 
@@ -263,11 +267,12 @@ public:
 					// Restore
 					rBox.set(rect_Box_STORE);
 				}
-				else if (modeLayout_PRE == FULL_SCREEN || modeLayout_PRE == FULL_WITH_BOTTOM)
-				{
-					// Restore
-					rBox.set(rect_Box_STORE);
-				}
+
+				//else if (modeLayout_PRE == FULL_SCREEN || modeLayout_PRE == FULL_WITH_BOTTOM)
+				//{
+				//	// Restore
+				//	rBox.set(rect_Box_STORE);
+				//}
 
 				//--
 
@@ -275,6 +280,8 @@ public:
 				modeLayout_PRE = modeLayout;
 				bIsChanged = true;
 
+				//--
+				
 				// workflow
 				if (modeLayout != FREE_LAYOUT)
 				{
@@ -380,6 +387,10 @@ public:
 					float __h = ofGetHeight() - 2 * ytop;
 					if (_ww != __w) rBox.setWidth(__w);
 					if (_hh != __h) rBox.setHeight(__h);
+
+					////TODO:
+					//_ww = rBox.getWidth();
+					//_hh = rBox.getHeight();
 				}
 
 				else if (modeLayout == FULL_WITH_BOTTOM)
@@ -389,6 +400,10 @@ public:
 
 					float __w = ofGetWidth() - 2 * xleft;
 					if (_ww != __w) rBox.setWidth(__w);
+
+					//TODO:
+					_ww = rBox.getWidth();
+					_hh = rBox.getHeight();
 				}
 
 				//--
@@ -418,15 +433,15 @@ public:
 			// Force fit box inside the window
 			if (bForceFitInsideWindow) doForceFitOnWindow();
 
-			//----
+			//--
 
-			// Move clicker linked to the box
+			// Move clicker handler linked to the box
 			doubleClicker.set(_xx, _yy, _ww, _hh);
 
 			// Double clicker handler
 			drawDoubleClicker();
 
-			//----
+			//--
 
 			// Aspect changed
 			if (bLockedAspectRatio != bLockedAspectRatio_PRE)
@@ -447,7 +462,7 @@ public:
 				}
 			}
 
-			//----
+			//--
 
 			// Draw border
 
@@ -467,7 +482,7 @@ public:
 				}
 			}
 
-			//----
+			//--
 
 			// Debug
 			// Detect changes
@@ -561,7 +576,8 @@ private:
 
 private:
 
-	DoubleClicker doubleClicker;
+	DoubleClicker doubleClicker;//handles double clicks and right click interaction
+
 	bool bStateEdit = false;
 	//bool bState2 = false;
 
@@ -600,7 +616,6 @@ public:
 	void setToggleDebugDoubleClick() {
 		bDebugDoubleClick = !bDebugDoubleClick;
 		doubleClicker.setDebug(bDebugDoubleClick);
-
 		bIsChanged = true;
 	};
 	//--------------------------------------------------------------
@@ -837,7 +852,7 @@ public:
 		float sz = width;
 		rBox.setWidth(sz);
 		rBox.setHeight(sz);
-		
+
 		// pos
 		if (!bOnlySize) rBox.setPosition(ofGetWidth() / 2.f - (sz / 2.f), ofGetHeight() / 2.f - (sz / 2.f));
 
@@ -1043,7 +1058,7 @@ private:
 
 				return;
 			}
-		}
+	}
 
 		//--
 
@@ -1120,7 +1135,7 @@ public:
 		{
 			rBox.disableEdit();
 
-			//TODO: autosave
+			//TODO: auto save
 			// Save
 			//rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
 
