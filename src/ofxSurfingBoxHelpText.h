@@ -613,6 +613,20 @@ public:
 		}
 	}
 
+	ofRectangle getRectangle() { return rBox.getRect(); };
+
+	//--------------------------------------------------------------
+	void setPosition(float x, float y) {
+		rBox.setPosition(x, y);
+	}
+	
+	//TODO: disable? must update?
+	// disable
+	//--------------------------------------------------------------
+	void setShape(ofRectangle shape) {
+		rBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
+	}
+
 private:
 
 	ofxInteractiveRect rBox = { "Help_ofxPresetsManager" };
@@ -691,13 +705,13 @@ private: // disable
 		rBox.setLockResize(!bNoText);
 	}
 
-	//public:
-private: // disable
-
-	//--------------------------------------------------------------
-	void setShape(ofRectangle shape) {
-		rBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
-	}
+//	//public:
+//private: 
+//	// disable
+//	//--------------------------------------------------------------
+//	void setShape(ofRectangle shape) {
+//		rBox.setRect(shape.x, shape.y, shape.getWidth(), shape.getHeight());
+//	}
 
 public:
 

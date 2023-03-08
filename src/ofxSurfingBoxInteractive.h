@@ -248,7 +248,6 @@ public:
 
 		ofPushStyle();
 		{
-
 			static float _h_PreFullScreen = 0;
 
 			//--
@@ -934,7 +933,8 @@ public:
 	{
 		if (!bGui) return;//TODO:
 
-		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
+		int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 12, 48);
+		//int a = ofMap(ofxSurfingHelpers::Bounce(), 0, 1, 24, 64);
 		ofColor c = ofColor(_colorBorder, a);
 
 		// Border

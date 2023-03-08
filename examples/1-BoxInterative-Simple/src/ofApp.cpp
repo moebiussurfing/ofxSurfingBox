@@ -53,7 +53,14 @@ void ofApp::drawSceneBoxed()
 	ofPushStyle();
 	ofFill();
 	ofSetColor(boxWidget.getModeLayout() == 0 ? ofColor::yellow : ofColor::blue);
-	ofDrawRectRounded(r, 10);
+	ofDrawRectRounded(r, 30);
+
+	// Text label
+	ofBitmapFont f;
+	string ss = boxWidget.getModeLayoutName();
+	auto sz = f.getBoundingBox(ss, 0, 0);
+	auto c = boxWidget.getRectangle().getCenter() - glm::vec2(sz.x / 2, sz.y / 2);
+	ofDrawBitmapStringHighlight(ss, c.x, c.y);
 	ofPopStyle();
 }
 
