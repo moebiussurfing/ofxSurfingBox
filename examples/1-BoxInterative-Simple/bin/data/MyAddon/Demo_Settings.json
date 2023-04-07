@@ -1,9 +1,9 @@
 {
     "Settings": {
         "Blink": "0",
-        "Border": "1",
+        "Border": "0",
         "Edit": "0",
-        "ModeLayout": "10",
+        "ModeLayout": "0",
         "Transparent": "0"
     }
 }

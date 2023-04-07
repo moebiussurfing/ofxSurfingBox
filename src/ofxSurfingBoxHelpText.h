@@ -82,6 +82,8 @@ public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxHelpText()
 	{
+		ofAddListener(ofEvents().exit, this, &ofxSurfingBoxHelpText::exit, OF_EVENT_ORDER_AFTER_APP);
+
 		// Default Fonts
 
 		//--
@@ -105,6 +107,22 @@ public:
 	//--------------------------------------------------------------
 	~ofxSurfingBoxHelpText()
 	{
+		ofRemoveListener(ofEvents().exit, this, &ofxSurfingBoxHelpText::exit);
+
+		//exit();
+	}
+
+private:
+
+	//--------------------------------------------------------------
+	virtual void exit(ofEventArgs& args)
+	{
+		exit();
+	}
+
+	//--------------------------------------------------------------
+	virtual void exit()
+	{		
 		// All app settings
 		ofxSurfingHelpers::CheckFolder(path_Global + "/");
 
@@ -114,6 +132,8 @@ public:
 		//ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/Session" + nameBoxFile + ".xml");
 		ofRemoveListener(params_AppSession.parameterChangedE(), this, &ofxSurfingBoxHelpText::Changed);
 	}
+
+public:
 
 	//--------------------------------------------------------------
 	//void setup(bool bUsingTitle = false)

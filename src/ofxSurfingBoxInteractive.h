@@ -25,14 +25,15 @@
 
 	TODO:
 
-	+ check colliding when multi instances.
+	+ add shift + mouse wheel to scale from center.
+
 	+ add ofRectangle helpers to maximize, full screen.
 		or a new types like top left, full width bottom, top center...etc.
-	+ fix that setLockX is overwritten with loading settings..
-	+ fix loading well.
-	+ store layout mode, not only the free layout.
-	+ update text box from this class.
-	+ fit screen or mini / big modes to use on a video player.
+		fit screen or mini / big modes to use on a video player.
+	+ check colliding when multi instances.?
+	+ fix that setLockX is overwritten with loading settings..?
+	+ store layout mode, not only the free layout.?
+	+ update text box from this class.?
 
 */
 
@@ -94,15 +95,34 @@ public:
 		}
 	};
 
+public:
 	//--------------------------------------------------------------
 	ofxSurfingBoxInteractive()
 	{
+		ofAddListener(ofEvents().exit, this, &ofxSurfingBoxInteractive::exit, OF_EVENT_ORDER_AFTER_APP);
+
 		setRectConstraintMin(glm::vec2(50, 50));
 		setPads(4, 4);
 	};
 
 	//--------------------------------------------------------------
 	~ofxSurfingBoxInteractive()
+	{
+		ofRemoveListener(ofEvents().exit, this, &ofxSurfingBoxInteractive::exit);
+
+		//exit();
+	};	
+
+private:
+	
+	//--------------------------------------------------------------
+	virtual void exit(ofEventArgs& args)
+	{
+		exit();
+	}
+
+	//--------------------------------------------------------------
+	virtual void exit()
 	{
 		bEdit.removeListener(this, &ofxSurfingBoxInteractive::Changed_Edit);
 		bUseBorder.removeListener(this, &ofxSurfingBoxInteractive::Changed_Border);
@@ -121,6 +141,8 @@ public:
 
 		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
 	};
+
+public:
 
 	//--------------------------------------------------------------
 	void setup()
@@ -873,7 +895,28 @@ public:
 	};
 
 	//--------------------------------------------------------------
-	void reset(bool bOnlySize = false, int width = 400) {
+	void reset(float ratio = 0.8) 
+	{
+		ofRectangle r;
+		float ww = ofGetWidth();
+		float wh = ofGetHeight();
+		//r.setWidth(ww * ratio);
+		//r.setHeight(wh * ratio);
+		//r.setPosition(p);
+		r.setFromCenter(ww / 2.f, wh / 2.f, ww * ratio, wh * ratio);
+		
+		//this->setRectangle(r);
+		//rBox.setRect(r);
+		rBox.set(r);
+
+		modeLayout = FREE_LAYOUT;
+
+		rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
+		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
+	};
+
+	//--------------------------------------------------------------
+	void reset(bool bOnlySize /*= false*/, int width /*= 400*/) {
 
 		// size
 		float sz = width;
