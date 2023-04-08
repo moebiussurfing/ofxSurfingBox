@@ -252,7 +252,7 @@ public:
 		s += "\n [A]         LOCK ASPECT RATIO " + ofToString(this->isLockedAspectRatio() ? "ON" : "OFF");
 		s += "\n";
 
-		ofDrawBitmapStringHighlight(s, 15, 28, ofColor(0, 225), ofColor(255));
+		ofDrawBitmapStringHighlight(s, 15, 28, ofColor(0, 150), ofColor(255));
 	};
 
 	//--------------------------------------------------------------
@@ -1034,10 +1034,10 @@ public:
 		if (bChangedSz) c2 = ofColor::green;
 
 		auto p = r.getTopLeft() + glm::vec2(9 + BORDER_DRAG_SIZE, 19 + BORDER_DRAG_SIZE);
-		ofDrawBitmapStringHighlight(s1, p, c1, 255);
+		ofDrawBitmapStringHighlight(s1, p, ofColor(c1, 150), 255);
 
 		p = p + glm::vec2(0, 20);
-		ofDrawBitmapStringHighlight(s2, p, c2, 255);
+		ofDrawBitmapStringHighlight(s2, p, ofColor(c2, 150), 255);
 
 		string s3 = "";
 		s3 += "MODE       " + this->getModeName() + "\n";
@@ -1056,7 +1056,8 @@ public:
 		//s3 += "Drag Diff  " + ofToString(rBox.diffx) + ", " + ofToString(rBox.diffy);
 
 		p = p + glm::vec2(0, 40);
-		ofDrawBitmapStringHighlight(s3, p, 0, 255);
+		ofDrawBitmapStringHighlight(s3, p, ofColor(0, 150), ofColor(255));
+
 	};
 
 	//--------------------------------------------------------------

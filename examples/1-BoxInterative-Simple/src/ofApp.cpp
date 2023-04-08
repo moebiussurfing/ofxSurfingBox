@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	ofxSurfingHelpers::setMonitorsLayout(1);
 	//ofSetWindowPosition(-1920, 23);
 
 	//--
@@ -55,11 +56,12 @@ void ofApp::drawSceneBoxed()
 	ofSetColor(boxWidget.getModeLayout() == 0 ? ofColor::yellow : ofColor::blue);
 	ofDrawRectRounded(r, 30);
 
-	// Text label
+	// Text label to debug box mode
 	ofBitmapFont f;
 	string ss = boxWidget.getModeLayoutName();
-	auto sz = f.getBoundingBox(ss, 0, 0);
-	auto c = boxWidget.getRectangle().getCenter() - glm::vec2(sz.x / 2, sz.y / 2);
+	auto bb = f.getBoundingBox(ss, 0, 0);
+	glm::vec2 sz(bb.getWidth(), bb.getHeight());
+	glm::vec2 c = glm::vec2(r.getCenter() - glm::vec2(sz.x / 2, sz.y / 2) + glm::vec2(0, 10));
 	ofDrawBitmapStringHighlight(ss, c.x, c.y);
 	ofPopStyle();
 }
