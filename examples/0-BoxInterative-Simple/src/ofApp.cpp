@@ -12,7 +12,7 @@ void ofApp::setup()
 void ofApp::update()
 {
 	// We have a simple callback available
-	if (boxWidget.isChanged()) { ofLog() << "boxWidget changed: "<< boxWidget.getRectangle(); }
+	if (boxWidget.isChanged()) { ofLog() << "boxWidget changed: " << boxWidget.getRectangle(); }
 }
 
 //--------------------------------------------------------------
@@ -38,11 +38,20 @@ void ofApp::drawSceneBoxed()
 	ofRectangle r = boxWidget.getRectangle();
 
 	// Animate scale
-	r.scaleFromCenter(ofMap(glm::cos(20 * ofGetElapsedTimef()), -1, 1, 0.9, 1));
+	float s = ofMap(glm::cos(10 * ofGetElapsedTimef()), -1, 1, 0.98, 1);
+	float d = MAX(r.getWidth() - r.getWidth() * s, (r.getHeight() - r.getHeight() * s));
+	float w = r.getWidth();
+	float h = r.getHeight();
+	if (boxWidget.getModeType() != ofxSurfingBoxInteractive::BOX_TYPE::TYPE_BAR_HORIZONTAL)
+		w = r.getWidth() - d;
+	if (boxWidget.getModeType() != ofxSurfingBoxInteractive::BOX_TYPE::TYPE_BAR_VERTICAL)
+		h = r.getHeight() - d;
+	r.setFromCenter(r.getCenter(), w, h);
 
+	// Draw
 	ofPushStyle();
 	ofFill();
-	ofSetColor(ofColor::blue, 200);
+	ofSetColor(ofColor::blue, 150);
 	ofDrawRectangle(r);
 	ofPopStyle();
 }
@@ -50,9 +59,9 @@ void ofApp::drawSceneBoxed()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
+	if (key == 'd') bDrawScene = !bDrawScene;
+
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
-	if (key == OF_KEY_TAB) boxWidget.setToggleMode();
-
-	if (key == 'd') bDrawScene = !bDrawScene;
+	if (key == OF_KEY_TAB) boxWidget.setToggleModeLayout();
 }

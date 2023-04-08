@@ -23,7 +23,8 @@
 
 	SPACE : Toggle Edit
 	BACKSPACE : Reset
-	TAB LEFT/RIGHT : Browse Layout Modes
+	TAB LEFT/RIGHT : Browse Mode Layouts 
+	T : Browse Mode Types
 	A : Lock Aspect Ratio
 	B : Toggle Border
 	K : Toggle Border Blink
@@ -34,12 +35,12 @@
 class ofApp : public ofBaseApp 
 {
 public:
-
 	void setup();
 	void setupOptional();
 	void draw();
 	void keyPressed(int key);
 	
 	void drawSceneBoxed();
+
 	ofxSurfingBoxInteractive boxWidget;
 };

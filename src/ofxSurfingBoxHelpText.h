@@ -61,8 +61,8 @@
 	boxHelpInfo.setPath(path_GLOBAL + "HelpBox/");
 
 	 Customize Mode
-	//boxHelpInfo.setMode(ofxSurfingBoxHelpText::FREE_LAYOUT);
-	boxHelpInfo.setMode(ofxSurfingBoxHelpText::BOTTOM_CENTER);
+	//boxHelpInfo.setModeLayout(ofxSurfingBoxHelpText::FREE_LAYOUT);
+	boxHelpInfo.setModeLayout(ofxSurfingBoxHelpText::BOTTOM_CENTER);
 
 	// Custom Theme
 	boxHelpInfo.setTheme(true); // dark

@@ -2,9 +2,9 @@
     "Settings": {
         "Blink": "0",
         "Border": "0",
-        "Edit": "1",
+        "Edit": "0",
         "ModeLayout": "0",
-        "ModeType": "0",
+        "ModeType": "1",
         "Transparent": "0"
     }
 }

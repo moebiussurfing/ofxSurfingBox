@@ -4,7 +4,6 @@
 void ofApp::setup()
 {
 	ofxSurfingHelpers::setMonitorsLayout(1);
-	//ofSetWindowPosition(-1920, 23);
 
 	//--
 
@@ -35,6 +34,7 @@ void ofApp::draw()
 	// Box Interactive
 	boxWidget.draw();
 
+	// Debug info
 	boxWidget.drawHelpInfo();
 }
 
@@ -48,17 +48,28 @@ void ofApp::drawSceneBoxed()
 	ofRectangle r = boxWidget.getRectangle();
 
 	// Animate scale
-	float s = ofMap(glm::cos(8 * ofGetElapsedTimef()), -1, 1, 0.5, 1);
-	r.scaleFromCenter(s);
+	float s = ofMap(glm::cos(10 * ofGetElapsedTimef()), -1, 1, 0.98, 1);
+	float d = MAX(r.getWidth() - r.getWidth() * s, (r.getHeight() - r.getHeight() * s));
+	float w = r.getWidth();
+	float h = r.getHeight();
+	if (boxWidget.getModeType() != BOX_TYPE::TYPE_BAR_HORIZONTAL)
+		w = r.getWidth() - d;
+	if (boxWidget.getModeType() != BOX_TYPE::TYPE_BAR_VERTICAL)
+		h = r.getHeight() - d;
+	r.setFromCenter(r.getCenter(), w, h);
 
+	// Draw
 	ofPushStyle();
 	ofFill();
-	ofSetColor(boxWidget.getModeLayout() == 0 ? ofColor::yellow : ofColor::blue);
-	ofDrawRectRounded(r, 30);
+	ofColor col = boxWidget.getModeLayout() == BOX_LAYOUT::FREE_LAYOUT ? ofColor::yellow : ofColor::blue;
+	if (boxWidget.getModeType() != BOX_TYPE::TYPE_RECTANGLE) col = ofColor::green;
+	ofSetColor(col);
+	ofDrawRectRounded(r, 5);
 
 	// Text label to debug box mode
 	ofBitmapFont f;
 	string ss = boxWidget.getModeLayoutName();
+	ss += "\n" + ofToString(boxWidget.getModeTypeName());
 	auto bb = f.getBoundingBox(ss, 0, 0);
 	glm::vec2 sz(bb.getWidth(), bb.getHeight());
 	glm::vec2 c = glm::vec2(r.getCenter() - glm::vec2(sz.x / 2, sz.y / 2) + glm::vec2(0, 10));
@@ -72,8 +83,8 @@ void ofApp::keyPressed(int key)
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
-	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();//next
-	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);//prev
+	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleModeLayout();//next
+	if (key == OF_KEY_LEFT) boxWidget.setToggleModeLayout(true);//prev
 
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
 	if (key == 'B') boxWidget.setToggleUseBorder();
@@ -82,11 +93,21 @@ void ofApp::keyPressed(int key)
 	if (key == 'G') boxWidget.setToggleVisible();
 	if (key == 'D') boxWidget.setToggleDebug();
 	if (key == 'd') boxWidget.setToggleDebugDoubleClick();
+
+	if (key == 'T') {
+		boxWidget.setToggleType();
+		boxWidget.reset();
+	}
+	if (key == 'R') boxWidget.setType(BOX_TYPE::TYPE_RECTANGLE);
+	if (key == 'H') boxWidget.setType(BOX_TYPE::TYPE_BAR_HORIZONTAL);
+	if (key == 'V') boxWidget.setType(BOX_TYPE::TYPE_BAR_VERTICAL);
 }
 
 //--------------------------------------------------------------
 void ofApp::setupOptional()
 {
+	// List of some optional settings
+
 	// Debug
 	//boxWidget.setDebug(true);
 	//boxWidget.setDebugDoubleClick(true);
@@ -111,6 +132,6 @@ void ofApp::setupOptional()
 	//boxWidget.setBorderColor(c); // custom color
 
 	// Force layout position
-	//boxWidget.setMode(ofxSurfingBoxInteractive::BOTTOM_RIGHT);
-	//boxWidget.setMode(ofxSurfingBoxInteractive::CENTER_LEFT);
+	//boxWidget.setMode(BOX_LAYOUT::BOTTOM_RIGHT);
+	//boxWidget.setMode(BOX_LAYOUT::CENTER_LEFT);
 }
