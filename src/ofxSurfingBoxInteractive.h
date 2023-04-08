@@ -86,37 +86,41 @@ namespace ofxSurfingBox {
 
 		void setType(BOX_TYPE mode) {
 			modeType = mode;
+			iModeType = (int)modeType;
+
 			switch (modeType)
 			{
 			case TYPE_RECTANGLE: {
 				str_modeType = getTypeName();
 				//workflow.
-				//TODO: should not expect to block previous state..
+				//TODO: should not expect to block previous state if settled manually by the coder/user..
 				setLockH(false);
 				setLockW(false);
 				break;
 			}
 			case TYPE_BAR_VERTICAL: {
 				str_modeType = getTypeName();
-				setY(0);
-				setHeight(ofGetHeight());
 				setLockH(true);
 				setLockW(false);
 				modeLayout = FREE_LAYOUT;
 				iModeLayout = (int)modeLayout;
+				setY(0);
+				setHeight(ofGetHeight());
 				break;
 			}
 			case TYPE_BAR_HORIZONTAL: {
 				str_modeType = getTypeName();
-				setX(0);
-				setWidth(ofGetWidth());
 				setLockH(false);
 				setLockW(true);
 				modeLayout = FREE_LAYOUT;
 				iModeLayout = (int)modeLayout;
+				setX(0);
+				setWidth(ofGetWidth());
 				break;
 			}
 			}
+
+			if (bForceType) doForceType();
 		};
 
 		//--------------------------------------------------------------
@@ -310,6 +314,7 @@ namespace ofxSurfingBox {
 			s += "\n";
 			s += "\n * INTERNAL";
 			s += "\n";
+			s += "\n";
 			s += "\n DOUBLE LEFT-CLICK : EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
 			s += "\n";
 			addLineDivider(s);
@@ -340,7 +345,10 @@ namespace ofxSurfingBox {
 			s += "\n";
 			s += "\n";
 			s += "\n";
+			s += "\n";
+			s += "\n";
 			s += "\n * EXTERNAL (ofApp)";
+			s += "\n";
 			s += "\n";
 			s += "\n [G]         VISIBLE " + ofToString(this->isVisible() ? "ON" : "OFF");
 			s += "\n [SPACE]     EDIT " + ofToString(this->isEditing() ? "ON" : "OFF");
@@ -415,6 +423,7 @@ namespace ofxSurfingBox {
 
 					//--
 
+					//TODO:
 					//if (modeLayout == FULL_SCREEN ||
 					//	modeLayout == FULL_WITH_TOP ||
 					//	modeLayout == FULL_WITH_BOTTOM)
@@ -541,7 +550,8 @@ namespace ofxSurfingBox {
 					//--
 
 					// Extra
-
+					
+					//TODO:
 					else if (modeLayout == FULL_SCREEN)
 					{
 						_xx = xleft;
@@ -593,8 +603,9 @@ namespace ofxSurfingBox {
 
 				//--
 
-				// Calculate Fit/clamp Marks
+				// Calculate fit/clamp Marks
 				{
+					//TODO: ?
 					xcenter = _w / 2.f - _ww / 2.f;
 					ycenter = _h / 2.f - _hh / 2.f;
 
@@ -616,7 +627,6 @@ namespace ofxSurfingBox {
 						ytop = ypad;
 						ybottom = _h - _hh - ypad;
 					}
-
 				}
 
 				//--

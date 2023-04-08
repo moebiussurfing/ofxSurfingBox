@@ -25,13 +25,26 @@ void ofApp::setup()
 }
 
 //--------------------------------------------------------------
+void ofApp::update()
+{
+	// We have a simple callback available
+	if (boxWidget.isChanged()) { ofLog() << "boxWidget changed: " << boxWidget.getRectangle(); }
+}
+
+//--------------------------------------------------------------
 void ofApp::draw()
 {
 	// Scene
-	// We can link visibility with the widget
-	if (boxWidget.isVisible()) drawSceneBoxed();
+	// Draw an animated inner box 
+	// attached to the box rectangle widget
 
-	// Box Interactive
+	// Here we get the ofRectangle from the Box object!
+	ofRectangle r = boxWidget.getRectangle();
+
+	// We can link visibility with the widget
+	if (boxWidget.isVisible()) drawSceneBoxed(r);
+
+	// Box Interactive controller
 	boxWidget.draw();
 
 	// Debug info
@@ -39,13 +52,8 @@ void ofApp::draw()
 }
 
 //--------------------------------------------------------------
-void ofApp::drawSceneBoxed()
+void ofApp::drawSceneBoxed(ofRectangle r)
 {
-	// Draw an animated inner box 
-	// attached to the box rectangle widget
-
-	// Here we get the ofRectangle from the Box object!
-	ofRectangle r = boxWidget.getRectangle();
 
 	// Animate scale
 	float s = ofMap(glm::cos(10 * ofGetElapsedTimef()), -1, 1, 0.98, 1);
