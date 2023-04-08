@@ -9,7 +9,6 @@
 	HOW TO
 
 	> MOUSE
-
 	Double click to Toggle Edit.
 	Use Mouse Drag to move the box.
 	Drag borders to change the scale.
@@ -20,10 +19,10 @@
 	+ALT (height only) modifiers.
 
 	> KEYS
-
 	SPACE : Toggle Edit
 	BACKSPACE : Reset
-	TAB LEFT/RIGHT : Browse Layout Modes
+	TAB: Browse Layout Modes
+	d : enable draw scene that uses the box
 
 */
 
@@ -33,10 +32,11 @@ class ofApp : public ofBaseApp
 public:
 
 	void setup();
+	void update();
 	void draw();
 	void keyPressed(int key);
 	
 	ofxSurfingBoxInteractive boxWidget;
 	void drawSceneBoxed();
-	bool bDrawScene = false;
+	bool bDrawScene = 1;
 };

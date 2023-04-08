@@ -111,10 +111,10 @@ public:
 		ofRemoveListener(ofEvents().exit, this, &ofxSurfingBoxInteractive::exit);
 
 		//exit();
-	};	
+	};
 
 private:
-	
+
 	//--------------------------------------------------------------
 	virtual void exit(ofEventArgs& args)
 	{
@@ -895,28 +895,25 @@ public:
 	};
 
 	//--------------------------------------------------------------
-	void reset(float ratio = 0.8) 
+	void reset(bool bSave = true, float ratio = 0.8)
 	{
 		ofRectangle r;
 		float ww = ofGetWidth();
 		float wh = ofGetHeight();
-		//r.setWidth(ww * ratio);
-		//r.setHeight(wh * ratio);
-		//r.setPosition(p);
 		r.setFromCenter(ww / 2.f, wh / 2.f, ww * ratio, wh * ratio);
-		
-		//this->setRectangle(r);
-		//rBox.setRect(r);
+
 		rBox.set(r);
 
 		modeLayout = FREE_LAYOUT;
 
-		rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
-		ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
+		if (bSave) {
+			rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
+			ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
+		}
 	};
 
 	//--------------------------------------------------------------
-	void reset(bool bOnlySize /*= false*/, int width /*= 400*/) {
+	void reset(bool bOnlySize /*= false*/, int width /*= 400*/, bool bSave = true) {
 
 		// size
 		float sz = width;
@@ -927,6 +924,11 @@ public:
 		if (!bOnlySize) rBox.setPosition(ofGetWidth() / 2.f - (sz / 2.f), ofGetHeight() / 2.f - (sz / 2.f));
 
 		modeLayout = FREE_LAYOUT;
+
+		if (bSave) {
+			rBox.saveSettings(path_RectHelpBox, path_Global + "/", false);
+			ofxSurfingHelpers::saveGroup(params_AppSession, path_Global + "/" + path_AppSession);
+		}
 	};
 
 	//--------------------------------------------------------------
