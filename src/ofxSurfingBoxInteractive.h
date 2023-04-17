@@ -550,7 +550,7 @@ namespace ofxSurfingBox {
 					//--
 
 					// Extra
-					
+
 					//TODO:
 					else if (modeLayout == FULL_SCREEN)
 					{
@@ -972,9 +972,9 @@ namespace ofxSurfingBox {
 		//void setWokflow(bool b) { bWorflow = b; } // enables some automated workflow. ex: disable gui edit when hide.
 
 		//--------------------------------------------------------------
-		void setName(string name) {
+		void setName(string name, bool bRenamebGui = false) {
 			path_RectHelpBox = name;
-			bGui.setName(name);
+			if (bRenamebGui) bGui.setName(name);
 			path_AppSession = name + "_" + suffixSettings;
 		};
 
