@@ -45,7 +45,7 @@ Already added to `OFX_ADDON/libs/`. No need to add to **PROJECT GENERATOR**.
 * [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject) / _Fork from [memo](https://github.com/memo/ofxMSAInteractiveObject)_  
 
 ## Tested System
-* **Windows 10** / **VS 2022** / **oF ~0.12**
+* **Windows 10** / **VS 2022** / **OF 0.12+**
 
 ## Author
 An add-on by **@moebiusSurfing**  

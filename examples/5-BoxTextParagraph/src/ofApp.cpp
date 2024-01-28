@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	ofSetWindowPosition(-1920, 23);
+	//ofSetWindowPosition(-1920, 23);
 
 	//--
 
@@ -98,8 +98,8 @@ void ofApp::keyPressed(int key)
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
-	if (key == OF_KEY_LEFT) boxWidget.setToggleMode(true);
-	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleMode();
+	if (key == OF_KEY_LEFT) boxWidget.setToggleModeLayout(true);
+	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleModeLayout();
 
 	if (key == 'B') boxWidget.setToggleUseBorder();
 	if (key == 'K') boxWidget.setToggleUseBorderBlinking();

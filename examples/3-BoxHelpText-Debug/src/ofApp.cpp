@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 
-	ofSetWindowPosition(-1920, 30);
+	//ofSetWindowPosition(-1920, 30);
 
 	//--
 
@@ -13,18 +13,18 @@ void ofApp::setup() {
 
 	//--
 
-	//TODO: 
+	//TODO:
 	// Customization is WIP yet,
 	// now could break the layout...
 
 	// Customize Fonts
-	if(0) // uncomment to use the default fonts.
+	if (0) // uncomment to use the default fonts.
 	{
-		// Body Font 
+		// Body Font
 		textBoxWidget.setFontName("AnonymousPro-Bold.ttf");
 		textBoxWidget.setFontSize(14);
 
-		// Tittle Font 
+		// Tittle Font
 		textBoxWidget.setFontTitleName("UbuntuMono-Bold.ttf");
 		textBoxWidget.setFontTitleSize(60);
 	}
@@ -67,8 +67,7 @@ void ofApp::setup() {
 }
 
 //--------------------------------------------------------------
-void ofApp::draw()
-{
+void ofApp::draw() {
 	ofSetWindowTitle(textBoxWidget.getModeName());
 
 	// B. We build the help info on every frame:
@@ -77,7 +76,7 @@ void ofApp::draw()
 	buildHelpInfo();
 
 	//// We could update our info depending of our app Mode during runtime.
-	//// C. Rebuild text info if required. 
+	//// C. Rebuild text info if required.
 	//if (bSomethingChanged()) buildHelpInfo();
 	//// D. Or maybe when changed internally the theme or layout ...
 	//if (textBoxWidget.isChanged()) buildHelpInfo();
@@ -87,7 +86,7 @@ void ofApp::draw()
 	textBoxWidget.draw();
 
 	//--
-	 
+
 	//// D Can be directly draw without requiring to set to the object like when
 	////textBoxWidget.setText(helpInfo);
 	//draw(helpInfo)
@@ -105,14 +104,12 @@ void ofApp::keyPressed(int key) {
 }
 
 //--------------------------------------------------------------
-void ofApp::buildHelpInfo()
-{
+void ofApp::buildHelpInfo() {
 	//--
 
 	std::string helpInfo = "";
 
-	if (!bMinimized)
-	{
+	if (!bMinimized) {
 		//TODO: WIP
 		// When customizing fonts and sizes,
 		// Sometimes we need to force spaces to fix layout troubles.
@@ -124,7 +121,6 @@ void ofApp::buildHelpInfo()
 		//helpInfo += "HELP \n";
 		//helpInfo += "ofxSurfingBoxHelpText \n";
 		//helpInfo += "\n";
-
 
 		bool b = textBoxWidget.getIsEditing();
 
@@ -143,7 +139,7 @@ void ofApp::buildHelpInfo()
 		helpInfo += "\n";
 		helpInfo += "h/H    HELP \n";
 		helpInfo += "\n";
-		helpInfo += "t      TOGGLE THEME \n";
+		helpInfo += "T      TOGGLE THEME \n";
 		helpInfo += "       " + textBoxWidget.getThemeName() + "\n";
 		helpInfo += "\n";
 	}
@@ -153,12 +149,11 @@ void ofApp::buildHelpInfo()
 	helpInfo += "\n";
 	helpInfo += "SPACE  EDIT/LOCK \n";
 	helpInfo += "\n";
-	helpInfo += "m      MINIMIZE \n";
+	helpInfo += "M      MINIMIZE \n";
 	helpInfo += "\n";
 
 	// Testing monospace
-	if (bMinimized)
-	{
+	if (bMinimized) {
 		helpInfo += "\n";
 		helpInfo += "1      WINDOW 1 ON \n";
 		helpInfo += "2      WINDOW 2 ON \n";

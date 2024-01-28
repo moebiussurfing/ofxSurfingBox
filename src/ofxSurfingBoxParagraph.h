@@ -1,18 +1,14 @@
 
-#pragma once
-
 /*
-
 	TODO:
 
-	+ fix box width weird
 	+ add shadow mode
 	+ add align
-
 */
 
 //----
 
+#pragma once
 #include "ofMain.h"
 
 #include "ofxSurfingBoxInteractive.h"
@@ -182,7 +178,7 @@ public:
 
 		ofColor colorBg;
 
-		if (this->ofxSurfingBoxInteractive::modeLayout == BOX_LAYOUT::FREE_LAYOUT) {
+		if (this->getModeLayout()==BOX_LAYOUT::FREE_LAYOUT) {
 			if (this->isEditing()) {
 				float a = ofxSurfingHelpers::getFadeBlink(0.6f, 1.f);
 				ofColor c = ofColor(_colorBg, _colorBg.a * a);
@@ -220,12 +216,12 @@ public:
 		// shadow
 		if (_bUseShadow) {
 			buildFonts(_colorShadow); //TODO: could be slow?
-			fonts.drawFormattedColumn(s, x + 1, y + 1, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
+			fonts.drawFormattedColumn(s, x + 1, y + 1, w, OF_ALIGN_HORZ_LEFT, this->isDebug());
 		}
 
 		// draw
 		if (_bUseShadow) buildFonts(_colorText); //TODO: could be slow?
-		bbox = fonts.drawFormattedColumn(s, x, y, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
+		bbox = fonts.drawFormattedColumn(s, x, y, w, OF_ALIGN_HORZ_LEFT, this->isDebug());
 
 		// force height
 		this->setHeight(bbox.getHeight() + size_Title1 + 2 * ypad);

@@ -8,7 +8,7 @@ void ofApp::setup() {
 	boxWidget.setPath("MyPath/");
 	boxWidget.setup();
 	boxWidget.setUseBorder(true);
-	boxWidget.setMode(ofxSurfingBoxInteractive::FREE_LAYOUT);
+	boxWidget.setModeLayout(ofxSurfingBox::FREE_LAYOUT);
 	boxWidget.setRectConstraintMin(glm::vec2(50, 50));
 
 	// Scene
@@ -50,7 +50,6 @@ void ofApp::draw()
 
 	boxWidget.setBorderColor(c);
 	boxWidget.draw();
-	boxWidget.drawBorderBlinking();
 }
 
 //--------------------------------------------------------------
@@ -60,7 +59,6 @@ void ofApp::drawScene()
 
 	//float s = ofxSurfingHelpers::getFadeBlink(0.5f, 1.f, 0.04f);//inner
 	//float s = ofxSurfingHelpers::getFadeBlink(1.1f, 1.2f, 0.04f);//outer
-
 	float s = ofMap(ofGetFrameNum() % d, 0, d, 0.5f, 1.f);//inner
 
 	bool b = (ofGetFrameNum() % d == 0);
@@ -76,7 +74,7 @@ void ofApp::drawScene()
 	// Draw a background scene
 	if (0)
 	{
-		scene.drawScene();
+		scene.draw();
 	}
 
 	//--
@@ -91,8 +89,6 @@ void ofApp::drawScene()
 
 	ofPushStyle();
 	ofFill();
-	//ofNoFill();
-	//ofSetLineWidth(4);
 	ofSetColor(c);
 	ofDrawRectRounded(r, 0);
 	ofPopStyle();
@@ -104,7 +100,7 @@ void ofApp::keyPressed(int key) {
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
 	if (key == 'D') boxWidget.setToggleDebugDoubleClick();
-	if (key == OF_KEY_TAB) boxWidget.setToggleMode();
+	if (key == OF_KEY_TAB) boxWidget.setToggleModeLayout();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
 	buildHelpInfo();
@@ -122,10 +118,10 @@ void ofApp::buildHelpInfo()
 	helpInfo += "BACKSPACE      RESET SIZE \n";
 	helpInfo += "\n";
 	helpInfo += "TAB            MODE LAYOUT \n";
-	helpInfo += "               " + ofToString(boxWidget.getModeLayoutString()) + " \n";
+	helpInfo += "               " + ofToString(boxWidget.getModeLayoutName()) + " \n";
 	helpInfo += "\n";
 
-	if (boxWidget.getModeLayout() == ofxSurfingBoxInteractive::FREE_LAYOUT)
+	if (boxWidget.getModeLayout() == ofxSurfingBox::FREE_LAYOUT)
 	{
 		helpInfo += "FREE_LAYOUT \n";
 		helpInfo += "\n";

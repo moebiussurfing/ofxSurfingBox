@@ -1,6 +1,4 @@
-
 #pragma once
-
 #include "ofMain.h"
 
 #include "ofxSurfingHelpers.h"
@@ -8,7 +6,6 @@
 #include "DoubleClicker.h"
 
 /*
-
 	This class is a draggable ofRectangle based (not purely derived)
 	It can be used as a viewport or like any rectangle on many scenarios.
 	Can be placed into pre determined top, bottom, left... positions.
@@ -17,16 +14,14 @@
 	Aspect ratio can be locked.
 	Double click activates editing or locked modes.
 	Can be also handled with double, triple mouse clicks.
-
 */
 
-
 /*
-
 	TODO:
 
+	+ fix offsets / hardcoded x,y
+	+ remake / replace using new ofxSurfingHelpersLite
 	+ add shift + mouse wheel to scale from center.
-
 	+ add ofRectangle helpers to maximize, full screen.
 		or a new types like top left, full width bottom, top center...etc.
 		fit screen or mini / big modes to use on a video player.
@@ -34,7 +29,6 @@
 	+ fix that setLockX is overwritten with loading settings..?
 	+ store layout mode, not only the free layout.?
 	+ update text box from this class.?
-
 */
 
 
@@ -698,8 +692,8 @@ namespace ofxSurfingBox {
 
 		//--
 
-	private:
-
+	//private:
+	public:
 		ofxInteractiveRect rBox = { "_" };
 
 	public:
@@ -762,7 +756,8 @@ namespace ofxSurfingBox {
 
 		ofParameterGroup params_AppSession{ "Settings" };
 
-	private:
+	public:
+	//private:
 		bool bIsChanged = false;
 		bool bDebug = false;
 
