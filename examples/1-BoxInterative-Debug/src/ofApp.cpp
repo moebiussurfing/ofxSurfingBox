@@ -1,15 +1,14 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup()
-{
+void ofApp::setup() {
 	ofxSurfingHelpers::setMonitorsLayout(1);
 
 	//--
 
 	// Optional
 	// Customize to avoid collide
-	// settings folders when using 
+	// settings folders when using
 	// multiple instances!
 	boxWidget.setName("Demo"); // for the filename
 	boxWidget.setPath("MyAddon/"); // for the container folder
@@ -25,17 +24,17 @@ void ofApp::setup()
 }
 
 //--------------------------------------------------------------
-void ofApp::update()
-{
+void ofApp::update() {
 	// We have a simple callback available
-	if (boxWidget.isChanged()) { ofLog() << "boxWidget changed: " << boxWidget.getRectangle(); }
+	if (boxWidget.isChanged()) {
+		ofLog() << "boxWidget changed: " << boxWidget.getRectangle();
+	}
 }
 
 //--------------------------------------------------------------
-void ofApp::draw()
-{
+void ofApp::draw() {
 	// Scene
-	// Draw an animated inner box 
+	// Draw an animated inner box
 	// attached to the box rectangle widget
 
 	// Here we get the ofRectangle from the Box object!
@@ -52,19 +51,20 @@ void ofApp::draw()
 }
 
 //--------------------------------------------------------------
-void ofApp::drawSceneBoxed(ofRectangle r)
-{
-
-	// Animate scale
-	float s = ofMap(glm::cos(10 * ofGetElapsedTimef()), -1, 1, 0.98, 1);
-	float d = MAX(r.getWidth() - r.getWidth() * s, (r.getHeight() - r.getHeight() * s));
-	float w = r.getWidth();
-	float h = r.getHeight();
-	if (boxWidget.getModeType() != BOX_TYPE::TYPE_BAR_HORIZONTAL)
-		w = r.getWidth() - d;
-	if (boxWidget.getModeType() != BOX_TYPE::TYPE_BAR_VERTICAL)
-		h = r.getHeight() - d;
-	r.setFromCenter(r.getCenter(), w, h);
+void ofApp::drawSceneBoxed(ofRectangle r) {
+	if (boxWidget.isEditing()) {
+		// Animate scale
+		float s = ofMap(glm::cos(10 * ofGetElapsedTimef()), -1, 1, 0.98, 1);
+		float d = MAX(r.getWidth() - r.getWidth() * s, (r.getHeight() - r.getHeight() * s));
+		float w = r.getWidth();
+		float h = r.getHeight();
+		if (boxWidget.getModeType() != BOX_TYPE::TYPE_BAR_HORIZONTAL)
+			w = r.getWidth() - d;
+		if (boxWidget.getModeType() != BOX_TYPE::TYPE_BAR_VERTICAL)
+			h = r.getHeight() - d;
+		r.setFromCenter(r.getCenter(), w, h);
+	} else {
+	}
 
 	// Draw
 	ofPushStyle();
@@ -86,13 +86,12 @@ void ofApp::drawSceneBoxed(ofRectangle r)
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key)
-{
+void ofApp::keyPressed(int key) {
 	if (key == ' ') boxWidget.setToggleEdit();
 	if (key == OF_KEY_BACKSPACE) boxWidget.reset();
 
-	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleModeLayout();//next
-	if (key == OF_KEY_LEFT) boxWidget.setToggleModeLayout(true);//prev
+	if (key == OF_KEY_RIGHT || key == OF_KEY_TAB) boxWidget.setToggleModeLayout(); //next
+	if (key == OF_KEY_LEFT) boxWidget.setToggleModeLayout(true); //prev
 
 	if (key == 'A') boxWidget.setToggleLockAspectRatio();
 	if (key == 'B') boxWidget.setToggleUseBorder();
@@ -112,8 +111,7 @@ void ofApp::keyPressed(int key)
 }
 
 //--------------------------------------------------------------
-void ofApp::setupOptional()
-{
+void ofApp::setupOptional() {
 	// List of some optional settings
 
 	// Debug

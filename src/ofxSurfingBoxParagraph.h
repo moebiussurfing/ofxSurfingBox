@@ -19,15 +19,12 @@
 
 #include "ofxFontStash2.h"
 
-class ofxSurfingBoxParagraph : public ofxSurfingBoxInteractive
-{
+class ofxSurfingBoxParagraph : public ofxSurfingBoxInteractive {
 
 public:
-
-	ofxFontStash2::Fonts fonts;//public to allow handle styles externally.
+	ofxFontStash2::Fonts fonts; //public to allow handle styles externally.
 
 private:
-
 	string text_Styled = "";
 	string text_Body = "";
 	string text_Title = "";
@@ -64,19 +61,16 @@ private:
 	ofRectangle bbox;
 	ofRectangle bboxHeader;
 
-	ofParameter<bool> bThemeDarkOrLight{ "Theme", true };
+	ofParameter<bool> bThemeDarkOrLight { "Theme", true };
 
 public:
-
 	//--------------------------------------------------------------
-	virtual void setup()
-	{
+	virtual void setup() {
 		setup(true);
 	}
 
 	//--------------------------------------------------------------
-	void setup(bool bWithText)
-	{
+	void setup(bool bWithText) {
 		ofLogNotice("ofxSurfingBoxHelpText") << (__FUNCTION__);
 
 		// colors
@@ -117,13 +111,11 @@ public:
 	}
 
 private:
-
 	//--------------------------------------------------------------
-	void buildFonts(ofColor __colorText)
-	{
+	void buildFonts(ofColor __colorText) {
 		// clear styles
 		auto styles = fonts.getStyles();
-		for (auto& it : styles) {
+		for (auto & it : styles) {
 			fonts.removeStyle(it.first);
 		}
 
@@ -132,8 +124,8 @@ private:
 		fonts.addStyle("header2", ofxFontStash2::Style("F1", size_Title2, __colorText));
 
 		fonts.addStyle("body", ofxFontStash2::Style("F2", size_Style1, __colorText));
-		fonts.addStyle("bold", ofxFontStash2::Style("F2", size_Style2, __colorText));//TODO: add ttf
-		fonts.addStyle("italic", ofxFontStash2::Style("F2", size_Style2, __colorText));//TODO: add ttf
+		fonts.addStyle("bold", ofxFontStash2::Style("F2", size_Style2, __colorText)); //TODO: add ttf
+		fonts.addStyle("italic", ofxFontStash2::Style("F2", size_Style2, __colorText)); //TODO: add ttf
 
 		fonts.addStyle("H1", ofxFontStash2::Style("F2", size_Title2, __colorText));
 		fonts.addStyle("H2", ofxFontStash2::Style("F2", size_Style1, __colorText));
@@ -142,7 +134,6 @@ private:
 	}
 
 public:
-
 	//--------------------------------------------------------------
 	void setTitle(string text) {
 		// we add plain text without tags easily
@@ -176,8 +167,7 @@ public:
 	}
 
 	//--------------------------------------------------------------
-	virtual void draw()
-	{
+	virtual void draw() {
 		if (!bGui) return;
 
 		this->ofxSurfingBoxInteractive::draw(true);
@@ -192,18 +182,16 @@ public:
 
 		ofColor colorBg;
 
-		if (this->ofxSurfingBoxInteractive::modeLayout == BOX_LAYOUT::FREE_LAYOUT)
-		{
-			if (this->isEditing())
-			{
+		if (this->ofxSurfingBoxInteractive::modeLayout == BOX_LAYOUT::FREE_LAYOUT) {
+			if (this->isEditing()) {
 				float a = ofxSurfingHelpers::getFadeBlink(0.6f, 1.f);
 				ofColor c = ofColor(_colorBg, _colorBg.a * a);
 				this->ofxSurfingBoxInteractive::rBox.draw();
 				colorBg = c;
-			}
-			else colorBg = _colorBg;
-		}
-		else colorBg = _colorBg;
+			} else
+				colorBg = _colorBg;
+		} else
+			colorBg = _colorBg;
 
 		ofPushStyle();
 		ofSetColor(colorBg);
@@ -217,14 +205,10 @@ public:
 
 		s = "";
 
-		if (bStyled)
-		{
+		if (bStyled) {
 			s = text_Styled;
-		}
-		else
-		{
-			if (bUseTitle)
-			{
+		} else {
+			if (bUseTitle) {
 				s += text_Title;
 			}
 
@@ -234,14 +218,13 @@ public:
 
 		//TODO: requires dual styles..
 		// shadow
-		if (_bUseShadow)
-		{
-			buildFonts(_colorShadow);//TODO: could be slow?
+		if (_bUseShadow) {
+			buildFonts(_colorShadow); //TODO: could be slow?
 			fonts.drawFormattedColumn(s, x + 1, y + 1, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
 		}
 
 		// draw
-		if (_bUseShadow) buildFonts(_colorText);//TODO: could be slow?
+		if (_bUseShadow) buildFonts(_colorText); //TODO: could be slow?
 		bbox = fonts.drawFormattedColumn(s, x, y, w, OF_ALIGN_HORZ_LEFT, this->bDebug);
 
 		// force height
@@ -253,8 +236,7 @@ public:
 		// constraint
 		bool bConstraint = 1;
 
-		if (bConstraint)
-		{
+		if (bConstraint) {
 			// title
 			ofxFontStash2::Style style = ofxFontStash2::Style("F1", size_Title1, 255);
 			bboxHeader = fonts.getTextBounds(text_TitleRaw, style, 0, 0);
@@ -264,16 +246,16 @@ public:
 			float w2 = bboxHeader.getWidth() + 2 * xpad;
 
 			float w0;
-			if (w1 < w2) w0 = w2;
-			else w0 = w1;
+			if (w1 < w2)
+				w0 = w2;
+			else
+				w0 = w1;
 			this->setWidth(w0);
 
 			//cout << "w1:" << w1 << endl;
 			//cout << "w2:" << w2 << endl;
 			//cout << "w0:" << w0 << endl<< endl;
-		}
-		else
-		{
+		} else {
 			float w1 = bbox.getWidth() + 2 * xpad;
 			this->setWidth(w1);
 		}
@@ -334,15 +316,13 @@ public:
 		bThemeDarkOrLight = bTheme;
 
 		// Light theme (false = light)
-		if (!bThemeDarkOrLight)
-		{
+		if (!bThemeDarkOrLight) {
 			_colorText = ofColor(0, 255);
 			_colorShadow = ofColor(255, 64);
 			_colorBg = ofColor(225, 64);
 		}
 		// Dark theme (white lines & black bg) (true = dark)
-		else
-		{
+		else {
 			_colorText = ofColor(255, 200);
 			//_colorText = ofColor(255, 150);
 			_colorShadow = ofColor(16, 225);
@@ -357,11 +337,11 @@ public:
 	//--
 
 public:
-
 	// A simple callback to trig when theme or layout changed
 	//--------------------------------------------------------------
 	bool isChanged() {
-		if (!bIsChanged) return false;
+		if (!bIsChanged)
+			return false;
 		else {
 			bIsChanged = false;
 			return true;
@@ -370,7 +350,10 @@ public:
 
 	//--------------------------------------------------------------
 	string getEditingString() {
-		if (rBox.isEditing()) return "Editing"; else return "Not Editing";
+		if (rBox.isEditing())
+			return "Editing";
+		else
+			return "Not Editing";
 	}
 
 	//--------------------------------------------------------------
@@ -380,6 +363,9 @@ public:
 
 	//--------------------------------------------------------------
 	string getThemeName() {
-		if (bThemeDarkOrLight) return "Dark"; else return "Light";
+		if (bThemeDarkOrLight)
+			return "Dark";
+		else
+			return "Light";
 	}
 };

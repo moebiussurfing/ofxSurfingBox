@@ -5,8 +5,6 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	ofSetWindowPosition(-1900, 100);
-
 	// Optional
 	
 	textBoxWidget.setName("Demo");
@@ -24,9 +22,9 @@ void ofApp::setup()
 	else
 	{
 		// Pick one
-		//helpTitle = "HELP BOX";
-		helpTitle = "HELP\nBOX";
-		//helpTitle = "HELP\nmyBOX\nAdd-on";
+		//helpTitle = "HELP BOX";//one line
+		helpTitle = "HELP\nBOX";//two lines
+		//helpTitle = "HELP\nmyBOX\nAdd-on";//three lines
 
 		textBoxWidget.setTitle(helpTitle);
 
@@ -73,12 +71,12 @@ void ofApp::buildHelpInfo()
 
 	bool b = textBoxWidget.getIsEditing();
 	helpInfo += ofToString(!b ? "LOCKED! " : "EDITING!");
-	helpInfo += "\nDoubleClick > " + ofToString(b ? "LOCK" : "EDIT") + ". \n\n";
-
+	helpInfo += "\nDoubleClick > " + ofToString(b ? "LOCK" : "EDIT") + ".\n";
+	helpInfo += "\n";
 	helpInfo += "LeftClick + RightClick to close.\n";
 	helpInfo += "Drag the Box around the window!\n";
-	helpInfo += "Layout will be auto saved.\n\n";
-
+	helpInfo += "Layout will be auto saved.\n";
+	helpInfo += "\n";
 	helpInfo += "KEY COMMANDS \n";
 	helpInfo += "\n";
 	helpInfo += "SPACE  EDIT \n";

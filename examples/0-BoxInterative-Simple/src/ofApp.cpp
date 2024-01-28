@@ -42,9 +42,9 @@ void ofApp::drawSceneBoxed()
 	float d = MAX(r.getWidth() - r.getWidth() * s, (r.getHeight() - r.getHeight() * s));
 	float w = r.getWidth();
 	float h = r.getHeight();
-	if (boxWidget.getModeType() != ofxSurfingBoxInteractive::BOX_TYPE::TYPE_BAR_HORIZONTAL)
+	if (boxWidget.getModeType() != ofxSurfingBox::BOX_TYPE::TYPE_BAR_HORIZONTAL)
 		w = r.getWidth() - d;
-	if (boxWidget.getModeType() != ofxSurfingBoxInteractive::BOX_TYPE::TYPE_BAR_VERTICAL)
+	if (boxWidget.getModeType() != ofxSurfingBox::BOX_TYPE::TYPE_BAR_VERTICAL)
 		h = r.getHeight() - d;
 	r.setFromCenter(r.getCenter(), w, h);
 
