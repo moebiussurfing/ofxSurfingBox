@@ -880,6 +880,16 @@ namespace ofxSurfingBox {
 		};
 
 		//--------------------------------------------------------------
+		void disableEdit() {
+			getInteractiveRect().disableEdit();
+		};
+
+		//--------------------------------------------------------------
+		bool isMouseOver() {
+			return getInteractiveRect().isMouseOver();
+		};
+
+		//--------------------------------------------------------------
 		BOX_LAYOUT getModeLayout() {
 			return modeLayout;
 		};
